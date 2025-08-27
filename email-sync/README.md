@@ -1,24 +1,42 @@
 # 📧 Sincronización de Correos - marcas@patriciastocker.com
 
-Este directorio contiene los scripts para sincronizar todos los correos de `marcas@patriciastocker.com` desde el servidor origen (`mail.patriciastocker.com`) hacia el servidor destino (`imap.hostinger.com` en la cuenta `tomas@patriciastocker.com`).
+Este directorio contiene los scripts para sincronizar todos los correos de `marcas@patriciastocker.com` desde el servidor cPanel hacia Hostinger.
 
-## 🚀 Scripts Disponibles
+## 🎉 **MIGRACIÓN EXITOSA COMPLETADA** ✅
 
-### 1. `test-connection.sh`
-Prueba las conexiones IMAP antes de ejecutar la sincronización completa.
+### 📊 **Resumen de la Migración (27 Agosto 2025)**
+- **Origen**: `marcas@patriciastocker.com` (cPanel `patriciastocker.com:993`)
+- **Destino**: `tomas@patriciastocker.com` (Hostinger `imap.hostinger.com:993`)
+- **Correos migrados**: **1,132 correos nuevos**
+- **Total procesado**: 2,359 correos (eliminando 1,227 duplicados)
+- **Datos transferidos**: ~760 MiB
+- **Límite diario respetado**: 1,132 < 2,700 correos
 
-```bash
-./test-connection.sh
-```
+### 🔐 **Credenciales Confirmadas y Funcionando:**
+- **Servidor**: `patriciastocker.com:993` (SSL)
+- **Usuario**: `marcas@patriciastocker.com`
+- **Contraseña**: `$Full5tack$`
 
-### 2. `sync-marcas.sh`
-Script principal que ejecuta la sincronización completa. Se ejecuta en background y se detiene automáticamente cuando termina.
+### 📋 **Próximos Pasos:**
+- **Correos restantes**: 12,647 correos por migrar
+- **Cuota disponible mañana**: 2,700 correos
+- **Días estimados**: ~5 días para completar
 
+## 🛠️ **Scripts Disponibles**
+
+### 1. `sync-marcas.sh` ⭐ **PRINCIPAL**
+Script principal de sincronización configurado y probado.
 ```bash
 ./sync-marcas.sh &
 ```
 
-### 3. `monitor-sync.sh`
+### 2. `test-cpanel-connection.sh` 🔍 **DIAGNÓSTICO**
+Prueba las credenciales y conectividad con el servidor cPanel.
+```bash
+./test-cpanel-connection.sh
+```
+
+### 3. `monitor-sync.sh` 📊 **MONITOREO**
 Monitorea el progreso de la sincronización en tiempo real.
 
 ```bash

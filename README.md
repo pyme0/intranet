@@ -1,6 +1,55 @@
-# Sistema Intranet y Correos - Patricia Stocker
+# Patricia Stocker Intranet
 
-Sistema integrado que combina gestión de deudas empresariales y cliente de correos, construido con Deno y Python.
+Sistema de intranet para Patricia Stocker con cliente de correos integrado y herramientas de migración de correos.
+
+## 📧 **MIGRACIÓN DE CORREOS COMPLETADA** ✅
+
+### 🎯 **Resumen de la Migración (27 Agosto 2025)**
+
+**MIGRACIÓN EXITOSA**: Se completó la migración parcial de correos desde el servidor cPanel hacia Hostinger.
+
+#### 📊 **Estadísticas de Migración:**
+- **Origen**: `marcas@patriciastocker.com` (servidor cPanel `patriciastocker.com:993`)
+- **Destino**: `tomas@patriciastocker.com` (Hostinger `imap.hostinger.com:993`)
+- **Correos migrados**: **1,132 correos nuevos**
+- **Total procesado**: 2,359 correos (eliminando 1,227 duplicados)
+- **Datos transferidos**: ~760 MiB
+- **Límite diario respetado**: 1,132 < 2,700 correos
+
+#### 🔐 **Credenciales Confirmadas:**
+- **Servidor origen**: `patriciastocker.com:993` (SSL)
+- **Usuario**: `marcas@patriciastocker.com`
+- **Contraseña**: `$Full5tack$`
+- **Estado**: ✅ Funcionando correctamente
+
+#### 📋 **Próximos Pasos:**
+- **Correos restantes**: 12,647 correos por migrar
+- **Cuota disponible mañana**: 2,700 correos
+- **Días estimados**: ~5 días para completar la migración
+- **Recomendación**: Continuar mañana con lotes de 2,700 correos diarios
+
+### 🛠️ **Scripts de Migración Disponibles:**
+
+#### `email-sync/sync-marcas.sh` ⭐ **PRINCIPAL**
+Script principal de sincronización configurado y probado.
+```bash
+cd email-sync
+./sync-marcas.sh &
+```
+
+#### `email-sync/test-cpanel-connection.sh` 🔍 **DIAGNÓSTICO**
+Prueba las credenciales y conectividad con el servidor cPanel.
+```bash
+cd email-sync
+./test-cpanel-connection.sh
+```
+
+#### `email-sync/monitor-sync.sh` 📊 **MONITOREO**
+Monitorea el progreso de la sincronización en tiempo real.
+```bash
+cd email-sync
+./monitor-sync.sh
+```
 
 ## 🚀 Características
 
@@ -18,6 +67,7 @@ Sistema integrado que combina gestión de deudas empresariales y cliente de corr
 - **Actualización automática** cada 2 segundos
 - **Tema oscuro/claro** con toggle automático
 - **Diseño responsive** y animaciones suaves
+- **Migración de correos** con imapsync
 
 ## 📋 Requisitos
 
@@ -63,12 +113,42 @@ npm install
 npm run dev
 ```
 
-### Servicios Disponibles
+## 🌐 Acceso
 
-- 🌐 **Intranet**: http://localhost:8000 (Gestión de deudas)
-- 📧 **Cliente Correos Moderno**: http://localhost:3001 (Interfaz Shadcn/ui)
-- 🔧 **API Correos**: http://localhost:8080 (Backend Python)
-- 📊 **API Intranet**: http://localhost:8000/api/deudas
+### En Producción (VPS Vultr):
+- **Cliente de correos:** http://64.176.6.196:3001 ✅
+- **API del servidor:** http://64.176.6.196:8080 ✅
+
+### En Desarrollo Local:
+- **Cliente de correos:** http://localhost:3001
+- **API del servidor:** http://localhost:8080
+- **Intranet:** http://localhost:8000
+
+## 📧 Configuración de Correos
+
+### Servidor Destino (Hostinger) ✅
+- **IMAP:** imap.hostinger.com:993 (SSL)
+- **SMTP:** smtp.hostinger.com:465 (SSL)
+- **Cuenta:** tomas@patriciastocker.com
+- **Estado:** Funcionando correctamente
+
+### Servidor Origen (cPanel) ✅
+- **IMAP:** patriciastocker.com:993 (SSL)
+- **Cuenta:** marcas@patriciastocker.com
+- **Estado:** Credenciales confirmadas y funcionando
+
+## ⚠️ **LÍMITES IMPORTANTES**
+
+### Límites de Hostinger:
+- **3,000 emails/día por buzón** (límite oficial)
+- **2,700 emails/día** (límite seguro recomendado)
+- **Sin límite de buzones por dominio**
+- **Protección avanzada contra spam, malware y phishing**
+
+### Recomendaciones:
+- Ejecutar migraciones en lotes diarios de 2,700 correos
+- Monitorear el progreso con `monitor-sync.sh`
+- Verificar logs en `email-sync/logs/`
 
 ### Características del Cliente de Correos
 

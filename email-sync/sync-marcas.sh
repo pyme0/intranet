@@ -46,16 +46,16 @@ log "🚀 Iniciando sincronización de marcas@patriciastocker.com"
 log "📁 Log: $LOG_FILE"
 log "🆔 PID: $$"
 
-# Configuración de servidores
-SOURCE_HOST="mail.patriciastocker.com"
-SOURCE_PORT="993"
-SOURCE_USER="marcas@patriciastocker.com"
-SOURCE_PASS="\$Full5tack\$"
+# Configuración de servidores - SERVIDOR CPANEL ORIGEN
+SOURCE_HOST="patriciastocker.com"  # Servidor cPanel origen (antes funcionaba con este)
+SOURCE_PORT="993"  # Puerto IMAP SSL
+SOURCE_USER="marcas@patriciastocker.com"  # Usuario de correo completo
+SOURCE_PASS="\$Full5tack\$"  # Contraseña del correo
 
-DEST_HOST="imap.hostinger.com"
-DEST_PORT="993"
-DEST_USER="tomas@patriciastocker.com"
-DEST_PASS="\$Full5tack\$"
+DEST_HOST="imap.hostinger.com"  # Servidor Hostinger destino
+DEST_PORT="993"  # Puerto IMAP SSL
+DEST_USER="tomas@patriciastocker.com"  # Usuario destino
+DEST_PASS="\$Full5tack\$"  # Contraseña destino
 
 log "📧 Origen: $SOURCE_USER@$SOURCE_HOST:$SOURCE_PORT"
 log "📧 Destino: $DEST_USER@$DEST_HOST:$DEST_PORT"
