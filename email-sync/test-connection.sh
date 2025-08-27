@@ -8,7 +8,7 @@ echo "================================"
 # Configuración
 SOURCE_HOST="mail.patriciastocker.com"
 SOURCE_PORT="993"
-SOURCE_USER="patriciastocker"
+SOURCE_USER="marcas@patriciastocker.com"
 SOURCE_PASS="\$Full5tack\$"
 
 DEST_HOST="imap.hostinger.com"
