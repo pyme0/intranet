@@ -11,6 +11,8 @@ import email.header
 import email.utils
 import time
 import json
+import sqlite3
+import os
 from datetime import datetime
 from flask import Flask, render_template_string, jsonify, request
 from flask_cors import CORS
@@ -38,6 +40,176 @@ USE_EXTERNAL_SMTP = False
 emails_list = []  # Correos recibidos (INBOX)
 sent_emails_list = []  # Correos enviados (INBOX.Sent)
 connection_status = {"connected": False, "last_check": None, "error": None}
+
+# Configuración de paginación
+DEFAULT_PAGE_SIZE = 50  # Correos por página
+MAX_PAGE_SIZE = 200     # Máximo correos por página
+INITIAL_LOAD_SIZE = 100 # Correos a cargar inicialmente
+
+# Cache de metadatos de correos (headers ligeros)
+emails_metadata_cache = {}  # {email_id: metadata}
+emails_content_cache = {}   # {email_id: full_content}
+
+# Base de datos SQLite para caché persistente
+DB_PATH = 'email_cache.db'
+
+def init_database():
+    """Inicializar base de datos SQLite para caché"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        # Tabla para metadatos de correos
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS email_metadata (
+                email_id TEXT PRIMARY KEY,
+                folder TEXT NOT NULL,
+                subject TEXT,
+                from_addr TEXT,
+                to_addr TEXT,
+                date_str TEXT,
+                timestamp REAL,
+                message_id TEXT,
+                account TEXT,
+                has_attachments BOOLEAN DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        # Tabla para contenido completo de correos (opcional)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS email_content (
+                email_id TEXT PRIMARY KEY,
+                folder TEXT NOT NULL,
+                body TEXT,
+                html_body TEXT,
+                attachments TEXT,  -- JSON string
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (email_id) REFERENCES email_metadata (email_id)
+            )
+        ''')
+
+        # Índices para mejorar rendimiento
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_folder ON email_metadata (folder)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_timestamp ON email_metadata (timestamp)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_account ON email_metadata (account)')
+
+        conn.commit()
+        conn.close()
+        print("✅ Base de datos SQLite inicializada")
+
+    except Exception as e:
+        print(f"❌ Error inicializando base de datos: {e}")
+
+def save_email_metadata_to_db(email_data):
+    """Guardar metadatos de correo en la base de datos"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            INSERT OR REPLACE INTO email_metadata
+            (email_id, folder, subject, from_addr, to_addr, date_str, timestamp,
+             message_id, account, has_attachments, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ''', (
+            email_data['email_id'],
+            email_data.get('folder', 'INBOX'),
+            email_data.get('subject', ''),
+            email_data.get('from', ''),
+            email_data.get('to', ''),
+            email_data.get('date', ''),
+            email_data.get('timestamp', 0),
+            email_data.get('message_id', ''),
+            email_data.get('account', ''),
+            len(email_data.get('attachments', [])) > 0
+        ))
+
+        conn.commit()
+        conn.close()
+
+    except Exception as e:
+        print(f"❌ Error guardando metadatos en DB: {e}")
+
+def load_email_metadata_from_db(folder='INBOX', limit=None, offset=0, account_filter=None):
+    """Cargar metadatos de correos desde la base de datos"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        query = '''
+            SELECT email_id, folder, subject, from_addr, to_addr, date_str,
+                   timestamp, message_id, account, has_attachments
+            FROM email_metadata
+            WHERE folder = ?
+        '''
+
+        params = [folder]
+
+        # Agregar filtro de cuenta si se especifica
+        if account_filter:
+            query += ' AND account = ?'
+            params.append(account_filter)
+
+        query += ' ORDER BY timestamp DESC'
+
+        if limit:
+            query += ' LIMIT ? OFFSET ?'
+            params.extend([limit, offset])
+
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+
+        emails = []
+        for row in rows:
+            email_data = {
+                'email_id': row[0],
+                'folder': row[1],
+                'subject': row[2],
+                'from': row[3],
+                'to': row[4],
+                'date': row[5],
+                'timestamp': row[6],
+                'message_id': row[7],
+                'account': row[8],
+                'has_attachments': bool(row[9]),
+                'body': '',  # Vacío para headers-only
+                'html_body': '',  # Vacío para headers-only
+                'attachments': [],  # Vacío para headers-only
+                'is_headers_only': True
+            }
+            emails.append(email_data)
+
+        conn.close()
+        return emails
+
+    except Exception as e:
+        print(f"❌ Error cargando metadatos desde DB: {e}")
+        return []
+
+def count_emails_by_account(folder='INBOX', account_filter=None):
+    """Contar correos por cuenta en la base de datos"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        query = 'SELECT COUNT(*) FROM email_metadata WHERE folder = ?'
+        params = [folder]
+
+        if account_filter:
+            query += ' AND account = ?'
+            params.append(account_filter)
+
+        cursor.execute(query, params)
+        count = cursor.fetchone()[0]
+
+        conn.close()
+        return count
+
+    except Exception as e:
+        print(f"❌ Error contando correos: {e}")
+        return 0
 
 def connect_imap():
     """Conectar al servidor IMAP de Hostinger"""
@@ -480,6 +652,60 @@ def send_email(to_email, subject, body, attachments=None, cc_email=None):
         print(f"❌ Error enviando correo: {e}")
         return {"success": False, "error": str(e)}
 
+def parse_email_headers(mail, email_id):
+    """Parsear solo headers del email para metadatos ligeros"""
+    try:
+        # Obtener solo headers (más rápido que RFC822 completo)
+        status, msg_data = mail.fetch(email_id, '(ENVELOPE INTERNALDATE FLAGS)')
+        if status != 'OK':
+            return None
+
+        # También obtener headers básicos
+        status, header_data = mail.fetch(email_id, '(BODY[HEADER.FIELDS (FROM TO SUBJECT DATE MESSAGE-ID)])')
+        if status != 'OK':
+            return None
+
+        # Parsear headers
+        header_text = header_data[0][1].decode('utf-8', errors='ignore')
+        msg = email.message_from_string(header_text)
+
+        # Extraer información básica
+        subject = decode_mime_header(msg.get('Subject', 'Sin asunto'))
+        from_addr = decode_mime_header(msg.get('From', 'Desconocido'))
+        to_addr = decode_mime_header(msg.get('To', 'Desconocido'))
+        date_str = str(msg.get('Date', ''))
+        message_id = str(msg.get('Message-ID', ''))
+
+        # Parsear fecha
+        try:
+            if date_str:
+                parsed_date = email.utils.parsedate_tz(date_str)
+                if parsed_date:
+                    timestamp = email.utils.mktime_tz(parsed_date)
+                else:
+                    timestamp = time.time()
+            else:
+                timestamp = time.time()
+        except:
+            timestamp = time.time()
+
+        return {
+            'subject': subject,
+            'from': from_addr,
+            'to': to_addr,
+            'date': date_str,
+            'timestamp': timestamp,
+            'message_id': message_id,
+            'body': '',  # Vacío para headers-only
+            'html_body': '',  # Vacío para headers-only
+            'attachments': [],  # Vacío para headers-only
+            'has_attachments': False,  # Se puede determinar después si es necesario
+            'is_headers_only': True  # Marca que solo tiene headers
+        }
+    except Exception as e:
+        print(f"⚠️ Error parseando headers del correo {email_id}: {e}")
+        return None
+
 def parse_email(raw_email):
     """Parsear email crudo y extraer información"""
     try:
@@ -562,18 +788,162 @@ def parse_email(raw_email):
         print(f"Error parseando email: {e}")
         return None
 
+def get_email_content(email_id, folder='INBOX'):
+    """Obtener contenido completo de un correo específico"""
+    try:
+        mail = connect_imap()
+        if not mail:
+            return None
+
+        mail.select(folder)
+
+        # Obtener contenido completo
+        status, msg_data = mail.fetch(email_id, '(RFC822)')
+        if status == 'OK':
+            raw_email = msg_data[0][1]
+            parsed_email = parse_email(raw_email)
+
+            if parsed_email:
+                parsed_email['email_id'] = email_id
+                parsed_email['folder'] = folder
+                parsed_email['is_headers_only'] = False
+
+                # Cachear el contenido completo
+                emails_content_cache[email_id] = parsed_email
+
+            mail.close()
+            mail.logout()
+            return parsed_email
+
+        mail.close()
+        mail.logout()
+        return None
+
+    except Exception as e:
+        print(f"❌ Error obteniendo contenido del correo {email_id}: {e}")
+        return None
+
+def load_emails_paginated(page=1, page_size=DEFAULT_PAGE_SIZE, folder='INBOX', use_cache=True, account_filter=None):
+    """Cargar correos con paginación usando caché SQLite"""
+    try:
+        # Primero intentar cargar desde caché
+        if use_cache:
+            offset = (page - 1) * page_size
+            cached_emails = load_email_metadata_from_db(folder, page_size, offset, account_filter)
+
+            if cached_emails:
+                # Obtener total de correos desde IMAP para verificar si hay nuevos
+                mail = connect_imap()
+                if mail:
+                    mail.select(folder)
+                    status, messages = mail.search(None, 'ALL')
+                    if status == 'OK':
+                        total_emails_imap = len(messages[0].split())
+                        mail.close()
+                        mail.logout()
+
+                        # Obtener total filtrado desde la base de datos
+                        total_filtered = count_emails_by_account(folder, account_filter)
+
+                        # Si tenemos suficientes correos en caché, usarlos
+                        if len(cached_emails) == page_size or (page - 1) * page_size + len(cached_emails) >= total_filtered:
+                            print(f"📦 Usando caché: {len(cached_emails)} correos de página {page}")
+                            return cached_emails, total_filtered
+
+        # Si no hay caché o necesitamos actualizar, cargar desde IMAP
+        mail = connect_imap()
+        if not mail:
+            return [], 0
+
+        mail.select(folder)
+        status, messages = mail.search(None, 'ALL')
+
+        if status != 'OK':
+            mail.close()
+            mail.logout()
+            return [], 0
+
+        email_ids = messages[0].split()
+        total_emails = len(email_ids)
+
+        print(f"📊 {folder}: {total_emails} correos totales")
+
+        # Calcular rango de paginación (más recientes primero)
+        start_idx = max(0, total_emails - (page * page_size))
+        end_idx = max(0, total_emails - ((page - 1) * page_size))
+
+        paginated_ids = email_ids[start_idx:end_idx]
+        paginated_ids.reverse()  # Más recientes primero
+
+        emails = []
+        for email_id in paginated_ids:
+            email_id_str = email_id.decode()
+
+            # Verificar si ya tenemos los headers en caché de memoria
+            if email_id_str in emails_metadata_cache:
+                emails.append(emails_metadata_cache[email_id_str])
+            else:
+                # Cargar solo headers
+                parsed_email = parse_email_headers(mail, email_id)
+                if parsed_email:
+                    parsed_email['email_id'] = email_id_str
+                    parsed_email['folder'] = folder
+
+                    # Determinar la cuenta basándose en el contexto de migración
+                    # TODOS los correos en INBOX de tomas@ están disponibles para ambas cuentas
+                    to_addr = parsed_email.get('to', '').lower()
+
+                    # Clasificar por destinatario original, pero todos están disponibles para tomas@
+                    if 'marcas@patriciastocker.com' in to_addr:
+                        parsed_email['account'] = 'marcas@patriciastocker.com'
+                        parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
+                    elif 'tomas@patriciastocker.com' in to_addr:
+                        parsed_email['account'] = 'tomas@patriciastocker.com'
+                        parsed_email['original_recipient'] = 'tomas@patriciastocker.com'
+                    else:
+                        # Correos migrados o con otros destinatarios - disponibles para tomas@
+                        parsed_email['account'] = 'tomas@patriciastocker.com'
+                        parsed_email['original_recipient'] = 'migrated'
+
+                    # Cachear metadatos en memoria y base de datos
+                    emails_metadata_cache[email_id_str] = parsed_email
+                    save_email_metadata_to_db(parsed_email)
+                    emails.append(parsed_email)
+
+        mail.close()
+        mail.logout()
+
+        # Aplicar filtro de cuenta si se especifica
+        if account_filter:
+            # Filtrar correos por cuenta específica
+            filtered_emails = [email for email in emails if email.get('account') == account_filter]
+
+            # Obtener el total correcto desde la base de datos
+            filtered_total = count_emails_by_account(folder, account_filter)
+
+            return filtered_emails, filtered_total
+
+        return emails, total_emails
+
+    except Exception as e:
+        print(f"❌ Error cargando correos paginados: {e}")
+        return [], 0
+
 def check_emails():
     """Verificar nuevos correos recibidos y enviados"""
     global emails_list, sent_emails_list, connection_status
-    
+
+    print("🔄 Iniciando hilo de verificación de correos...")
+
     while True:
         try:
+            print("🔍 Verificando correos...")
             mail = connect_imap()
             if not mail:
                 connection_status["connected"] = False
                 time.sleep(10)
                 continue
-            
+
             connection_status["connected"] = True
             connection_status["error"] = None
             connection_status["last_check"] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -607,31 +977,63 @@ def check_emails():
                     if len(email_ids) > 0:
                         print(f"📊 INBOX - Rango de IDs: {email_ids[0].decode()} a {email_ids[-1].decode()}")
 
-                    # Tomar los últimos 50 correos de INBOX
-                    recent_email_ids = email_ids[-50:] if len(email_ids) > 50 else email_ids
+                    # NUEVA IMPLEMENTACIÓN: Cargar solo headers inicialmente
+                    print(f"📧 Cargando headers de {len(email_ids)} correos...")
+
+                    # Tomar los últimos INITIAL_LOAD_SIZE correos (más recientes)
+                    recent_email_ids = email_ids[-INITIAL_LOAD_SIZE:] if len(email_ids) > INITIAL_LOAD_SIZE else email_ids
+                    recent_email_ids = list(reversed(recent_email_ids))  # Más recientes primero
 
                     for email_id in recent_email_ids:
-                        status, msg_data = mail.fetch(email_id, '(RFC822)')
-                        if status == 'OK':
-                            raw_email = msg_data[0][1]
-                            parsed_email = parse_email(raw_email)
+                        email_id_str = email_id.decode()
+
+                        # Verificar si ya tenemos los headers en caché
+                        if email_id_str not in emails_metadata_cache:
+                            parsed_email = parse_email_headers(mail, email_id)
                             if parsed_email:
-                                parsed_email['email_id'] = email_id.decode()
+                                parsed_email['email_id'] = email_id_str
                                 parsed_email['folder'] = 'INBOX'
-                                # Determinar la cuenta basándose en el destinatario
+                                # Determinar la cuenta basándose en el contexto de migración
+                                # TODOS los correos en INBOX de tomas@ están disponibles para ambas cuentas
                                 to_addr = parsed_email.get('to', '').lower()
+
+                                # Clasificar por destinatario original, pero todos están disponibles para tomas@
                                 if 'marcas@patriciastocker.com' in to_addr:
                                     parsed_email['account'] = 'marcas@patriciastocker.com'
+                                    parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
                                 elif 'tomas@patriciastocker.com' in to_addr:
                                     parsed_email['account'] = 'tomas@patriciastocker.com'
+                                    parsed_email['original_recipient'] = 'tomas@patriciastocker.com'
                                 else:
-                                    parsed_email['account'] = 'unknown'
+                                    # Correos migrados o con otros destinatarios - disponibles para tomas@
+                                    parsed_email['account'] = 'tomas@patriciastocker.com'
+                                    parsed_email['original_recipient'] = 'migrated'
+
+                                # Cachear metadatos
+                                emails_metadata_cache[email_id_str] = parsed_email
                                 all_emails.append(parsed_email)
+                        else:
+                            all_emails.append(emails_metadata_cache[email_id_str])
+
             except Exception as e:
                 print(f"❌ Error procesando INBOX: {e}")
 
-            # Ordenar todos los correos por timestamp (más recientes primero)
-            emails_list = sorted(all_emails, key=lambda x: x.get('timestamp', 0), reverse=True)
+            # Aplicar clasificación automática a correos que no la tengan
+            for email in all_emails:
+                if email.get('account') is None:
+                    to_addr = email.get('to', '').lower()
+                    if 'marcas@patriciastocker.com' in to_addr:
+                        email['account'] = 'marcas@patriciastocker.com'
+                        email['original_recipient'] = 'marcas@patriciastocker.com'
+                    elif 'tomas@patriciastocker.com' in to_addr:
+                        email['account'] = 'tomas@patriciastocker.com'
+                        email['original_recipient'] = 'tomas@patriciastocker.com'
+                    else:
+                        email['account'] = 'tomas@patriciastocker.com'
+                        email['original_recipient'] = 'migrated'
+
+            # Los correos ya están ordenados (más recientes primero)
+            emails_list = all_emails
 
             # Procesar correos enviados (INBOX.Sent)
             sent_emails = []
@@ -665,7 +1067,9 @@ def check_emails():
             sent_emails_list = sorted(sent_emails, key=lambda x: x.get('timestamp', 0), reverse=True)
 
             print(f"✅ Verificación completada: {len(emails_list)} correos recibidos, {len(sent_emails_list)} correos enviados")
-            
+            print(f"📊 DEBUG: emails_list tiene {len(emails_list)} elementos")
+            print(f"📊 DEBUG: sent_emails_list tiene {len(sent_emails_list)} elementos")
+
             mail.close()
             mail.logout()
             
@@ -959,8 +1363,10 @@ def api_sent_emails():
 
 @app.route('/api/all-emails')
 def api_all_emails():
-    """Obtener correos recibidos (bandeja principal) con filtros opcionales"""
+    """Obtener correos recibidos (bandeja principal) con filtros opcionales y paginación"""
     account_filter = request.args.get('account', None)
+    page = int(request.args.get('page', 1))
+    page_size = min(int(request.args.get('limit', DEFAULT_PAGE_SIZE)), MAX_PAGE_SIZE)
 
     # Solo correos recibidos (no enviados)
     filtered_emails = emails_list
@@ -971,13 +1377,199 @@ def api_all_emails():
     # Ordenar por timestamp (más recientes primero)
     filtered_emails = sorted(filtered_emails, key=lambda x: x.get('timestamp', 0), reverse=True)
 
+    # Aplicar paginación
+    start_idx = (page - 1) * page_size
+    end_idx = start_idx + page_size
+    paginated_emails = filtered_emails[start_idx:end_idx]
+
     return jsonify({
-        'emails': filtered_emails,
+        'emails': paginated_emails,
         'status': connection_status,
-        'count': len(filtered_emails),
-        'total_count': len(emails_list),
+        'count': len(paginated_emails),
+        'total_count': len(filtered_emails),
+        'page': page,
+        'page_size': page_size,
+        'total_pages': (len(filtered_emails) + page_size - 1) // page_size,
         'filter': account_filter
     })
+
+@app.route('/api/emails/paginated')
+def api_emails_paginated():
+    """Cargar correos con paginación real desde IMAP"""
+    page = int(request.args.get('page', 1))
+    page_size = min(int(request.args.get('limit', DEFAULT_PAGE_SIZE)), MAX_PAGE_SIZE)
+    account_filter = request.args.get('account', None)
+    folder = request.args.get('folder', 'INBOX')
+
+    try:
+        emails, total_count = load_emails_paginated(page, page_size, folder, use_cache=True, account_filter=account_filter)
+
+        return jsonify({
+            'emails': emails,
+            'status': connection_status,
+            'count': len(emails),
+            'total_count': total_count,
+            'page': page,
+            'page_size': page_size,
+            'total_pages': (total_count + page_size - 1) // page_size,
+            'filter': account_filter,
+            'folder': folder
+        })
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'emails': [],
+            'status': connection_status,
+            'count': 0,
+            'total_count': 0,
+            'page': page,
+            'page_size': page_size,
+            'total_pages': 0
+        }), 500
+
+@app.route('/api/email/<email_id>/content')
+def api_email_content(email_id):
+    """Obtener contenido completo de un correo específico"""
+    folder = request.args.get('folder', 'INBOX')
+
+    try:
+        # Verificar si ya tenemos el contenido en caché
+        if email_id in emails_content_cache:
+            return jsonify({
+                'email': emails_content_cache[email_id],
+                'cached': True
+            })
+
+        # Cargar contenido completo
+        email_content = get_email_content(email_id, folder)
+        if email_content:
+            return jsonify({
+                'email': email_content,
+                'cached': False
+            })
+        else:
+            return jsonify({'error': 'Correo no encontrado'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/load-more-emails')
+def load_more_emails():
+    """Cargar más correos en lotes para completar la migración"""
+    try:
+        # Obtener parámetros
+        batch_size = int(request.args.get('batch_size', 200))
+        start_from = int(request.args.get('start_from', 0))
+
+        mail = connect_imap()
+        if not mail:
+            return jsonify({'error': 'No se pudo conectar al servidor IMAP'}), 500
+
+        mail.select('INBOX')
+        status, messages = mail.search(None, 'ALL')
+
+        if status == 'OK':
+            email_ids = messages[0].split()
+            total_emails = len(email_ids)
+
+            # Calcular el rango a cargar
+            end_index = min(start_from + batch_size, total_emails)
+            batch_ids = email_ids[start_from:end_index]
+
+            loaded_count = 0
+            for email_id in batch_ids:
+                email_id_str = email_id.decode()
+
+                # Solo cargar si no está en caché
+                if email_id_str not in emails_metadata_cache:
+                    parsed_email = parse_email_headers(mail, email_id)
+                    if parsed_email:
+                        parsed_email['email_id'] = email_id_str
+                        parsed_email['folder'] = 'INBOX'
+
+                        # Clasificar por destinatario
+                        to_addr = parsed_email.get('to', '').lower()
+                        if 'marcas@patriciastocker.com' in to_addr:
+                            parsed_email['account'] = 'marcas@patriciastocker.com'
+                            parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
+                        elif 'tomas@patriciastocker.com' in to_addr:
+                            parsed_email['account'] = 'tomas@patriciastocker.com'
+                            parsed_email['original_recipient'] = 'tomas@patriciastocker.com'
+                        else:
+                            parsed_email['account'] = 'tomas@patriciastocker.com'
+                            parsed_email['original_recipient'] = 'migrated'
+
+                        # Cachear metadatos
+                        emails_metadata_cache[email_id_str] = parsed_email
+                        save_email_metadata_to_db(parsed_email)
+                        loaded_count += 1
+
+            mail.close()
+            mail.logout()
+
+            return jsonify({
+                'loaded': loaded_count,
+                'start_from': start_from,
+                'end_at': end_index,
+                'total_emails': total_emails,
+                'remaining': total_emails - end_index,
+                'completed': end_index >= total_emails
+            })
+
+        mail.close()
+        mail.logout()
+        return jsonify({'error': 'No se pudieron obtener los correos'}), 500
+
+    except Exception as e:
+        print(f"❌ Error cargando más correos: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/reclassify-emails')
+def reclassify_emails():
+    """Reclasificar todos los correos en caché y guardarlos en la base de datos"""
+    try:
+        reclassified_count = 0
+        updated_count = 0
+
+        print("🔄 Iniciando reclasificación de correos...")
+
+        # Procesar todos los correos en el caché de memoria
+        for email_id, email_data in emails_metadata_cache.items():
+            # Aplicar lógica de clasificación
+            to_addr = email_data.get('to', '').lower()
+
+            # Determinar la cuenta correcta
+            if 'marcas@patriciastocker.com' in to_addr:
+                email_data['account'] = 'marcas@patriciastocker.com'
+                email_data['original_recipient'] = 'marcas@patriciastocker.com'
+            elif 'tomas@patriciastocker.com' in to_addr:
+                email_data['account'] = 'tomas@patriciastocker.com'
+                email_data['original_recipient'] = 'tomas@patriciastocker.com'
+            else:
+                # Correos migrados o con otros destinatarios - disponibles para tomas@
+                email_data['account'] = 'tomas@patriciastocker.com'
+                email_data['original_recipient'] = 'migrated'
+
+            # Guardar en la base de datos
+            save_email_metadata_to_db(email_data)
+            reclassified_count += 1
+
+            # Actualizar el caché de memoria
+            emails_metadata_cache[email_id] = email_data
+            updated_count += 1
+
+        print(f"✅ Reclasificación completada: {reclassified_count} correos procesados")
+
+        return jsonify({
+            'success': True,
+            'reclassified': reclassified_count,
+            'updated_cache': updated_count,
+            'total_in_cache': len(emails_metadata_cache)
+        })
+
+    except Exception as e:
+        print(f"❌ Error en reclasificación: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/send-email', methods=['POST'])
 def api_send_email():
@@ -1076,6 +1668,9 @@ if __name__ == '__main__':
     print(f"📥 Servidor IMAP: {IMAP_SERVER}:{IMAP_PORT}")
     print(f"📤 Servidor SMTP: {SMTP_SERVER}:{SMTP_PORT}")
     print("🏢 Proveedor: Hostinger")
+
+    # Inicializar base de datos SQLite
+    init_database()
 
     # Iniciar hilo para verificar correos
     email_thread = threading.Thread(target=check_emails, daemon=True)

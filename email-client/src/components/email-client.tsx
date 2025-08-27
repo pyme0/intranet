@@ -38,6 +38,10 @@ export interface EmailData {
   emails: Email[]
   status: ConnectionStatus
   count: number
+  total_count?: number
+  page?: number
+  page_size?: number
+  total_pages?: number
 }
 
 export function EmailClient() {
@@ -54,6 +58,13 @@ export function EmailClient() {
   const [isLoading, setIsLoading] = useState(true)
   const [emailFilter, setEmailFilter] = useState<'inbox' | 'sent'>('inbox')
   const [subFilter, setSubFilter] = useState<'all' | 'marcas' | 'tomas'>('all')
+
+  // Estados para paginación
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const [pageSize] = useState(50)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   // Función para cargar el estado de correos leídos desde la base de datos
   const loadReadStatus = useCallback(async () => {
@@ -89,22 +100,30 @@ export function EmailClient() {
     }
   }, [])
 
-  // Función para obtener correos desde la API proxy
-  const fetchEmails = useCallback(async () => {
+  // Función para obtener correos con paginación
+  const fetchEmails = useCallback(async (page = 1, append = false, isPolling = false) => {
     try {
-      let endpoint = '/api/all-emails'
+      // Solo mostrar loading en carga inicial, no en polling
+      if (!append && !isPolling) setIsLoading(true)
+      else if (append) setIsLoadingMore(true)
+
+      let endpoint = '/api/emails/paginated'
       let params = new URLSearchParams()
+
+      params.append('page', page.toString())
+      params.append('limit', pageSize.toString())
 
       // Configurar endpoint y parámetros según el filtro
       if (emailFilter === 'sent') {
-        endpoint = '/api/sent-emails'
+        params.append('folder', 'INBOX.Sent')
         // Para enviados, filtrar por cuenta de origen
         if (subFilter === 'marcas') {
-          params.append('from_account', 'marcas@patriciastocker.com')
+          params.append('account', 'marcas@patriciastocker.com')
         } else if (subFilter === 'tomas') {
-          params.append('from_account', 'tomas@patriciastocker.com')
+          params.append('account', 'tomas@patriciastocker.com')
         }
       } else {
+        params.append('folder', 'INBOX')
         // Para bandeja principal, filtrar por cuenta de destino
         if (subFilter === 'marcas') {
           params.append('account', 'marcas@patriciastocker.com')
@@ -113,7 +132,7 @@ export function EmailClient() {
         }
       }
 
-      const url = params.toString() ? `${endpoint}?${params}` : endpoint
+      const url = `${endpoint}?${params}`
       const response = await fetch(url)
 
       if (!response.ok) {
@@ -127,10 +146,19 @@ export function EmailClient() {
         isRead: readEmails.has(email.email_id)
       }))
 
-      setEmails(emailsWithReadStatus)
+      if (append) {
+        setEmails(prev => [...prev, ...emailsWithReadStatus])
+      } else {
+        setEmails(emailsWithReadStatus)
+      }
 
       setConnectionStatus(data.status)
+      setTotalCount(data.total_count || 0)
+      setTotalPages(data.total_pages || 1)
+      setCurrentPage(page)
+
       setIsLoading(false)
+      setIsLoadingMore(false)
     } catch (error) {
       console.error('Error fetching emails:', error)
       setConnectionStatus({
@@ -139,12 +167,50 @@ export function EmailClient() {
         last_check: new Date().toLocaleTimeString()
       })
       setIsLoading(false)
+      setIsLoadingMore(false)
     }
-  }, [emailFilter, subFilter, readEmails])
+  }, [emailFilter, subFilter, readEmails, pageSize])
+
+  // Función para cargar más correos (scroll infinito)
+  const loadMoreEmails = useCallback(() => {
+    if (currentPage < totalPages && !isLoadingMore) {
+      fetchEmails(currentPage + 1, true)
+    }
+  }, [currentPage, totalPages, isLoadingMore, fetchEmails])
+
+  // Función para cargar contenido completo de un correo
+  const loadEmailContent = useCallback(async (email: Email) => {
+    try {
+      // Si el correo ya tiene contenido completo, no necesitamos cargarlo
+      if (!email.body && !email.html_body) {
+        const folder = emailFilter === 'sent' ? 'INBOX.Sent' : 'INBOX'
+        const response = await fetch(`/api/email/${email.email_id}/content?folder=${folder}`)
+
+        if (response.ok) {
+          const data = await response.json()
+          if (data.email) {
+            // Actualizar el correo en la lista con el contenido completo
+            setEmails(prev => prev.map(e =>
+              e.email_id === email.email_id
+                ? { ...e, ...data.email, isRead: e.isRead }
+                : e
+            ))
+            return data.email
+          }
+        }
+      }
+      return email
+    } catch (error) {
+      console.error('Error loading email content:', error)
+      return email
+    }
+  }, [emailFilter])
 
   // Función para manejar selección de correo y marcarlo como leído
-  const handleSelectEmail = (email: Email) => {
-    setSelectedEmail(email)
+  const handleSelectEmail = async (email: Email) => {
+    // Cargar contenido completo si es necesario
+    const fullEmail = await loadEmailContent(email)
+    setSelectedEmail(fullEmail)
 
     // Marcar como leído en la base de datos
     if (!readEmails.has(email.email_id)) {
@@ -163,12 +229,24 @@ export function EmailClient() {
     if (!isLoadingReadStatus) {
       fetchEmails()
 
-      // Polling cada 2 segundos (igual que el cliente Python original)
-      const interval = setInterval(fetchEmails, 2000)
+      // Polling más inteligente: 10 segundos en lugar de 2
+      // Solo recargar la primera página para detectar nuevos correos (sin mostrar loading)
+      const interval = setInterval(() => {
+        fetchEmails(1, false, true) // isPolling = true
+      }, 10000)
 
       return () => clearInterval(interval)
     }
   }, [fetchEmails, isLoadingReadStatus])
+
+  // Efecto para resetear paginación cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1)
+    setEmails([])
+    if (!isLoadingReadStatus) {
+      fetchEmails(1, false)
+    }
+  }, [emailFilter, subFilter, isLoadingReadStatus])
 
   // Los correos ya vienen filtrados del backend
   const filteredEmails = emails
@@ -196,6 +274,10 @@ export function EmailClient() {
           isLoading={isLoading}
           isSentView={emailFilter === 'sent'}
           currentFilter={emailFilter}
+          onLoadMore={loadMoreEmails}
+          hasMore={currentPage < totalPages}
+          isLoadingMore={isLoadingMore}
+          totalCount={totalCount}
         />
       </div>
 

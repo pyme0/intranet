@@ -4,10 +4,12 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Mail, MailOpen } from 'lucide-react'
+import { Mail, MailOpen, Loader2 } from 'lucide-react'
 import { Email } from './email-client'
+import { useEffect, useRef } from 'react'
 
 interface EmailListProps {
   emails: Email[]
@@ -16,6 +18,10 @@ interface EmailListProps {
   isLoading: boolean
   isSentView?: boolean
   currentFilter?: string
+  onLoadMore?: () => void
+  hasMore?: boolean
+  isLoadingMore?: boolean
+  totalCount?: number
 }
 
 // Función para decodificar nombres codificados en UTF-8
@@ -50,7 +56,37 @@ const decodeEmailName = (encodedName: string): string => {
   }
 }
 
-export function EmailList({ emails, selectedEmail, onSelectEmail, isLoading, isSentView = false, currentFilter }: EmailListProps) {
+export function EmailList({
+  emails,
+  selectedEmail,
+  onSelectEmail,
+  isLoading,
+  isSentView = false,
+  currentFilter,
+  onLoadMore,
+  hasMore = false,
+  isLoadingMore = false,
+  totalCount = 0
+}: EmailListProps) {
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
+
+  // Detectar scroll para cargar más correos
+  useEffect(() => {
+    const scrollArea = scrollAreaRef.current
+    if (!scrollArea || !onLoadMore || !hasMore) return
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollArea
+      // Cargar más cuando esté cerca del final (80% del scroll)
+      if (scrollTop + clientHeight >= scrollHeight * 0.8 && !isLoadingMore) {
+        onLoadMore()
+      }
+    }
+
+    scrollArea.addEventListener('scroll', handleScroll)
+    return () => scrollArea.removeEventListener('scroll', handleScroll)
+  }, [onLoadMore, hasMore, isLoadingMore])
+
   const getInitials = (fromField: string) => {
     const name = getDisplayName(fromField)
     const words = name.split(' ')
@@ -181,7 +217,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, isLoading, isS
       </div>
 
       {/* Email List */}
-      <ScrollArea className="flex-1 overflow-hidden">
+      <ScrollArea className="flex-1 overflow-hidden" ref={scrollAreaRef}>
         <div className="p-3">
           {emails.map((email) => (
             <Card
@@ -278,6 +314,35 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, isLoading, isS
               </div>
             </Card>
           ))}
+
+          {/* Indicador de carga más correos */}
+          {isLoadingMore && (
+            <div className="flex items-center justify-center py-4">
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              <span className="text-sm text-muted-foreground">Cargando más correos...</span>
+            </div>
+          )}
+
+          {/* Botón cargar más (fallback si el scroll infinito no funciona) */}
+          {hasMore && !isLoadingMore && onLoadMore && (
+            <div className="flex justify-center py-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onLoadMore}
+                className="text-xs"
+              >
+                Cargar más correos
+              </Button>
+            </div>
+          )}
+
+          {/* Información de total de correos */}
+          {totalCount > 0 && (
+            <div className="text-center py-2 text-xs text-muted-foreground">
+              Mostrando {emails.length} de {totalCount} correos
+            </div>
+          )}
         </div>
       </ScrollArea>
     </div>
