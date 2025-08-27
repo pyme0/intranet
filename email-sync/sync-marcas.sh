@@ -49,7 +49,7 @@ log "🆔 PID: $$"
 # Configuración de servidores
 SOURCE_HOST="mail.patriciastocker.com"
 SOURCE_PORT="993"
-SOURCE_USER="marcas@patriciastocker.com"
+SOURCE_USER="patriciastocker"
 SOURCE_PASS="\$Full5tack\$"
 
 DEST_HOST="imap.hostinger.com"

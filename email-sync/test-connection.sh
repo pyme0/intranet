@@ -8,7 +8,7 @@ echo "================================"
 # Configuración
 SOURCE_HOST="mail.patriciastocker.com"
 SOURCE_PORT="993"
-SOURCE_USER="marcas@patriciastocker.com"
+SOURCE_USER="patriciastocker"
 SOURCE_PASS="\$Full5tack\$"
 
 DEST_HOST="imap.hostinger.com"
@@ -17,7 +17,7 @@ DEST_USER="tomas@patriciastocker.com"
 DEST_PASS="\$Full5tack\$"
 
 echo "📧 Probando conexión ORIGEN:"
-echo "   Host: $SOURCE_USER@$SOURCE_HOST:$SOURCE_PORT"
+echo "   Host: $SOURCE_USER@$SOURCE_HOST:$SOURCE_PORT (cPanel user)"
 
 imapsync \
     --host1 "$SOURCE_HOST" \
