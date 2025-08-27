@@ -1,0 +1,288 @@
+Here is imapsync 2.290 on host MacBook-Pro-de-Tomas.local, a darwin system with 0.1/8.0 free GiB of RAM, 71.00% used by processes.
+with Perl 5.34.1 and Mail::IMAPClient 3.43
+Transfer started at Wednesday 27 August 2025-08-27 15:30:11 -0400 -04
+PID is 33220 my PPID is 4992
+Log file is LOG_imapsync/2025_08_27_15_30_11_274_tomas_patriciastocker_com_tomas_patriciastocker_com.txt ( to change it, use --logfile path ; or use --nolog to turn off logging )
+Load is 3.35 2.82 2.48 on 8 cores
+Real user id is a1234 (uid 501)
+Effective user id is a1234 (euid 501)
+$RCSfile: imapsync,v $ $Revision: 2.290 $ $Date: 2024/08/20 10:37:23 $ 
+Command line used, run by /usr/bin/perl5.34:
+/opt/homebrew/Cellar/imapsync/2.290_1/libexec/bin/imapsync --host1 patriciastocker.com --user1 tomas@patriciastocker.com --password1 MASKED --host2 imap.hostinger.com --user2 tomas@patriciastocker.com --password2 MASKED --dry --justfolders
+Current directory is /Users/a1234/Desktop/Patricia-Stocker/patricia-stocker-intranet
+Temp directory is /Users/a1234/tmp ( to change it use --tmpdir dirpath )
+Creating temp directory /Users/a1234/tmp
+kill -QUIT 33220 # special behavior: call to sub catch_exit
+kill -TERM 33220 # special behavior: call to sub catch_exit
+kill -INT 33220 # special behavior: call to sub catch_reconnect
+kill -HUP 33220 # special behavior: call to sub catch_print
+kill -USR1 33220 # special behavior: call to sub toggle_sleep
+Logging to a logfile by default. To turn off logging, use --nolog
+File /Users/a1234/tmp/imapsync.pid does not exist
+PID file is /Users/a1234/tmp/imapsync.pid ( to change it, use --pidfile filepath ; to avoid it use --pidfile "" )
+Writing my PID 33220 in /Users/a1234/tmp/imapsync.pid
+Writing also my logfile name in /Users/a1234/tmp/imapsync.pid : LOG_imapsync/2025_08_27_15_30_11_274_tomas_patriciastocker_com_tomas_patriciastocker_com.txt
+Modules version list ( use --no-modulesversion to turn off printing this Perl modules list ):
+Authen::NTLM         1.09
+CGI                  4.48
+Compress::Zlib       2.102
+Crypt::OpenSSL::RSA  0.31
+Digest::HMAC_MD5     1.01
+Digest::HMAC_SHA1    1.03
+Digest::MD5          2.58
+Digest::SHA          6.02
+Encode               3.0801
+Encode::IMAPUTF7     1.05
+File::Copy::Recursive 0.45
+File::Spec           3.80
+Getopt::Long         2.52
+HTML::Entities       3.69
+IO::Socket           1.46
+IO::Socket::INET     1.46
+IO::Socket::INET6    2.72
+IO::Socket::IP       0.42
+IO::Socket::SSL      2.068
+IO::Tee              0.65
+JSON                 4.10
+JSON::WebToken       0.10
+LWP                  6.44
+MIME::Base64         3.16
+Mail::IMAPClient     3.43
+Net::Ping            2.74
+Net::SSLeay          1.88
+Term::ReadKey        2.38
+Test::MockObject     1.20200122
+Time::HiRes          1.9767
+Unicode::String      2.10
+
+Info: will resync flags for already transferred messages. Use --noresyncflags to not resync flags.
+Host1: probing ssl on port 993 ( use --nosslcheck to avoid this ssl probe ) 
+Probing imap ssl on host patriciastocker.com port 993, got banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Dovecot ready.
+Host1: sslcheck detected open ssl port 993 so turning ssl on (use --nossl1 --notls1 to turn off SSL and TLS wizardry)
+Host2: probing ssl on port 993 ( use --nosslcheck to avoid this ssl probe ) 
+Probing imap ssl on host imap.hostinger.com port 993, got banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Server ready.
+Host2: sslcheck detected open ssl port 993 so turning ssl on (use --nossl2 --notls2 to turn off SSL and TLS wizardry)
+SSL debug mode level is --debugssl 1 (can be set from 0 meaning no debug to 4 meaning max debug)
+Host1: SSL default mode is like --sslargs1 "SSL_verify_mode=0", meaning for host1 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host1: Use --sslargs1 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host1
+Host2: SSL default mode is like --sslargs2 "SSL_verify_mode=0", meaning for host2 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host2: Use --sslargs2 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host2
+Info: turned ON syncinternaldates, will set the internal dates (arrival dates) on host2 same as host1.
+Host1: will try to use LOGIN authentication on host1
+Host2: will try to use LOGIN authentication on host2
+Host1: imap connection timeout is 120 seconds
+Host2: imap connection timeout is 120 seconds
+Host1: imap connection keepalive is on on host1. Use --nokeepalive1 to disable it.
+Host2: imap connection keepalive is on on host2. Use --nokeepalive2 to disable it.
+Host1: IMAP server [patriciastocker.com] port [993] user [tomas@patriciastocker.com]
+Host2: IMAP server [imap.hostinger.com] port [993] user [tomas@patriciastocker.com]
+Host1: connecting and login on host1 [patriciastocker.com] port [993] with user [tomas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host1 IP address: 45.239.218.18 Local IP address: 192.168.1.20
+Host1 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Dovecot ready.
+Host1 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host1: patriciastocker.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host1: success login on [patriciastocker.com] with user [tomas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host2: connecting and login on host2 [imap.hostinger.com] port [993] with user [tomas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host2 IP address: 172.65.188.64 Local IP address: 192.168.1.20
+Host2 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Server ready.
+Host2 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host2: imap.hostinger.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host2: success login on [imap.hostinger.com] with user [tomas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host1: state Authenticated
+Host2: state Authenticated
+Host1 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE NAMESPACE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host2 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host1: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host1")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+Host2: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host2")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+
+Host2: QUOTA capability found, presented in raw IMAP on next lines
+Sending: 5 GETQUOTAROOT INBOX
+Sent 22 bytes
+Read: 	* QUOTAROOT INBOX "Storage quota"
+  	* QUOTA "Storage quota" (STORAGE 1264163 10485760 MESSAGE 2398 100000)
+  	5 OK Getquotaroot completed (0.065 + 0.000 + 0.064 secs).
+
+Host2: Quota current storage is 1294502912 bytes. Limit is 10737418240 bytes. So 12.06 % full
+Host1: Compression is off. Use --compress1 to allow compression on host1
+Host2: Compression is off. Use --compress2 to allow compression on host2
+Compression often generates annoying errors, especially with SSL connexions, Gmail, Office365. So, avoid it.
+Host1: found 7 folders.
+Host2: found 6 folders.
+Host1: guessing separator from folder listing: [.]
+Host1: separator given by NAMESPACE: [.]
+Host2: guessing separator from folder listing: [.]
+Host2: separator given by NAMESPACE: [.]
+Host1: guessing prefix from folder listing: [INBOX.]
+Host1: prefix given by NAMESPACE: [INBOX.]
+Host2: guessing prefix from folder listing: [INBOX.]
+Host2: prefix given by NAMESPACE: [INBOX.]
+Host1: separator and prefix: [.][INBOX.]
+Host2: separator and prefix: [.][INBOX.]
+Including all folders found by default. Use --subscribed or --folder or --folderrec or --include to select specific folders. Use --exclude to unselect specific folders.
+Host1: Checking wanted folders exist. Use --nocheckfoldersexist to avoid this check (shared of public namespace targeted).
+Host1: Checking wanted folders are selectable. Use --nocheckselectable to avoid this check.
+Turned off automapping folders ( use --automap to turn on automapping )
+
+++++ Listing folders
+All foldernames are presented between brackets like [X] where X is the foldername.
+When a foldername contains non-ASCII characters it is presented in the form
+[X] = [Y] where
+X is the imap foldername you have to use in command line options and
+Y is the utf8 output just printed for convenience, to recognize it.
+
+Host1: folders list (first the raw imap format then the [X] = [Y]):
+* LIST (\HasChildren) "." INBOX
+* LIST (\HasNoChildren \UnMarked \Archive) "." INBOX.Archive
+* LIST (\HasNoChildren \UnMarked \Junk) "." INBOX.spam
+* LIST (\HasNoChildren \UnMarked \Trash) "." INBOX.Trash
+* LIST (\HasNoChildren \UnMarked \Sent) "." INBOX.Sent
+* LIST (\HasNoChildren) "." INBOX.Junk
+* LIST (\HasNoChildren \UnMarked \Drafts) "." INBOX.Drafts
+16 OK List completed (0.001 + 0.000 secs).
+
+[INBOX]
+[INBOX.Archive]
+[INBOX.Drafts]
+[INBOX.Junk]
+[INBOX.Sent]
+[INBOX.Trash]
+[INBOX.spam]
+
+Host2: folders list (first the raw imap format then the [X] = [Y]):
+* LIST (\HasChildren) "." INBOX
+* LIST (\HasNoChildren \UnMarked) "." INBOX.Archive
+* LIST (\HasNoChildren \UnMarked \Trash) "." INBOX.Trash
+* LIST (\HasNoChildren \UnMarked \Junk) "." INBOX.Junk
+* LIST (\HasNoChildren \Marked \Sent) "." INBOX.Sent
+* LIST (\HasNoChildren \UnMarked \Drafts) "." INBOX.Drafts
+10 OK List completed (0.001 + 0.000 secs).
+
+[INBOX]
+[INBOX.Archive]
+[INBOX.Drafts]
+[INBOX.Junk]
+[INBOX.Sent]
+[INBOX.Trash]
+
+++++ Looping on each one of 7 folders to sync
+Folder     1/7 [INBOX]                             -> [INBOX]                            
+Host1: folder [INBOX] has 97 messages in total (mentioned by SELECT)
+Host2: folder [INBOX] has 2379 messages in total (mentioned by SELECT)
+Host2: folder [INBOX] permanentflags: 
+Folder     2/7 [INBOX.Archive]                     -> [INBOX.Archive]                    
+Host1: folder [INBOX.Archive] has 0 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Archive] has 0 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Archive] permanentflags: 
+Folder     3/7 [INBOX.Drafts]                      -> [INBOX.Drafts]                     
+Host1: folder [INBOX.Drafts] has 1 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Drafts] has 1 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Drafts] permanentflags: 
+Folder     4/7 [INBOX.Junk]                        -> [INBOX.Junk]                       
+Host1: folder [INBOX.Junk] has 0 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Junk] has 3 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Junk] permanentflags: 
+Folder     5/7 [INBOX.Sent]                        -> [INBOX.Sent]                       
+Host1: folder [INBOX.Sent] has 5 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Sent] has 15 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Sent] permanentflags: 
+Folder     6/7 [INBOX.Trash]                       -> [INBOX.Trash]                      
+Host1: folder [INBOX.Trash] has 0 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Trash] has 0 messages in total (mentioned by SELECT)
+Host2: folder [INBOX.Trash] permanentflags: 
+Folder     7/7 [INBOX.spam]                        -> [INBOX.spam]                       
+Host1: folder [INBOX.spam] has 0 messages in total (mentioned by SELECT)
+Creating folder [INBOX.spam] on host2
+Created folder [INBOX.spam] on host2 	(not really since --dry mode)
+++++ End looping on each folder
+
+Folders sizes after the synchronization.
+You can remove this foldersizes listing by using  "--nofoldersizesatend"
+Host1 folder     1/7 [INBOX]                             Size:  20782662 Messages:    97 Biggest:   3670485
+Host2 folder     1/7 [INBOX]                             Size: 1290793727 Messages:  2379 Biggest:  35448814
+Host2-Host1                                                    1270011065            2282           31778329
+
+Host1 folder     2/7 [INBOX.Archive]                     Size:         0 Messages:     0 Biggest:         0
+Host2 folder     2/7 [INBOX.Archive]                     Size:         0 Messages:     0 Biggest:         0
+Host2-Host1                                                            0               0                  0
+
+Host1 folder     3/7 [INBOX.Drafts]                      Size:      1329 Messages:     1 Biggest:      1329
+Host2 folder     3/7 [INBOX.Drafts]                      Size:      1329 Messages:     1 Biggest:      1329
+Host2-Host1                                                            0               0                  0
+
+Host1 folder     4/7 [INBOX.Junk]                        Size:         0 Messages:     0 Biggest:         0
+Host2 folder     4/7 [INBOX.Junk]                        Size:     63189 Messages:     3 Biggest:     50198
+Host2-Host1                                                        63189               3              50198
+
+Host1 folder     5/7 [INBOX.Sent]                        Size:   3532706 Messages:     5 Biggest:   1201709
+Host2 folder     5/7 [INBOX.Sent]                        Size:   3644145 Messages:    15 Biggest:   1201709
+Host2-Host1                                                       111439              10                  0
+
+Host1 folder     6/7 [INBOX.Trash]                       Size:         0 Messages:     0 Biggest:         0
+Host2 folder     6/7 [INBOX.Trash]                       Size:         0 Messages:     0 Biggest:         0
+Host2-Host1                                                            0               0                  0
+
+Host1 folder     7/7 [INBOX.spam]                        Size:         0 Messages:     0 Biggest:         0
+Host2 folder     7/7 [INBOX.spam]                         does not exist yet
+Host2-Host1                                                            0               0                  0
+
+Host1 Nb folders:                     7 folders
+Host2 Nb folders:                     7 folders
+
+Host1 Nb messages:                  103 messages
+Host2 Nb messages:                 2398 messages
+
+Host1 Total size:              24316697 bytes (23.190 MiB)
+Host2 Total size:            1294502390 bytes (1.206 GiB)
+
+Host1 Biggest message:          3670485 bytes (3.500 MiB)
+Host2 Biggest message:         35448814 bytes (33.807 MiB)
+
+Time spent on sizing:         4.0 seconds
+++++ Statistics
+Transfer started on                     : Wednesday 27 August 2025-08-27 15:30:11 -0400 -04
+Transfer ended on                       : Wednesday 27 August 2025-08-27 15:30:21 -0400 -04
+Transfer time                           : 10.4 sec
+Folders synced                          : 7/7 synced
+Folders deleted on host2                : 0 	(not really since --dry mode)
+Messages transferred                    : 0 (could be 0 without dry mode)
+Messages skipped                        : 0
+Messages found duplicate on host1       : 0
+Messages found duplicate on host2       : 0
+Messages found crossduplicate on host2  : 0
+Messages void (noheader) on host1       : 0  
+Messages void (noheader) on host2       : 0
+Messages found in host1 not in host2    : 0 messages
+Messages found in host2 not in host1    : 0 messages
+Messages deleted on host1               : 0
+Messages deleted on host2               : 0
+Total bytes transferred                 : 0 (0.000 KiB)
+Total bytes skipped                     : 0 (0.000 KiB)
+Message rate                            : 0.0 messages/s
+Average bandwidth rate                  : 0.0 KiB/s
+Reconnections to host1                  : 0
+Reconnections to host2                  : 0
+Memory consumption at the end           : 32.8 MiB (*time 0.1 MiB*h) (started with 128.9 MiB)
+Load end is                             : 3.37 2.84 2.49 on 8 cores
+CPU time and %cpu                       : 0.6 sec 5.7 %cpu 0.7 %allcpus
+Biggest message transferred             : 0 bytes (0.000 KiB)
+Memory/biggest message ratio            : NA
+Detected 0 errors
+This imapsync is up to date. ( local 2.290 >= official 2.290 )( Use --noreleasecheck to avoid this release check. )
+Homepage: https://imapsync.lamiral.info/
+Exiting with return value 0 (EX_OK: successful termination) 0/50 nb_errors/max_errors PID 33220
+Removing pidfile /Users/a1234/tmp/imapsync.pid
+Log file is LOG_imapsync/2025_08_27_15_30_11_274_tomas_patriciastocker_com_tomas_patriciastocker_com.txt ( to change it, use --logfile filepath ; or use --nolog to turn off logging )

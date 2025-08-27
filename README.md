@@ -9,12 +9,23 @@ Sistema de intranet para Patricia Stocker con cliente de correos integrado y her
 **MIGRACIÓN EXITOSA**: Se completó la migración parcial de correos desde el servidor cPanel hacia Hostinger.
 
 #### 📊 **Estadísticas de Migración:**
+
+**Primera Migración (marcas@patriciastocker.com):**
 - **Origen**: `marcas@patriciastocker.com` (servidor cPanel `patriciastocker.com:993`)
 - **Destino**: `tomas@patriciastocker.com` (Hostinger `imap.hostinger.com:993`)
 - **Correos migrados**: **1,132 correos nuevos**
 - **Total procesado**: 2,359 correos (eliminando 1,227 duplicados)
 - **Datos transferidos**: ~760 MiB
-- **Límite diario respetado**: 1,132 < 2,700 correos
+
+**Segunda Sincronización (tomas@patriciastocker.com):**
+- **Origen**: `tomas@patriciastocker.com` (servidor cPanel `patriciastocker.com:993`)
+- **Destino**: `tomas@patriciastocker.com` (Hostinger `imap.hostinger.com:993`)
+- **Correos sincronizados**: **82 correos nuevos** ✅
+- **Datos transferidos**: 15.04 MiB
+- **Tiempo**: 63.5 segundos
+- **Resultado**: Todos los correos de "test" ahora disponibles
+
+**Total Final**: **2,461 correos** en Hostinger
 
 #### 🔐 **Credenciales Confirmadas:**
 - **Servidor origen**: `patriciastocker.com:993` (SSL)
@@ -49,6 +60,107 @@ Monitorea el progreso de la sincronización en tiempo real.
 ```bash
 cd email-sync
 ./monitor-sync.sh
+```
+
+## 🔧 **CONFIGURACIÓN DE SERVIDORES Y SINCRONIZACIÓN**
+
+### 📧 **Configuración de Correos**
+
+#### Servidor Origen (Patricia Stocker - cPanel)
+- **Host**: `patriciastocker.com:993` (SSL)
+- **Usuarios disponibles**:
+  - `marcas@patriciastocker.com`
+  - `tomas@patriciastocker.com`
+- **Contraseña**: `$Full5tack$`
+- **⚠️ IMPORTANTE**: Usar `patriciastocker.com` (NO `mail.patriciastocker.com`)
+
+#### Servidor Destino (Hostinger)
+- **IMAP**: `imap.hostinger.com:993` (SSL)
+- **SMTP**: `smtp.hostinger.com:465` (SSL)
+- **Usuario**: `tomas@patriciastocker.com`
+- **Contraseña**: `$Full5tack$`
+
+### 🔄 **Sincronización con imapsync**
+
+#### Instalación de imapsync (macOS)
+```bash
+brew install imapsync
+```
+
+#### Comando de Sincronización Completa
+```bash
+# Sincronizar INBOX completo
+imapsync \
+  --host1 patriciastocker.com \
+  --user1 tomas@patriciastocker.com \
+  --password1 '$Full5tack$' \
+  --host2 imap.hostinger.com \
+  --user2 tomas@patriciastocker.com \
+  --password2 '$Full5tack$' \
+  --folder INBOX
+```
+
+#### Verificación de Diferencias (Dry Run)
+```bash
+# Ver qué correos faltan sin sincronizar
+imapsync \
+  --host1 patriciastocker.com \
+  --user1 tomas@patriciastocker.com \
+  --password1 '$Full5tack$' \
+  --host2 imap.hostinger.com \
+  --user2 tomas@patriciastocker.com \
+  --password2 '$Full5tack$' \
+  --dry --justfolders
+```
+
+### 🎯 **Lecciones Aprendidas**
+
+#### ✅ **Problemas Resueltos:**
+1. **Servidor incorrecto**: `mail.patriciastocker.com` NO funciona, usar `patriciastocker.com`
+2. **Correos faltantes**: El servidor antiguo tenía correos que no estaban en Hostinger
+3. **Autenticación**: Requiere SSL en puerto 993, no funciona en puerto 143 sin STARTTLS
+4. **Sincronización exitosa**: 82 correos nuevos transferidos correctamente
+
+#### ⚠️ **Configuraciones Importantes:**
+- **Cliente de correos**: Debe conectarse a Hostinger (servidor nuevo)
+- **imapsync**: Debe sincronizar desde servidor antiguo hacia Hostinger
+- **Verificación**: Siempre hacer dry run antes de sincronización real
+- **Reclasificación**: Ejecutar reclasificación después de cargar nuevos correos
+
+### 🛠️ **Comandos de Diagnóstico Útiles**
+
+#### Verificar Conectividad IMAP
+```bash
+# Probar conexión SSL
+openssl s_client -connect patriciastocker.com:993 -quiet
+
+# Probar conexión no SSL (debe mostrar LOGINDISABLED)
+nc -v patriciastocker.com 143
+```
+
+#### Verificar Estado del Cliente
+```bash
+# Ver correos clasificados para Tomás
+curl -s "http://localhost:8080/api/emails/paginated?page=1&limit=50&account=tomas@patriciastocker.com" | jq '.total_count'
+
+# Buscar correos de "test"
+curl -s "http://localhost:8080/api/emails/paginated?page=1&limit=300&account=tomas@patriciastocker.com" | jq -r '.emails[] | select(.subject | test("test"; "i")) | "- \(.subject) - ID: \(.email_id)"'
+
+# Reclasificar correos después de sincronización
+curl -s "http://localhost:8080/api/reclassify-emails"
+
+# Cargar más correos
+curl -s "http://localhost:8080/api/load-more-emails?start_from=2400&batch_size=100"
+```
+
+#### Gestión de Procesos
+```bash
+# Matar proceso en puerto 8080
+lsof -ti:8080 | xargs kill -9
+
+# Ver procesos activos
+lsof -i :8080
+lsof -i :3001
 ```
 
 ## 🚀 Características
@@ -109,8 +221,41 @@ cd email-client
 # Instalar dependencias
 npm install
 
-# Ejecutar en desarrollo
+# Ejecutar en desarrollo (RECOMENDADO)
 npm run dev
+
+# NOTA: Usar modo desarrollo, no producción
+# npm start puede fallar con Next.js 15.5.1
+```
+
+### 🐛 **Troubleshooting Común**
+
+#### Problemas con Next.js
+- **Error**: Next.js 15.5.1 puede tener bugs en modo producción
+- **Solución**: Usar `npm run dev` en lugar de `npm start`
+- **Alternativa**: Downgrade a Next.js 14.2.5 si es necesario
+
+#### Problemas de Sincronización
+- **Síntoma**: Correos no aparecen después de imapsync
+- **Causa**: Cache no actualizado o clasificación pendiente
+- **Solución**:
+  1. Ejecutar `curl -s "http://localhost:8080/api/load-more-emails?start_from=X&batch_size=100"`
+  2. Ejecutar `curl -s "http://localhost:8080/api/reclassify-emails"`
+
+#### Problemas de Autenticación IMAP
+- **Error**: `Authentication failed`
+- **Verificar**:
+  1. Usar `patriciastocker.com` (no `mail.patriciastocker.com`)
+  2. Puerto 993 para SSL
+  3. Contraseña correcta: `$Full5tack$`
+
+#### Puerto Ocupado
+```bash
+# Si el puerto 8080 está ocupado
+lsof -ti:8080 | xargs kill -9
+
+# Si el puerto 3001 está ocupado
+lsof -ti:3001 | xargs kill -9
 ```
 
 ## 🌐 Acceso
@@ -381,3 +526,36 @@ El script `migrate-emails.sh` transfiere todos los correos de `marcas@patriciast
 - ✅ **Deploy automatizado**: Script incluido
 - ✅ **Integración Claude Desktop**: API con CORS habilitado
 - ✅ **Cliente web responsive**: Funcional y profesional
+
+## 📅 **Historial de Cambios**
+
+### 27 Agosto 2025 - Sincronización Completa ✅
+
+#### 🎯 **Problema Identificado y Resuelto:**
+- **Síntoma**: Correos de "test" de Tomás Barrientos no aparecían en el cliente web
+- **Causa**: Los correos estaban en el servidor antiguo (`patriciastocker.com`) pero no en Hostinger
+- **Investigación**: Se descubrió que había 97 correos en el servidor antiguo que no estaban sincronizados
+
+#### 🔧 **Solución Implementada:**
+1. **Configuración correcta de imapsync**: Usar `patriciastocker.com` (no `mail.patriciastocker.com`)
+2. **Sincronización exitosa**: 82 correos nuevos transferidos desde servidor antiguo a Hostinger
+3. **Verificación completa**: Todos los correos de "test" ahora disponibles en el cliente web
+
+#### 📊 **Resultados:**
+- **Correos sincronizados**: 82 correos nuevos
+- **Total final**: 2,461 correos en Hostinger
+- **Correos de "test" encontrados**: 11+ correos de Tomás Barrientos
+- **Tiempo de sincronización**: 63.5 segundos
+- **Estado**: ✅ Completamente funcional
+
+#### 🛠️ **Mejoras en Documentación:**
+- Agregada sección completa de configuración de servidores
+- Comandos de diagnóstico y troubleshooting
+- Lecciones aprendidas y problemas comunes
+- Guía paso a paso para sincronización con imapsync
+
+#### 🎉 **Estado Final:**
+- **Cliente web**: Funcionando en http://localhost:3001
+- **API**: Funcionando en http://localhost:8080
+- **Sincronización**: Completa y exitosa
+- **Todos los correos**: Disponibles y clasificados correctamente

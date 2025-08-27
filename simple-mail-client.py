@@ -25,15 +25,15 @@ from email.mime.image import MIMEImage
 app = Flask(__name__)
 CORS(app)  # Habilitar CORS para todas las rutas
 
-# Configuración del servidor de correo - HOSTINGER
+# Configuración del servidor de correo - HOSTINGER (servidor nuevo)
 IMAP_SERVER = "imap.hostinger.com"  # Servidor IMAP de Hostinger
 IMAP_PORT = 993  # SSL/TLS seguro
 SMTP_SERVER = "smtp.hostinger.com"  # Servidor SMTP de Hostinger
 SMTP_PORT = 465  # SSL/TLS seguro
 EMAIL_USER = "tomas@patriciastocker.com"
-EMAIL_PASS = "$Full5tack$"  # Usar la misma contraseña
+EMAIL_PASS = "$Full5tack$"  # Contraseña
 
-# Ahora tenemos SMTP disponible con Hostinger
+# Cliente conectado a Hostinger (servidor nuevo)
 USE_EXTERNAL_SMTP = False
 
 # Listas globales para almacenar correos
@@ -149,7 +149,7 @@ def load_email_metadata_from_db(folder='INBOX', limit=None, offset=0, account_fi
 
         # Agregar filtro de cuenta si se especifica
         if account_filter:
-            query += ' AND account = ?'
+            query += ' AND account = ? AND account IS NOT NULL'
             params.append(account_filter)
 
         query += ' ORDER BY timestamp DESC'
@@ -198,7 +198,7 @@ def count_emails_by_account(folder='INBOX', account_filter=None):
         params = [folder]
 
         if account_filter:
-            query += ' AND account = ?'
+            query += ' AND account = ? AND account IS NOT NULL'
             params.append(account_filter)
 
         cursor.execute(query, params)
@@ -890,20 +890,30 @@ def load_emails_paginated(page=1, page_size=DEFAULT_PAGE_SIZE, folder='INBOX', u
                     parsed_email['folder'] = folder
 
                     # Determinar la cuenta basándose en el contexto de migración
-                    # TODOS los correos en INBOX de tomas@ están disponibles para ambas cuentas
+                    # Clasificación mejorada: verificar TO, CC y BCC (pero NO FROM)
                     to_addr = parsed_email.get('to', '').lower()
+                    cc_addr = parsed_email.get('cc', '').lower()
+                    bcc_addr = parsed_email.get('bcc', '').lower()
+                    from_addr = parsed_email.get('from', '').lower()
 
-                    # Clasificar por destinatario original, pero todos están disponibles para tomas@
-                    if 'marcas@patriciastocker.com' in to_addr:
-                        parsed_email['account'] = 'marcas@patriciastocker.com'
-                        parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
-                    elif 'tomas@patriciastocker.com' in to_addr:
+                    # Combinar SOLO los campos de destinatarios (no incluir FROM)
+                    all_recipients = f"{to_addr} {cc_addr} {bcc_addr}".lower()
+
+                    # Clasificar SOLO si el correo está dirigido específicamente a la cuenta
+                    # Y NO es un correo enviado DESDE esa cuenta
+                    if ('tomas@patriciastocker.com' in all_recipients and
+                        'tomas@patriciastocker.com' not in from_addr):
                         parsed_email['account'] = 'tomas@patriciastocker.com'
                         parsed_email['original_recipient'] = 'tomas@patriciastocker.com'
+                    elif ('marcas@patriciastocker.com' in all_recipients and
+                          'marcas@patriciastocker.com' not in from_addr):
+                        parsed_email['account'] = 'marcas@patriciastocker.com'
+                        parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
                     else:
-                        # Correos migrados o con otros destinatarios - disponibles para tomas@
-                        parsed_email['account'] = 'tomas@patriciastocker.com'
-                        parsed_email['original_recipient'] = 'migrated'
+                        # Si no está dirigido a ninguna de nuestras cuentas, no clasificar
+                        # Esto incluye correos enviados DESDE nuestras cuentas
+                        parsed_email['account'] = None
+                        parsed_email['original_recipient'] = 'not_for_us'
 
                     # Cachear metadatos en memoria y base de datos
                     emails_metadata_cache[email_id_str] = parsed_email
@@ -915,13 +925,25 @@ def load_emails_paginated(page=1, page_size=DEFAULT_PAGE_SIZE, folder='INBOX', u
 
         # Aplicar filtro de cuenta si se especifica
         if account_filter:
-            # Filtrar correos por cuenta específica
-            filtered_emails = [email for email in emails if email.get('account') == account_filter]
+            # Filtrar correos por cuenta específica (excluir None)
+            # IMPORTANTE: Usar el caché de memoria actualizado, no la base de datos
+            filtered_emails = []
+            for email in emails:
+                email_id = str(email.get('email_id'))
+                # Si el correo está en el caché, usar la clasificación del caché
+                if email_id in emails_metadata_cache:
+                    cached_account = emails_metadata_cache[email_id].get('account')
+                    if cached_account == account_filter and cached_account is not None:
+                        # Actualizar el correo con la clasificación del caché
+                        email['account'] = cached_account
+                        email['original_recipient'] = emails_metadata_cache[email_id].get('original_recipient')
+                        filtered_emails.append(email)
+                else:
+                    # Si no está en caché, usar la clasificación original
+                    if email.get('account') == account_filter and email.get('account') is not None:
+                        filtered_emails.append(email)
 
-            # Obtener el total correcto desde la base de datos
-            filtered_total = count_emails_by_account(folder, account_filter)
-
-            return filtered_emails, filtered_total
+            return filtered_emails, len(filtered_emails)
 
         return emails, total_emails
 
@@ -977,12 +999,16 @@ def check_emails():
                     if len(email_ids) > 0:
                         print(f"📊 INBOX - Rango de IDs: {email_ids[0].decode()} a {email_ids[-1].decode()}")
 
-                    # NUEVA IMPLEMENTACIÓN: Cargar solo headers inicialmente
+                    # IMPLEMENTACIÓN OPTIMIZADA: Cargar correos más recientes con límite razonable
                     print(f"📧 Cargando headers de {len(email_ids)} correos...")
 
-                    # Tomar los últimos INITIAL_LOAD_SIZE correos (más recientes)
-                    recent_email_ids = email_ids[-INITIAL_LOAD_SIZE:] if len(email_ids) > INITIAL_LOAD_SIZE else email_ids
+                    # Cargar los últimos 500 correos (más recientes por ID) para incluir correos nuevos
+                    # pero sin sobrecargar el sistema cargando todos los 2462 correos
+                    load_size = min(500, len(email_ids))  # Máximo 500 correos
+                    recent_email_ids = email_ids[-load_size:]  # Últimos N correos por ID
                     recent_email_ids = list(reversed(recent_email_ids))  # Más recientes primero
+
+                    print(f"📊 Cargando {len(recent_email_ids)} correos más recientes (IDs: {recent_email_ids[0].decode()} a {recent_email_ids[-1].decode()})")
 
                     for email_id in recent_email_ids:
                         email_id_str = email_id.decode()
@@ -994,20 +1020,30 @@ def check_emails():
                                 parsed_email['email_id'] = email_id_str
                                 parsed_email['folder'] = 'INBOX'
                                 # Determinar la cuenta basándose en el contexto de migración
-                                # TODOS los correos en INBOX de tomas@ están disponibles para ambas cuentas
+                                # Clasificación mejorada: verificar TO, CC y BCC (pero NO FROM)
                                 to_addr = parsed_email.get('to', '').lower()
+                                cc_addr = parsed_email.get('cc', '').lower()
+                                bcc_addr = parsed_email.get('bcc', '').lower()
+                                from_addr = parsed_email.get('from', '').lower()
 
-                                # Clasificar por destinatario original, pero todos están disponibles para tomas@
-                                if 'marcas@patriciastocker.com' in to_addr:
-                                    parsed_email['account'] = 'marcas@patriciastocker.com'
-                                    parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
-                                elif 'tomas@patriciastocker.com' in to_addr:
+                                # Combinar SOLO los campos de destinatarios (no incluir FROM)
+                                all_recipients = f"{to_addr} {cc_addr} {bcc_addr}".lower()
+
+                                # Clasificar SOLO si el correo está dirigido específicamente a la cuenta
+                                # Y NO es un correo enviado DESDE esa cuenta
+                                if ('tomas@patriciastocker.com' in all_recipients and
+                                    'tomas@patriciastocker.com' not in from_addr):
                                     parsed_email['account'] = 'tomas@patriciastocker.com'
                                     parsed_email['original_recipient'] = 'tomas@patriciastocker.com'
+                                elif ('marcas@patriciastocker.com' in all_recipients and
+                                      'marcas@patriciastocker.com' not in from_addr):
+                                    parsed_email['account'] = 'marcas@patriciastocker.com'
+                                    parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
                                 else:
-                                    # Correos migrados o con otros destinatarios - disponibles para tomas@
-                                    parsed_email['account'] = 'tomas@patriciastocker.com'
-                                    parsed_email['original_recipient'] = 'migrated'
+                                    # Si no está dirigido a ninguna de nuestras cuentas, no clasificar
+                                    # Esto incluye correos enviados DESDE nuestras cuentas
+                                    parsed_email['account'] = None
+                                    parsed_email['original_recipient'] = 'not_for_us'
 
                                 # Cachear metadatos
                                 emails_metadata_cache[email_id_str] = parsed_email
@@ -1018,22 +1054,41 @@ def check_emails():
             except Exception as e:
                 print(f"❌ Error procesando INBOX: {e}")
 
-            # Aplicar clasificación automática a correos que no la tengan
+            # Aplicar clasificación automática mejorada a correos que no la tengan
             for email in all_emails:
                 if email.get('account') is None:
                     to_addr = email.get('to', '').lower()
-                    if 'marcas@patriciastocker.com' in to_addr:
-                        email['account'] = 'marcas@patriciastocker.com'
-                        email['original_recipient'] = 'marcas@patriciastocker.com'
-                    elif 'tomas@patriciastocker.com' in to_addr:
+                    cc_addr = email.get('cc', '').lower()
+                    bcc_addr = email.get('bcc', '').lower()
+                    from_addr = email.get('from', '').lower()
+
+                    # Combinar SOLO los campos de destinatarios (no incluir FROM)
+                    all_recipients = f"{to_addr} {cc_addr} {bcc_addr}".lower()
+
+                    # Clasificar SOLO si está dirigido específicamente a nuestras cuentas
+                    # Y NO es un correo enviado DESDE esa cuenta
+                    if ('tomas@patriciastocker.com' in all_recipients and
+                        'tomas@patriciastocker.com' not in from_addr):
                         email['account'] = 'tomas@patriciastocker.com'
                         email['original_recipient'] = 'tomas@patriciastocker.com'
+                    elif ('marcas@patriciastocker.com' in all_recipients and
+                          'marcas@patriciastocker.com' not in from_addr):
+                        email['account'] = 'marcas@patriciastocker.com'
+                        email['original_recipient'] = 'marcas@patriciastocker.com'
                     else:
-                        email['account'] = 'tomas@patriciastocker.com'
-                        email['original_recipient'] = 'migrated'
+                        # No clasificar correos que no son para nosotros
+                        # Esto incluye correos enviados DESDE nuestras cuentas
+                        email['account'] = None
+                        email['original_recipient'] = 'not_for_us'
 
-            # Los correos ya están ordenados (más recientes primero)
+            # Ordenar correos por timestamp (más recientes primero) para asegurar orden cronológico correcto
+            all_emails = sorted(all_emails, key=lambda x: x.get('timestamp', 0), reverse=True)
             emails_list = all_emails
+
+            print(f"📊 DEBUG: emails_list actualizada con {len(emails_list)} correos")
+            if len(emails_list) > 0:
+                print(f"📊 DEBUG: Primer correo - ID: {emails_list[0].get('email_id')}, timestamp: {emails_list[0].get('timestamp')}")
+                print(f"📊 DEBUG: Último correo - ID: {emails_list[-1].get('email_id')}, timestamp: {emails_list[-1].get('timestamp')}")
 
             # Procesar correos enviados (INBOX.Sent)
             sent_emails = []
@@ -1331,7 +1386,7 @@ def api_emails():
 
     filtered_emails = emails_list
     if account_filter:
-        filtered_emails = [email for email in emails_list if email.get('account') == account_filter]
+        filtered_emails = [email for email in emails_list if email.get('account') == account_filter and email.get('account') is not None]
 
     return jsonify({
         'emails': filtered_emails,
@@ -1372,7 +1427,7 @@ def api_all_emails():
     filtered_emails = emails_list
 
     if account_filter:
-        filtered_emails = [email for email in emails_list if email.get('account') == account_filter]
+        filtered_emails = [email for email in emails_list if email.get('account') == account_filter and email.get('account') is not None]
 
     # Ordenar por timestamp (más recientes primero)
     filtered_emails = sorted(filtered_emails, key=lambda x: x.get('timestamp', 0), reverse=True)
@@ -1487,17 +1542,30 @@ def load_more_emails():
                         parsed_email['email_id'] = email_id_str
                         parsed_email['folder'] = 'INBOX'
 
-                        # Clasificar por destinatario
+                        # Clasificación mejorada por destinatario
                         to_addr = parsed_email.get('to', '').lower()
-                        if 'marcas@patriciastocker.com' in to_addr:
-                            parsed_email['account'] = 'marcas@patriciastocker.com'
-                            parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
-                        elif 'tomas@patriciastocker.com' in to_addr:
+                        cc_addr = parsed_email.get('cc', '').lower()
+                        bcc_addr = parsed_email.get('bcc', '').lower()
+                        from_addr = parsed_email.get('from', '').lower()
+
+                        # Combinar SOLO los campos de destinatarios (no incluir FROM)
+                        all_recipients = f"{to_addr} {cc_addr} {bcc_addr}".lower()
+
+                        # Clasificar SOLO si está dirigido específicamente a nuestras cuentas
+                        # Y NO es un correo enviado DESDE esa cuenta
+                        if ('tomas@patriciastocker.com' in all_recipients and
+                            'tomas@patriciastocker.com' not in from_addr):
                             parsed_email['account'] = 'tomas@patriciastocker.com'
                             parsed_email['original_recipient'] = 'tomas@patriciastocker.com'
+                        elif ('marcas@patriciastocker.com' in all_recipients and
+                              'marcas@patriciastocker.com' not in from_addr):
+                            parsed_email['account'] = 'marcas@patriciastocker.com'
+                            parsed_email['original_recipient'] = 'marcas@patriciastocker.com'
                         else:
-                            parsed_email['account'] = 'tomas@patriciastocker.com'
-                            parsed_email['original_recipient'] = 'migrated'
+                            # No clasificar correos que no son para nosotros
+                            # Esto incluye correos enviados DESDE nuestras cuentas
+                            parsed_email['account'] = None
+                            parsed_email['original_recipient'] = 'not_for_us'
 
                         # Cachear metadatos
                         emails_metadata_cache[email_id_str] = parsed_email
@@ -1526,49 +1594,218 @@ def load_more_emails():
 
 @app.route('/api/reclassify-emails')
 def reclassify_emails():
-    """Reclasificar todos los correos en caché y guardarlos en la base de datos"""
+    """Reclasificar TODOS los correos desde la base de datos"""
     try:
         reclassified_count = 0
         updated_count = 0
 
-        print("🔄 Iniciando reclasificación de correos...")
+        print("🔄 Iniciando reclasificación completa de correos desde base de datos...")
 
-        # Procesar todos los correos en el caché de memoria
-        for email_id, email_data in emails_metadata_cache.items():
-            # Aplicar lógica de clasificación
+        # Obtener TODOS los correos desde la base de datos
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT email_id, subject, sender, recipient, cc, bcc, timestamp, folder, message_id, account, original_recipient
+            FROM emails
+        ''')
+
+        all_emails = cursor.fetchall()
+        conn.close()
+
+        print(f"📊 Procesando {len(all_emails)} correos desde la base de datos...")
+
+        # Procesar cada correo
+        for email_row in all_emails:
+            email_id, subject, sender, recipient, cc, bcc, timestamp, folder, message_id, old_account, old_original_recipient = email_row
+
+            # Crear estructura de datos similar al caché
+            email_data = {
+                'email_id': str(email_id),
+                'subject': subject or '',
+                'from': sender or '',
+                'to': recipient or '',
+                'cc': cc or '',
+                'bcc': bcc or '',
+                'timestamp': timestamp,
+                'folder': folder,
+                'message_id': message_id,
+                'account': old_account,
+                'original_recipient': old_original_recipient
+            }
+
+            # Aplicar lógica de clasificación mejorada
             to_addr = email_data.get('to', '').lower()
+            cc_addr = email_data.get('cc', '').lower()
+            bcc_addr = email_data.get('bcc', '').lower()
+            from_addr = email_data.get('from', '').lower()
 
-            # Determinar la cuenta correcta
-            if 'marcas@patriciastocker.com' in to_addr:
-                email_data['account'] = 'marcas@patriciastocker.com'
-                email_data['original_recipient'] = 'marcas@patriciastocker.com'
-            elif 'tomas@patriciastocker.com' in to_addr:
-                email_data['account'] = 'tomas@patriciastocker.com'
-                email_data['original_recipient'] = 'tomas@patriciastocker.com'
-            else:
-                # Correos migrados o con otros destinatarios - disponibles para tomas@
-                email_data['account'] = 'tomas@patriciastocker.com'
-                email_data['original_recipient'] = 'migrated'
+            # Combinar SOLO los campos de destinatarios (no incluir FROM)
+            all_recipients = f"{to_addr} {cc_addr} {bcc_addr}".lower()
 
-            # Guardar en la base de datos
-            save_email_metadata_to_db(email_data)
-            reclassified_count += 1
+            # Determinar la cuenta correcta SOLO si está dirigido específicamente a nosotros
+            # Y NO es un correo enviado DESDE esa cuenta
+            new_account = None
+            new_original_recipient = 'not_for_us'
 
-            # Actualizar el caché de memoria
-            emails_metadata_cache[email_id] = email_data
-            updated_count += 1
+            if ('tomas@patriciastocker.com' in all_recipients and
+                'tomas@patriciastocker.com' not in from_addr):
+                new_account = 'tomas@patriciastocker.com'
+                new_original_recipient = 'tomas@patriciastocker.com'
+            elif ('marcas@patriciastocker.com' in all_recipients and
+                  'marcas@patriciastocker.com' not in from_addr):
+                new_account = 'marcas@patriciastocker.com'
+                new_original_recipient = 'marcas@patriciastocker.com'
 
-        print(f"✅ Reclasificación completada: {reclassified_count} correos procesados")
+            # Solo actualizar si cambió la clasificación
+            if new_account != old_account or new_original_recipient != old_original_recipient:
+                email_data['account'] = new_account
+                email_data['original_recipient'] = new_original_recipient
+
+                # Guardar en la base de datos
+                save_email_metadata_to_db(email_data)
+                reclassified_count += 1
+
+                # Actualizar el caché de memoria si existe
+                if str(email_id) in emails_metadata_cache:
+                    emails_metadata_cache[str(email_id)].update({
+                        'account': new_account,
+                        'original_recipient': new_original_recipient
+                    })
+                    updated_count += 1
+
+        print(f"✅ Reclasificación completa: {reclassified_count} correos reclasificados de {len(all_emails)} totales")
 
         return jsonify({
             'success': True,
             'reclassified': reclassified_count,
             'updated_cache': updated_count,
-            'total_in_cache': len(emails_metadata_cache)
+            'total_processed': len(all_emails)
         })
 
     except Exception as e:
         print(f"❌ Error en reclasificación: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/fix-specific-emails')
+def fix_specific_emails():
+    """Reclasificar correos específicos problemáticos"""
+    try:
+        problematic_ids = ['2395', '2397', '2398', '2399']
+        fixed_count = 0
+
+        print(f"🔧 Reclasificando correos problemáticos específicos: {problematic_ids}")
+
+        for email_id in problematic_ids:
+            if email_id in emails_metadata_cache:
+                email_data = emails_metadata_cache[email_id]
+
+                # Aplicar lógica de clasificación mejorada
+                to_addr = email_data.get('to', '').lower()
+                cc_addr = email_data.get('cc', '').lower()
+                bcc_addr = email_data.get('bcc', '').lower()
+                from_addr = email_data.get('from', '').lower()
+
+                # Combinar SOLO los campos de destinatarios (no incluir FROM)
+                all_recipients = f"{to_addr} {cc_addr} {bcc_addr}".lower()
+
+                print(f"📧 ID {email_id}:")
+                print(f"   TO: {to_addr}")
+                print(f"   FROM: {from_addr}")
+                print(f"   ALL_RECIPIENTS: {all_recipients}")
+                print(f"   tomas@ in recipients: {'tomas@patriciastocker.com' in all_recipients}")
+                print(f"   tomas@ in from: {'tomas@patriciastocker.com' in from_addr}")
+
+                # Determinar la cuenta correcta
+                new_account = None
+                new_original_recipient = 'not_for_us'
+
+                if ('tomas@patriciastocker.com' in all_recipients and
+                    'tomas@patriciastocker.com' not in from_addr):
+                    new_account = 'tomas@patriciastocker.com'
+                    new_original_recipient = 'tomas@patriciastocker.com'
+                elif ('marcas@patriciastocker.com' in all_recipients and
+                      'marcas@patriciastocker.com' not in from_addr):
+                    new_account = 'marcas@patriciastocker.com'
+                    new_original_recipient = 'marcas@patriciastocker.com'
+
+                # Actualizar clasificación
+                old_account = email_data.get('account')
+                email_data['account'] = new_account
+                email_data['original_recipient'] = new_original_recipient
+
+                print(f"   CAMBIO: {old_account} -> {new_account}")
+
+                # Actualizar el caché
+                emails_metadata_cache[email_id] = email_data
+                fixed_count += 1
+
+        print(f"✅ Correos específicos reclasificados: {fixed_count}")
+
+        return jsonify({
+            'success': True,
+            'fixed': fixed_count,
+            'processed_ids': problematic_ids
+        })
+
+    except Exception as e:
+        print(f"❌ Error reclasificando correos específicos: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/debug-email-2462')
+def api_debug_email_2462():
+    """Diagnosticar específicamente el correo ID 2462"""
+    try:
+        email_id = '2462'
+
+        # Verificar si está en caché de memoria
+        if email_id not in emails_metadata_cache:
+            return jsonify({'error': f'Correo ID {email_id} no está en caché de memoria'})
+
+        email_data = emails_metadata_cache[email_id]
+
+        # Aplicar lógica de clasificación
+        to_addr = email_data.get('to', '').lower()
+        cc_addr = email_data.get('cc', '').lower()
+        bcc_addr = email_data.get('bcc', '').lower()
+        from_addr = email_data.get('from', '').lower()
+
+        # Combinar SOLO los campos de destinatarios (no incluir FROM)
+        all_recipients = f"{to_addr} {cc_addr} {bcc_addr}".lower()
+
+        # Determinar la cuenta correcta
+        new_account = None
+        new_original_recipient = 'not_for_us'
+
+        if ('tomas@patriciastocker.com' in all_recipients and
+            'tomas@patriciastocker.com' not in from_addr):
+            new_account = 'tomas@patriciastocker.com'
+            new_original_recipient = 'tomas@patriciastocker.com'
+        elif ('marcas@patriciastocker.com' in all_recipients and
+              'marcas@patriciastocker.com' not in from_addr):
+            new_account = 'marcas@patriciastocker.com'
+            new_original_recipient = 'marcas@patriciastocker.com'
+
+        # Forzar actualización de la clasificación
+        old_account = email_data.get('account')
+        email_data['account'] = new_account
+        email_data['original_recipient'] = new_original_recipient
+
+        return jsonify({
+            'email_id': email_id,
+            'subject': email_data.get('subject', ''),
+            'to': to_addr,
+            'from': from_addr,
+            'old_account': old_account,
+            'new_account': new_account,
+            'all_recipients': all_recipients,
+            'tomas_in_recipients': 'tomas@patriciastocker.com' in all_recipients,
+            'tomas_in_from': 'tomas@patriciastocker.com' in from_addr,
+            'classification_updated': old_account != new_account
+        })
+
+    except Exception as e:
+        print(f"❌ Error en diagnóstico del correo 2462: {e}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/send-email', methods=['POST'])

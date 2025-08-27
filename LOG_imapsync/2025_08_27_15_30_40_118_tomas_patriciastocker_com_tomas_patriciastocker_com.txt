@@ -1,0 +1,363 @@
+Here is imapsync 2.290 on host MacBook-Pro-de-Tomas.local, a darwin system with 0.1/8.0 free GiB of RAM, 69.47% used by processes.
+with Perl 5.34.1 and Mail::IMAPClient 3.43
+Transfer started at Wednesday 27 August 2025-08-27 15:30:40 -0400 -04
+PID is 33298 my PPID is 4992
+Log file is LOG_imapsync/2025_08_27_15_30_40_118_tomas_patriciastocker_com_tomas_patriciastocker_com.txt ( to change it, use --logfile path ; or use --nolog to turn off logging )
+Load is 3.29 2.85 2.50 on 8 cores
+Real user id is a1234 (uid 501)
+Effective user id is a1234 (euid 501)
+$RCSfile: imapsync,v $ $Revision: 2.290 $ $Date: 2024/08/20 10:37:23 $ 
+Command line used, run by /usr/bin/perl5.34:
+/opt/homebrew/Cellar/imapsync/2.290_1/libexec/bin/imapsync --host1 patriciastocker.com --user1 tomas@patriciastocker.com --password1 MASKED --host2 imap.hostinger.com --user2 tomas@patriciastocker.com --password2 MASKED --folder INBOX
+Current directory is /Users/a1234/Desktop/Patricia-Stocker/patricia-stocker-intranet
+Temp directory is /Users/a1234/tmp ( to change it use --tmpdir dirpath )
+Creating temp directory /Users/a1234/tmp
+kill -QUIT 33298 # special behavior: call to sub catch_exit
+kill -TERM 33298 # special behavior: call to sub catch_exit
+kill -INT 33298 # special behavior: call to sub catch_reconnect
+kill -HUP 33298 # special behavior: call to sub catch_print
+kill -USR1 33298 # special behavior: call to sub toggle_sleep
+Logging to a logfile by default. To turn off logging, use --nolog
+File /Users/a1234/tmp/imapsync.pid does not exist
+PID file is /Users/a1234/tmp/imapsync.pid ( to change it, use --pidfile filepath ; to avoid it use --pidfile "" )
+Writing my PID 33298 in /Users/a1234/tmp/imapsync.pid
+Writing also my logfile name in /Users/a1234/tmp/imapsync.pid : LOG_imapsync/2025_08_27_15_30_40_118_tomas_patriciastocker_com_tomas_patriciastocker_com.txt
+Modules version list ( use --no-modulesversion to turn off printing this Perl modules list ):
+Authen::NTLM         1.09
+CGI                  4.48
+Compress::Zlib       2.102
+Crypt::OpenSSL::RSA  0.31
+Digest::HMAC_MD5     1.01
+Digest::HMAC_SHA1    1.03
+Digest::MD5          2.58
+Digest::SHA          6.02
+Encode               3.0801
+Encode::IMAPUTF7     1.05
+File::Copy::Recursive 0.45
+File::Spec           3.80
+Getopt::Long         2.52
+HTML::Entities       3.69
+IO::Socket           1.46
+IO::Socket::INET     1.46
+IO::Socket::INET6    2.72
+IO::Socket::IP       0.42
+IO::Socket::SSL      2.068
+IO::Tee              0.65
+JSON                 4.10
+JSON::WebToken       0.10
+LWP                  6.44
+MIME::Base64         3.16
+Mail::IMAPClient     3.43
+Net::Ping            2.74
+Net::SSLeay          1.88
+Term::ReadKey        2.38
+Test::MockObject     1.20200122
+Time::HiRes          1.9767
+Unicode::String      2.10
+
+Info: will resync flags for already transferred messages. Use --noresyncflags to not resync flags.
+Host1: probing ssl on port 993 ( use --nosslcheck to avoid this ssl probe ) 
+Probing imap ssl on host patriciastocker.com port 993, got banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Dovecot ready.
+Host1: sslcheck detected open ssl port 993 so turning ssl on (use --nossl1 --notls1 to turn off SSL and TLS wizardry)
+Host2: probing ssl on port 993 ( use --nosslcheck to avoid this ssl probe ) 
+Probing imap ssl on host imap.hostinger.com port 993, got banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Server ready.
+Host2: sslcheck detected open ssl port 993 so turning ssl on (use --nossl2 --notls2 to turn off SSL and TLS wizardry)
+SSL debug mode level is --debugssl 1 (can be set from 0 meaning no debug to 4 meaning max debug)
+Host1: SSL default mode is like --sslargs1 "SSL_verify_mode=0", meaning for host1 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host1: Use --sslargs1 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host1
+Host2: SSL default mode is like --sslargs2 "SSL_verify_mode=0", meaning for host2 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host2: Use --sslargs2 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host2
+Info: turned ON syncinternaldates, will set the internal dates (arrival dates) on host2 same as host1.
+Host1: will try to use LOGIN authentication on host1
+Host2: will try to use LOGIN authentication on host2
+Host1: imap connection timeout is 120 seconds
+Host2: imap connection timeout is 120 seconds
+Host1: imap connection keepalive is on on host1. Use --nokeepalive1 to disable it.
+Host2: imap connection keepalive is on on host2. Use --nokeepalive2 to disable it.
+Host1: IMAP server [patriciastocker.com] port [993] user [tomas@patriciastocker.com]
+Host2: IMAP server [imap.hostinger.com] port [993] user [tomas@patriciastocker.com]
+Host1: connecting and login on host1 [patriciastocker.com] port [993] with user [tomas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host1 IP address: 45.239.218.18 Local IP address: 192.168.1.20
+Host1 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Dovecot ready.
+Host1 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host1: patriciastocker.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host1: success login on [patriciastocker.com] with user [tomas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host2: connecting and login on host2 [imap.hostinger.com] port [993] with user [tomas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host2 IP address: 172.65.188.64 Local IP address: 192.168.1.20
+Host2 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Server ready.
+Host2 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host2: imap.hostinger.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host2: success login on [imap.hostinger.com] with user [tomas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host1: state Authenticated
+Host2: state Authenticated
+Host1 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE NAMESPACE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host2 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host1: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host1")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+Host2: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host2")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+
+Host2: QUOTA capability found, presented in raw IMAP on next lines
+Sending: 5 GETQUOTAROOT INBOX
+Sent 22 bytes
+Read: 	* QUOTAROOT INBOX "Storage quota"
+  	* QUOTA "Storage quota" (STORAGE 1264163 10485760 MESSAGE 2398 100000)
+  	5 OK Getquotaroot completed (0.063 + 0.000 + 0.062 secs).
+
+Host2: Quota current storage is 1294502912 bytes. Limit is 10737418240 bytes. So 12.06 % full
+Host1: Compression is off. Use --compress1 to allow compression on host1
+Host2: Compression is off. Use --compress2 to allow compression on host2
+Compression often generates annoying errors, especially with SSL connexions, Gmail, Office365. So, avoid it.
+Host1: found 7 folders.
+Host2: found 6 folders.
+Host1: guessing separator from folder listing: [.]
+Host1: separator given by NAMESPACE: [.]
+Host2: guessing separator from folder listing: [.]
+Host2: separator given by NAMESPACE: [.]
+Host1: guessing prefix from folder listing: [INBOX.]
+Host1: prefix given by NAMESPACE: [INBOX.]
+Host2: guessing prefix from folder listing: [INBOX.]
+Host2: prefix given by NAMESPACE: [INBOX.]
+Host1: separator and prefix: [.][INBOX.]
+Host2: separator and prefix: [.][INBOX.]
+Host1: Checking wanted folders exist. Use --nocheckfoldersexist to avoid this check (shared of public namespace targeted).
+Host1: Checking wanted folders are selectable. Use --nocheckselectable to avoid this check.
+Turned off automapping folders ( use --automap to turn on automapping )
+
+++++ Listing folders
+All foldernames are presented between brackets like [X] where X is the foldername.
+When a foldername contains non-ASCII characters it is presented in the form
+[X] = [Y] where
+X is the imap foldername you have to use in command line options and
+Y is the utf8 output just printed for convenience, to recognize it.
+
+Host1: folders list (first the raw imap format then the [X] = [Y]):
+* LIST (\HasChildren) "." INBOX
+* LIST (\HasNoChildren \UnMarked \Archive) "." INBOX.Archive
+* LIST (\HasNoChildren \UnMarked \Junk) "." INBOX.spam
+* LIST (\HasNoChildren \UnMarked \Trash) "." INBOX.Trash
+* LIST (\HasNoChildren \UnMarked \Sent) "." INBOX.Sent
+* LIST (\HasNoChildren) "." INBOX.Junk
+* LIST (\HasNoChildren \UnMarked \Drafts) "." INBOX.Drafts
+10 OK List completed (0.001 + 0.000 secs).
+
+[INBOX]
+[INBOX.Archive]
+[INBOX.Drafts]
+[INBOX.Junk]
+[INBOX.Sent]
+[INBOX.Trash]
+[INBOX.spam]
+
+Host2: folders list (first the raw imap format then the [X] = [Y]):
+* LIST (\HasChildren) "." INBOX
+* LIST (\HasNoChildren \UnMarked) "." INBOX.Archive
+* LIST (\HasNoChildren \UnMarked \Trash) "." INBOX.Trash
+* LIST (\HasNoChildren \UnMarked \Junk) "." INBOX.Junk
+* LIST (\HasNoChildren \UnMarked \Sent) "." INBOX.Sent
+* LIST (\HasNoChildren \UnMarked \Drafts) "." INBOX.Drafts
+10 OK List completed (0.001 + 0.000 secs).
+
+[INBOX]
+[INBOX.Archive]
+[INBOX.Drafts]
+[INBOX.Junk]
+[INBOX.Sent]
+[INBOX.Trash]
+
+Checking SEARCH ALL works on both accounts. To avoid that check, use --nochecknoabletosearch
+Host1: checking if SEARCH ALL works on INBOX
+Host1: folder [INBOX] has 97 messages mentioned by SELECT
+Host1: folder [INBOX] has 97 messages found by SEARCH ALL
+Host1: folder [INBOX] has the same messages count (97) by SELECT and SEARCH ALL
+Host2: checking if SEARCH ALL works on INBOX
+Host2: folder [INBOX] has 2379 messages mentioned by SELECT
+Host2: folder [INBOX] has 2379 messages found by SEARCH ALL
+Host2: folder [INBOX] has the same messages count (2379) by SELECT and SEARCH ALL
+Good! SEARCH ALL works on both accounts.
+
+Folders sizes before the synchronization. It can take some time. Be patient.
+You can remove foldersizes listings by using "--nofoldersizes" and "--nofoldersizesatend"
+but then you will also lose the ETA (Estimation Time of Arrival) given after each message copy.
+Host1 folder     1/1 [INBOX]                             Size:  20782662 Messages:    97 Biggest:   3670485
+Host2 folder     1/1 [INBOX]                             Size: 1290793727 Messages:  2379 Biggest:  35448814
+Host2-Host1                                                    1270011065            2282           31778329
+
+Host1 Nb folders:                     1 folders
+Host2 Nb folders:                     1 folders
+
+Host1 Nb messages:                   97 messages
+Host2 Nb messages:                 2379 messages
+
+Host1 Total size:              20782662 bytes (19.820 MiB)
+Host2 Total size:            1290793727 bytes (1.202 GiB)
+
+Host1 Biggest message:          3670485 bytes (3.500 MiB)
+Host2 Biggest message:         35448814 bytes (33.807 MiB)
+
+Time spent on sizing:         6.5 seconds
+++++ Looping on each one of 1 folders to sync
+ETA: Wednesday 27 August 2025-08-27 15:30:46 -0400 -04  0 s  97/97 msgs left
+Folder     1/1 [INBOX]                             -> [INBOX]                            
+Host1: folder [INBOX] has 97 messages in total (mentioned by SELECT)
+Host2: folder [INBOX] has 2379 messages in total (mentioned by SELECT)
+Host2: folder [INBOX] permanentflags: 
+Host1: folder [INBOX] considering 97 messages
+Host2: folder [INBOX] considering 2379 messages
+Host1: folder [INBOX] selected 97 messages, duplicates 0
+Host2: folder [INBOX] selected 2379 messages, duplicates 0
+msg INBOX/1 {81001}           copied to INBOX/2479       0.29 msgs/s  22.719 KiB/s 79.103 KiB copied ETA: Wednesday 27 August 2025-08-27 15:36:24 -0400 -04  334 s  96/97 msgs left
+msg INBOX/2 {305598}          copied to INBOX/2480       0.45 msgs/s  84.647 KiB/s 377.538 KiB copied ETA: Wednesday 27 August 2025-08-27 15:34:22 -0400 -04  212 s  95/97 msgs left
+msg INBOX/3 {305421}          copied to INBOX/2481       0.58 msgs/s  130.387 KiB/s 675.801 KiB copied ETA: Wednesday 27 August 2025-08-27 15:33:34 -0400 -04  162 s  94/97 msgs left
+msg INBOX/4 {305374}          copied to INBOX/2482       0.68 msgs/s  165.853 KiB/s 974.018 KiB copied ETA: Wednesday 27 August 2025-08-27 15:33:09 -0400 -04  137 s  93/97 msgs left
+msg INBOX/6 {305393}          copied to INBOX/2483       0.76 msgs/s  193.096 KiB/s 1.242 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:53 -0400 -04  120 s  91/97 msgs left
+msg INBOX/7 {305659}          copied to INBOX/2484       0.81 msgs/s  212.507 KiB/s 1.534 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:44 -0400 -04  111 s  90/97 msgs left
+msg INBOX/8 {307051}          copied to INBOX/2485       0.85 msgs/s  228.064 KiB/s 1.827 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:39 -0400 -04  104 s  89/97 msgs left
+msg INBOX/9 {307054}          copied to INBOX/2486       0.90 msgs/s  243.849 KiB/s 2.120 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:33 -0400 -04  98 s  88/97 msgs left
+msg INBOX/10 {306158}         copied to INBOX/2487       0.94 msgs/s  257.858 KiB/s 2.412 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:28 -0400 -04  93 s  87/97 msgs left
+msg INBOX/11 {8628}           copied to INBOX/2488       0.99 msgs/s  244.757 KiB/s 2.420 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:23 -0400 -04  87 s  86/97 msgs left
+msg INBOX/12 {824349}         copied to INBOX/2489       1.00 msgs/s  298.649 KiB/s 3.206 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:22 -0400 -04  85 s  85/97 msgs left
+msg INBOX/13 {3876}           copied to INBOX/2490       1.01 msgs/s  276.087 KiB/s 3.210 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:21 -0400 -04  83 s  84/97 msgs left
+msg INBOX/15 {4983}           copied to INBOX/2491       1.04 msgs/s  264.139 KiB/s 3.214 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:17 -0400 -04  79 s  82/97 msgs left
+msg INBOX/17 {122564}         copied to INBOX/2492       1.07 msgs/s  260.263 KiB/s 3.331 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:14 -0400 -04  75 s  80/97 msgs left
+msg INBOX/18 {10798}          copied to INBOX/2493       1.10 msgs/s  250.408 KiB/s 3.342 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:12 -0400 -04  72 s  79/97 msgs left
+msg INBOX/19 {3670485}        copied to INBOX/2494       1.05 msgs/s  461.682 KiB/s 6.842 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:15 -0400 -04  74 s  78/97 msgs left
+msg INBOX/20 {45685}          copied to INBOX/2495       1.08 msgs/s  448.117 KiB/s 6.886 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:13 -0400 -04  71 s  77/97 msgs left
+msg INBOX/21 {4131}           copied to INBOX/2496       1.07 msgs/s  420.448 KiB/s 6.890 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:14 -0400 -04  71 s  76/97 msgs left
+msg INBOX/22 {4937}           copied to INBOX/2497       1.10 msgs/s  407.196 KiB/s 6.894 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:12 -0400 -04  68 s  75/97 msgs left
+msg INBOX/23 {4754}           copied to INBOX/2498       1.12 msgs/s  394.969 KiB/s 6.899 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:10 -0400 -04  66 s  74/97 msgs left
+msg INBOX/25 {19467}          copied to INBOX/2499       1.12 msgs/s  378.201 KiB/s 6.917 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:09 -0400 -04  64 s  72/97 msgs left
+msg INBOX/26 {16027}          copied to INBOX/2500       1.14 msgs/s  368.300 KiB/s 6.933 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:08 -0400 -04  62 s  71/97 msgs left
+msg INBOX/27 {16027}          copied to INBOX/2501       1.16 msgs/s  358.917 KiB/s 6.948 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:06 -0400 -04  60 s  70/97 msgs left
+msg INBOX/28 {16027}          copied to INBOX/2502       1.18 msgs/s  350.033 KiB/s 6.963 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:05 -0400 -04  59 s  69/97 msgs left
+msg INBOX/29 {16027}          copied to INBOX/2503       1.19 msgs/s  341.521 KiB/s 6.978 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:04 -0400 -04  57 s  68/97 msgs left
+msg INBOX/30 {16027}          copied to INBOX/2504       1.21 msgs/s  333.472 KiB/s 6.994 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:03 -0400 -04  55 s  67/97 msgs left
+msg INBOX/31 {16027}          copied to INBOX/2505       1.23 msgs/s  325.742 KiB/s 7.009 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:02 -0400 -04  54 s  66/97 msgs left
+msg INBOX/32 {16027}          copied to INBOX/2506       1.24 msgs/s  317.926 KiB/s 7.024 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:01 -0400 -04  53 s  65/97 msgs left
+msg INBOX/33 {16027}          copied to INBOX/2507       1.25 msgs/s  311.070 KiB/s 7.040 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:00 -0400 -04  51 s  64/97 msgs left
+msg INBOX/34 {42465}          copied to INBOX/2508       1.26 msgs/s  305.088 KiB/s 7.080 MiB copied ETA: Wednesday 27 August 2025-08-27 15:32:00 -0400 -04  50 s  63/97 msgs left
+msg INBOX/35 {16027}          copied to INBOX/2509       1.27 msgs/s  297.822 KiB/s 7.095 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:59 -0400 -04  49 s  62/97 msgs left
+msg INBOX/36 {16027}          copied to INBOX/2510       1.28 msgs/s  291.803 KiB/s 7.111 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:59 -0400 -04  48 s  61/97 msgs left
+msg INBOX/37 {11175}          copied to INBOX/2511       1.29 msgs/s  284.565 KiB/s 7.121 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:58 -0400 -04  47 s  60/97 msgs left
+msg INBOX/38 {16027}          copied to INBOX/2512       1.30 msgs/s  279.114 KiB/s 7.137 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:58 -0400 -04  45 s  59/97 msgs left
+msg INBOX/39 {16027}          copied to INBOX/2513       1.31 msgs/s  273.856 KiB/s 7.152 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:57 -0400 -04  44 s  58/97 msgs left
+msg INBOX/40 {13621}          copied to INBOX/2514       1.32 msgs/s  268.836 KiB/s 7.165 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:57 -0400 -04  43 s  57/97 msgs left
+msg INBOX/41 {32949}          copied to INBOX/2515       1.33 msgs/s  264.624 KiB/s 7.196 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:56 -0400 -04  42 s  56/97 msgs left
+msg INBOX/42 {29690}          copied to INBOX/2516       1.34 msgs/s  260.494 KiB/s 7.225 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:56 -0400 -04  41 s  55/97 msgs left
+msg INBOX/43 {43079}          copied to INBOX/2517       1.35 msgs/s  256.758 KiB/s 7.266 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:55 -0400 -04  40 s  54/97 msgs left
+msg INBOX/44 {46898}          copied to INBOX/2518       1.35 msgs/s  252.924 KiB/s 7.310 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:55 -0400 -04  39 s  53/97 msgs left
+msg INBOX/45 {15579}          copied to INBOX/2519       1.35 msgs/s  247.685 KiB/s 7.325 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:55 -0400 -04  38 s  52/97 msgs left
+msg INBOX/46 {4309}           copied to INBOX/2520       1.36 msgs/s  243.368 KiB/s 7.329 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:54 -0400 -04  37 s  51/97 msgs left
+msg INBOX/47 {10244}          copied to INBOX/2521       1.37 msgs/s  239.190 KiB/s 7.339 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:54 -0400 -04  37 s  50/97 msgs left
+msg INBOX/48 {3149}           copied to INBOX/2522       1.38 msgs/s  235.198 KiB/s 7.342 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:54 -0400 -04  36 s  49/97 msgs left
+msg INBOX/49 {978623}         copied to INBOX/2523       1.38 msgs/s  259.024 KiB/s 8.275 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:54 -0400 -04  35 s  48/97 msgs left
+msg INBOX/51 {123210}         copied to INBOX/2524       1.38 msgs/s  258.040 KiB/s 8.393 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:53 -0400 -04  33 s  46/97 msgs left
+msg INBOX/52 {13145}          copied to INBOX/2525       1.39 msgs/s  254.010 KiB/s 8.406 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:52 -0400 -04  32 s  45/97 msgs left
+msg INBOX/54 {3441}           copied to INBOX/2526       1.39 msgs/s  250.087 KiB/s 8.409 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:51 -0400 -04  31 s  43/97 msgs left
+msg INBOX/55 {28445}          copied to INBOX/2527       1.40 msgs/s  246.887 KiB/s 8.436 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:51 -0400 -04  30 s  42/97 msgs left
+msg INBOX/57 {4149}           copied to INBOX/2528       1.41 msgs/s  243.198 KiB/s 8.440 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:50 -0400 -04  28 s  40/97 msgs left
+msg INBOX/58 {11273}          copied to INBOX/2529       1.41 msgs/s  239.847 KiB/s 8.451 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:50 -0400 -04  28 s  39/97 msgs left
+msg INBOX/60 {3121}           copied to INBOX/2530       1.42 msgs/s  236.416 KiB/s 8.454 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:49 -0400 -04  26 s  37/97 msgs left
+msg INBOX/61 {3662}           copied to INBOX/2531       1.42 msgs/s  232.839 KiB/s 8.457 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:49 -0400 -04  25 s  36/97 msgs left
+msg INBOX/63 {47641}          copied to INBOX/2532       1.42 msgs/s  229.652 KiB/s 8.503 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:48 -0400 -04  24 s  34/97 msgs left
+msg INBOX/64 {5196}           copied to INBOX/2533       1.43 msgs/s  226.538 KiB/s 8.507 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:48 -0400 -04  23 s  33/97 msgs left
+msg INBOX/65 {1003715}        copied to INBOX/2534       1.43 msgs/s  246.968 KiB/s 9.465 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:48 -0400 -04  22 s  32/97 msgs left
+msg INBOX/66 {615347}         copied to INBOX/2535       1.43 msgs/s  257.804 KiB/s 10.052 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:48 -0400 -04  22 s  31/97 msgs left
+msg INBOX/67 {18738}          copied to INBOX/2536       1.43 msgs/s  254.727 KiB/s 10.069 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:48 -0400 -04  21 s  30/97 msgs left
+msg INBOX/68 {3907}           copied to INBOX/2537       1.44 msgs/s  251.408 KiB/s 10.073 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  20 s  29/97 msgs left
+msg INBOX/69 {1205962}        copied to INBOX/2538       1.43 msgs/s  274.053 KiB/s 11.223 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:48 -0400 -04  20 s  28/97 msgs left
+msg INBOX/70 {3197}           copied to INBOX/2539       1.44 msgs/s  270.554 KiB/s 11.226 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  19 s  27/97 msgs left
+msg INBOX/71 {349251}         copied to INBOX/2540       1.44 msgs/s  274.185 KiB/s 11.559 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  18 s  26/97 msgs left
+msg INBOX/72 {4653}           copied to INBOX/2541       1.44 msgs/s  270.817 KiB/s 11.564 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  17 s  25/97 msgs left
+msg INBOX/73 {185612}         copied to INBOX/2542       1.44 msgs/s  270.881 KiB/s 11.741 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  17 s  24/97 msgs left
+msg INBOX/74 {621530}         copied to INBOX/2543       1.44 msgs/s  280.237 KiB/s 12.334 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  16 s  23/97 msgs left
+msg INBOX/75 {1031712}        copied to INBOX/2544       1.44 msgs/s  297.135 KiB/s 13.317 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  15 s  22/97 msgs left
+msg INBOX/76 {3170}           copied to INBOX/2545       1.44 msgs/s  293.684 KiB/s 13.320 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  15 s  21/97 msgs left
+msg INBOX/77 {469128}         copied to INBOX/2546       1.44 msgs/s  298.923 KiB/s 13.768 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  14 s  20/97 msgs left
+msg INBOX/79 {1043188}        copied to INBOX/2547       1.42 msgs/s  311.602 KiB/s 14.763 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:47 -0400 -04  13 s  18/97 msgs left
+msg INBOX/81 {7972}           copied to INBOX/2548       1.43 msgs/s  308.083 KiB/s 14.770 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:46 -0400 -04  11 s  16/97 msgs left
+msg INBOX/82 {240041}         copied to INBOX/2549       1.43 msgs/s  308.704 KiB/s 14.999 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:46 -0400 -04  11 s  15/97 msgs left
+msg INBOX/87 {3812}           copied to INBOX/2550       1.43 msgs/s  305.420 KiB/s 15.003 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:43 -0400 -04  7 s  10/97 msgs left
+msg INBOX/88 {3815}           copied to INBOX/2551       1.44 msgs/s  302.240 KiB/s 15.007 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:43 -0400 -04  6 s  9/97 msgs left
+msg INBOX/89 {3836}           copied to INBOX/2552       1.44 msgs/s  299.137 KiB/s 15.010 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:43 -0400 -04  6 s  8/97 msgs left
+msg INBOX/90 {3811}           copied to INBOX/2553       1.44 msgs/s  296.095 KiB/s 15.014 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:43 -0400 -04  5 s  7/97 msgs left
+msg INBOX/91 {3810}           copied to INBOX/2554       1.45 msgs/s  292.990 KiB/s 15.017 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:43 -0400 -04  4 s  6/97 msgs left
+msg INBOX/92 {3822}           copied to INBOX/2555       1.45 msgs/s  290.044 KiB/s 15.021 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:43 -0400 -04  3 s  5/97 msgs left
+msg INBOX/93 {3822}           copied to INBOX/2556       1.46 msgs/s  287.165 KiB/s 15.025 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:42 -0400 -04  3 s  4/97 msgs left
+msg INBOX/94 {3844}           copied to INBOX/2557       1.46 msgs/s  283.992 KiB/s 15.028 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:42 -0400 -04  2 s  3/97 msgs left
+msg INBOX/95 {3812}           copied to INBOX/2558       1.46 msgs/s  281.012 KiB/s 15.032 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:42 -0400 -04  1 s  2/97 msgs left
+msg INBOX/96 {3880}           copied to INBOX/2559       1.46 msgs/s  277.958 KiB/s 15.036 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:42 -0400 -04  1 s  1/97 msgs left
+msg INBOX/97 {3872}           copied to INBOX/2560       1.47 msgs/s  275.348 KiB/s 15.039 MiB copied ETA: Wednesday 27 August 2025-08-27 15:31:42 -0400 -04  0 s  0/97 msgs left
+ETA: Wednesday 27 August 2025-08-27 15:31:42 -0400 -04  0 s  0/97 msgs left
+++++ End looping on each folder
+
+Folders sizes after the synchronization.
+You can remove this foldersizes listing by using  "--nofoldersizesatend"
+Host1 folder     1/1 [INBOX]                             Size:  20782662 Messages:    97 Biggest:   3670485
+Host2 folder     1/1 [INBOX]                             Size: 1306563740 Messages:  2461 Biggest:  35448814
+Host2-Host1                                                    1285781078            2364           31778329
+
+Host1 Nb folders:                     1 folders
+Host2 Nb folders:                     1 folders
+
+Host1 Nb messages:                   97 messages
+Host2 Nb messages:                 2461 messages
+
+Host1 Total size:              20782662 bytes (19.820 MiB)
+Host2 Total size:            1306563740 bytes (1.217 GiB)
+
+Host1 Biggest message:          3670485 bytes (3.500 MiB)
+Host2 Biggest message:         35448814 bytes (33.807 MiB)
+
+Time spent on sizing:         1.1 seconds
+++++ Statistics
+Transfer started on                     : Wednesday 27 August 2025-08-27 15:30:40 -0400 -04
+Transfer ended on                       : Wednesday 27 August 2025-08-27 15:31:43 -0400 -04
+Transfer time                           : 63.5 sec
+Folders synced                          : 1/1 synced
+Folders deleted on host2                : 0 
+Messages transferred                    : 82 
+Messages skipped                        : 15
+Messages found duplicate on host1       : 0
+Messages found duplicate on host2       : 0
+Messages found crossduplicate on host2  : 0
+Messages void (noheader) on host1       : 0  
+Messages void (noheader) on host2       : 0
+Messages found in host1 not in host2    : 0 messages
+Messages found in host2 not in host1    : 2364 messages
+Messages deleted on host1               : 0
+Messages deleted on host2               : 0
+Total bytes transferred                 : 15770013 (15.039 MiB)
+Total bytes skipped                     : 5012649 (4.780 MiB)
+Message rate                            : 1.3 messages/s
+Average bandwidth rate                  : 242.5 KiB/s
+Reconnections to host1                  : 0
+Reconnections to host2                  : 0
+Memory consumption at the end           : 42.0 MiB (*time 0.7 MiB*h) (started with 174.8 MiB)
+Load end is                             : 3.20 2.87 2.53 on 8 cores
+CPU time and %cpu                       : 2.43 sec 3.8 %cpu 0.5 %allcpus
+Biggest message transferred             : 3670485 bytes (3.500 MiB)
+Memory/biggest message ratio            : 12.0
+Start difference host2 - host1          : 2282 messages, 1270011065 bytes (1.183 GiB)
+Final difference host2 - host1          : 2364 messages, 1285781078 bytes (1.197 GiB)
+The sync looks good, all 97 identified messages in host1 are on host2.
+There is no unidentified message on host1.
+The sync is not strict, there are 2364 among 2461 identified messages in host2 that are not on host1. Use --delete2 and sync again to delete them and have a strict sync.
+Detected 0 errors
+This imapsync is up to date. ( local 2.290 >= official 2.290 )( Use --noreleasecheck to avoid this release check. )
+Homepage: https://imapsync.lamiral.info/
+Exiting with return value 0 (EX_OK: successful termination) 0/50 nb_errors/max_errors PID 33298
+Removing pidfile /Users/a1234/tmp/imapsync.pid
+Log file is LOG_imapsync/2025_08_27_15_30_40_118_tomas_patriciastocker_com_tomas_patriciastocker_com.txt ( to change it, use --logfile filepath ; or use --nolog to turn off logging )
