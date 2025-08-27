@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de Cuenta - Patricia Stocker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 20px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .date-info {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+        .amount {
+            text-align: right;
+            font-weight: 600;
+        }
+        .amount.negative {
+            color: #27ae60;
+        }
+        .amount.positive {
+            color: #e74c3c;
+        }
+        .status-vencido {
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-vigente {
+            background-color: #27ae60;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .total-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            text-align: right;
+        }
+        .total-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+        .payment-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f6f3;
+            border-radius: 8px;
+            border-left: 5px solid #16a085;
+        }
+        .bank-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .bank-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #bdc3c7;
+        }
+        .bank-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .bank-details {
+            font-size: 13px;
+            color: #34495e;
+        }
+        .refresh-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .refresh-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="company-name">PATRICIASTOCKER.COM SPA</div>
+            <div class="date-info" id="dateInfo">Estados de Cuenta Pendientes</div>
+        </div>
+
+        <button class="refresh-btn" onclick="cargarDatos()">🔄 Actualizar Datos</button>
+
+        <div id="loading" class="loading">
+            Cargando datos...
+        </div>
+
+        <div id="error" class="error" style="display: none;">
+        </div>
+
+        <div id="content" style="display: none;">
+            <h3>Listado de Documentos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Empresa Acreedora</th>
+                        <th>Nº Factura</th>
+                        <th>Fecha Emisión</th>
+                        <th>Fecha Vencimiento</th>
+                        <th>Días Retraso</th>
+                        <th>Monto Pendiente</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="deudasTable">
+                </tbody>
+            </table>
+
+            <div class="total-section" id="totalSection">
+            </div>
+
+            <div class="payment-info">
+                <h4>Información para Transferencia Bancaria</h4>
+                <p><strong>Enviar comprobante a:</strong> vmantero@prisamedia.com</p>
+                
+                <div class="bank-info" id="bankInfo">
+                </div>
+                
+                <p style="margin-top: 20px;"><strong>Consultas:</strong> mpejic@prisamedia.com</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para formatear números como moneda chilena
+        function formatearMoneda(monto) {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                minimumFractionDigits: 0
+            }).format(monto);
+        }
+
+        // Función para formatear fechas
+        function formatearFecha(fechaISO) {
+            const fecha = new Date(fechaISO);
+            return fecha.toLocaleDateString('es-CL');
+        }
+
+        // Función para cargar datos desde la API
+        async function cargarDatos() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const contentEl = document.getElementById('content');
+
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            contentEl.style.display = 'none';
+
+            try {
+                // Cargar deudas
+                const responseDeudas = await fetch('/api/deudas');
+                const dataDeudas = await responseDeudas.json();
+
+                // Cargar resumen
+                const responseResumen = await fetch('/api/resumen');
+                const dataResumen = await responseResumen.json();
+
+                // Cargar información de empresas
+                const responseEmpresas = await fetch('/api/empresas');
+                const dataEmpresas = await responseEmpresas.json();
+
+                // Actualizar fecha
+                document.getElementById('dateInfo').textContent = 
+                    `Estados de Cuenta Pendientes al ${new Date().toLocaleDateString('es-CL')}`;
+
+                // Llenar tabla de deudas
+                llenarTablaDeudas(dataDeudas.deudas);
+
+                // Llenar sección de totales
+                llenarSeccionTotales(dataResumen);
+
+                // Llenar información bancaria
+                llenarInformacionBancaria(dataEmpresas.empresas);
+
+                loadingEl.style.display = 'none';
+                contentEl.style.display = 'block';
+
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Error al cargar los datos. Por favor, intente nuevamente.';
+            }
+        }
+
+        function llenarTablaDeudas(deudas) {
+            const tbody = document.getElementById('deudasTable');
+            tbody.innerHTML = '';
+
+            deudas.forEach(deuda => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${deuda.empresaAcreedora}</td>
+                    <td>${deuda.numeroFactura}</td>
+                    <td>${formatearFecha(deuda.fechaEmision)}</td>
+                    <td>${formatearFecha(deuda.fechaVencimiento)}</td>
+                    <td>${deuda.diasRetraso}</td>
+                    <td class="amount ${deuda.montoPendiente < 0 ? 'negative' : 'positive'}">
+                        ${formatearMoneda(deuda.montoPendiente)}
+                    </td>
+                    <td>
+                        <span class="status-${deuda.estado.toLowerCase()}">
+                            ${deuda.estado}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function llenarSeccionTotales(resumen) {
+            const totalSection = document.getElementById('totalSection');
+            
+            let desglose = '';
+            for (const [empresa, info] of Object.entries(resumen.desglosePorEmpresa)) {
+                desglose += `${empresa}: ${formatearMoneda(info.total)}`;
+                if (info.facturas > 1) {
+                    desglose += ` (${info.facturas} facturas)`;
+                }
+                desglose += '<br>';
+            }
+
+            totalSection.innerHTML = `
+                <strong>MONTO TOTAL ADEUDADO:</strong>
+                <div class="total-amount">${formatearMoneda(resumen.totalAdeudado)}</div>
+                <div style="font-size: 14px; margin-top: 10px; color: #7f8c8d;">
+                    <strong>Desglose:</strong><br>
+                    ${desglose}
+                </div>
+            `;
+        }
+
+        function llenarInformacionBancaria(empresas) {
+            const bankInfo = document.getElementById('bankInfo');
+            bankInfo.innerHTML = '';
+
+            for (const [key, empresa] of Object.entries(empresas)) {
+                const bankCard = document.createElement('div');
+                bankCard.className = 'bank-card';
+                bankCard.innerHTML = `
+                    <div class="bank-name">${empresa.nombre}</div>
+                    <div class="bank-details">
+                        RUT: ${empresa.rut}<br>
+                        ${empresa.banco}<br>
+                        Cuenta: ${empresa.cuenta}
+                    </div>
+                `;
+                bankInfo.appendChild(bankCard);
+            }
+        }
+
+        // Cargar datos al iniciar la página
+        document.addEventListener('DOMContentLoaded', cargarDatos);
+    </script>
+</body>
+</html>

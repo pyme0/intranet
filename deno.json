@@ -1,0 +1,11 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-all --watch server.ts",
+    "start": "deno run --allow-all server.ts",
+    "setup-db": "deno run --allow-all setup-database.ts"
+  },
+  "imports": {
+    "@oak/oak": "jsr:@oak/oak@^17.1.0",
+    "@db/sqlite": "jsr:@db/sqlite@^0.12.0"
+  }
+}

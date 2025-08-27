@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.git/
+LOG_imapsync/
+*.log
+.DS_Store
+.env*
+email-client/data/
+intranet.db
