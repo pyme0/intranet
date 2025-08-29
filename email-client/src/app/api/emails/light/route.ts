@@ -7,23 +7,23 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10') // Reducido de 50 a 10 para carga más rápida
+    const limit = parseInt(searchParams.get('limit') || '10') // Límite optimizado
     const folder = searchParams.get('folder') || 'INBOX'
     const searchQuery = searchParams.get('search') || ''
 
-    console.log(`📧 Proxy: Obteniendo correos - página ${page}, límite ${limit}, carpeta: ${folder} (optimizado)`)
-
+    console.log(`⚡ Proxy LIGERO: Obteniendo correos - página ${page}, límite ${limit}, carpeta: ${folder}`)
+    
     if (searchQuery) {
-      console.log(`🔍 Proxy: Búsqueda: "${searchQuery}"`)
+      console.log(`🔍 Proxy LIGERO: Búsqueda: "${searchQuery}"`)
     }
 
-    // Construir URL para el servidor Python
-    const pythonUrl = new URL('/api/emails', PYTHON_SERVER_URL)
+    // Construir URL para el servidor Python (endpoint ligero)
+    const pythonUrl = new URL('/api/emails/light', PYTHON_SERVER_URL)
     pythonUrl.searchParams.set('page', page.toString())
     pythonUrl.searchParams.set('limit', limit.toString())
     pythonUrl.searchParams.set('folder', folder)
-
-    console.log(`🔗 Proxy: Llamando a ${pythonUrl.toString()}`)
+    
+    console.log(`🔗 Proxy LIGERO: Llamando a ${pythonUrl.toString()}`)
 
     // Hacer request al servidor Python
     const response = await fetch(pythonUrl.toString(), {
@@ -38,8 +38,8 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json()
-
-    console.log(`✅ Proxy: Recibidos ${data.emails?.length || 0} correos de ${data.total || 0} total`)
+    
+    console.log(`✅ Proxy LIGERO: Recibidos ${data.emails?.length || 0} correos de ${data.total || 0} total`)
 
     // Transformar los datos del servidor Python al formato esperado por el frontend
     const transformedEmails = (data.emails || []).map((email: any, index: number) => ({
@@ -50,18 +50,18 @@ export async function GET(request: NextRequest) {
       to: email.to || '',
       date: email.date ? new Date(email.date).toISOString() : new Date().toISOString(),
       preview: email.preview || 'Sin contenido disponible',
-      hasAttachments: false, // El servidor Python no detecta attachments por ahora
-      isRead: false, // Por implementar en el servidor Python
+      hasAttachments: false, // No detectamos attachments en modo ligero
+      isRead: false, // Por implementar
       uid: email.email_id || index,
-      body: email.body || '',
-      html_body: email.html_body || ''
+      // NO incluimos body ni html_body para reducir tamaño
+      light_mode: true // Indicador de modo ligero
     }))
 
     // Filtrar por búsqueda si se especifica
     let filteredEmails = transformedEmails
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
-      filteredEmails = transformedEmails.filter((email: any) =>
+      filteredEmails = transformedEmails.filter((email: any) => 
         email.subject.toLowerCase().includes(query) ||
         email.from.toLowerCase().includes(query) ||
         email.preview.toLowerCase().includes(query)
@@ -91,6 +91,7 @@ export async function GET(request: NextRequest) {
       total_count: totalEmails,
       page_size: limit,
       total_pages: totalPages,
+      light_mode: true, // Indicador de modo ligero
       status: {
         connected: true,
         error: null,
@@ -99,18 +100,19 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('❌ Error en proxy de correos:', error)
-
+    console.error('❌ Error en proxy ligero de correos:', error)
+    
     return NextResponse.json({
       error: error instanceof Error ? error.message : 'Error de conexión con servidor de correos',
       emails: [],
       count: 0,
       total_count: 0,
       page: 1,
-      page_size: 50,
+      page_size: 10,
       total_pages: 0,
       folder: 'INBOX',
       searchQuery: null,
+      light_mode: true,
       status: {
         connected: false,
         error: error instanceof Error ? error.message : 'Error de conexión con servidor de correos',

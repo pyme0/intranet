@@ -69,18 +69,18 @@ export function EmailClient() {
   const [isLoading, setIsLoading] = useState(true)
   const [emailFilter, setEmailFilter] = useState<'inbox' | 'sent'>('inbox')
   const [subFilter, setSubFilter] = useState<'all' | 'marcas' | 'tomas'>('all')
+  const [recipientFilter, setRecipientFilter] = useState<'marcas' | 'tomas'>('marcas') // Nuevo filtro por destinatario
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearching, setIsSearching] = useState(false)
   const [searchResults, setSearchResults] = useState<Email[]>([])
   const [searchTotalCount, setSearchTotalCount] = useState(0)
-  const [isInitialLoading, setIsInitialLoading] = useState(true)
   const [loadingProgress, setLoadingProgress] = useState(0)
 
   // Estados para paginación
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
-  const [pageSize] = useState(50)
+  const [pageSize] = useState(5) // Reducido de 10 a 5 para carga ultra rápida
   const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   // Función para cargar el estado de correos leídos desde la base de datos
@@ -117,37 +117,21 @@ export function EmailClient() {
     }
   }, [])
 
-  // Función para obtener correos con paginación
+  // Función para obtener correos con filtros IMAP eficientes
   const fetchEmails = useCallback(async (page = 1, append = false, isPolling = false) => {
     try {
       // Solo mostrar loading en carga inicial, no en polling
       if (!append && !isPolling) setIsLoading(true)
       else if (append) setIsLoadingMore(true)
 
-      let endpoint = '/api/emails/with-preview'
+      // Usar endpoints de filtrado IMAP eficientes
+      let endpoint = recipientFilter === 'marcas' ? '/api/emails/for-marcas' : '/api/emails/for-tomas'
       let params = new URLSearchParams()
 
-      params.append('page', page.toString())
       params.append('limit', pageSize.toString())
 
-      // Configurar endpoint y parámetros según el filtro
-      if (emailFilter === 'sent') {
-        params.append('folder', 'INBOX.Sent')
-        // Para enviados, filtrar por cuenta de origen
-        if (subFilter === 'marcas') {
-          params.append('account', 'marcas@patriciastocker.com')
-        } else if (subFilter === 'tomas') {
-          params.append('account', 'tomas@patriciastocker.com')
-        }
-      } else {
-        params.append('folder', 'INBOX')
-        // Para bandeja principal, filtrar por cuenta de destino
-        if (subFilter === 'marcas') {
-          params.append('account', 'marcas@patriciastocker.com')
-        } else if (subFilter === 'tomas') {
-          params.append('account', 'tomas@patriciastocker.com')
-        }
-      }
+      // Los filtros se manejan directamente en el endpoint IMAP
+      // No necesitamos parámetros adicionales ya que el endpoint ya filtra por destinatario
 
       const url = `${endpoint}?${params}`
       const response = await fetch(url)
@@ -170,9 +154,10 @@ export function EmailClient() {
       }
 
       setConnectionStatus(data.status)
-      setTotalCount(data.total_count || 0)
-      setTotalPages(data.total_pages || 1)
-      setCurrentPage(page)
+      setTotalCount(data.total_found || 0)
+      // Para filtros IMAP, no usamos paginación tradicional, solo mostramos los más recientes
+      setTotalPages(1)
+      setCurrentPage(1)
 
       setIsLoading(false)
       setIsLoadingMore(false)
@@ -186,7 +171,7 @@ export function EmailClient() {
       setIsLoading(false)
       setIsLoadingMore(false)
     }
-  }, [emailFilter, subFilter, pageSize])
+  }, [recipientFilter, pageSize])
 
   // Función para cargar más correos (scroll infinito)
   const loadMoreEmails = useCallback(() => {
@@ -298,25 +283,7 @@ export function EmailClient() {
     }, 300)
   }, [subFilter, emailFilter, readEmails])
 
-  // Función para verificar el estado de carga inicial
-  const checkLoadingStatus = useCallback(async () => {
-    try {
-      const response = await fetch('/api/loading-status')
-      if (response.ok) {
-        const data = await response.json()
-        setIsInitialLoading(!data.initial_load_complete)
 
-        if (data.cached_emails_count > 0) {
-          setLoadingProgress(Math.min(100, (data.cached_emails_count / 50) * 100))
-        }
-
-        return data.initial_load_complete
-      }
-    } catch (error) {
-      console.error('Error verificando estado de carga:', error)
-    }
-    return false
-  }, [])
 
   // Función para manejar selección de correo y marcarlo como leído
   const handleSelectEmail = useCallback(async (email: Email) => {
@@ -340,38 +307,16 @@ export function EmailClient() {
     loadReadStatus()
   }, [loadReadStatus])
 
-  // Efecto para verificar carga inicial
+  // Efecto para cargar correos inmediatamente (sin polling)
   useEffect(() => {
     if (!isLoadingReadStatus) {
-      const checkInitialLoad = async () => {
-        const isComplete = await checkLoadingStatus()
-
-        if (!isComplete) {
-          // Si no está completa, verificar cada 2 segundos
-          const interval = setInterval(async () => {
-            const complete = await checkLoadingStatus()
-            if (complete) {
-              clearInterval(interval)
-              // Cargar correos una vez que la carga inicial esté completa
-              fetchEmails(1, false)
-            }
-          }, 2000)
-
-          return () => clearInterval(interval)
-        } else {
-          // Si ya está completa, cargar correos inmediatamente
-          setIsInitialLoading(false)
-          fetchEmails()
-        }
-      }
-
-      checkInitialLoad()
+      fetchEmails()
     }
-  }, [checkLoadingStatus, fetchEmails, isLoadingReadStatus])
+  }, [isLoadingReadStatus, fetchEmails])
 
   // Efecto para configurar polling después de la carga inicial
   useEffect(() => {
-    if (!isInitialLoading && !isLoadingReadStatus) {
+    if (!isLoadingReadStatus) {
       // Polling más inteligente: 10 segundos en lugar de 2
       // Solo recargar la primera página para detectar nuevos correos (sin mostrar loading)
       const interval = setInterval(() => {
@@ -380,9 +325,9 @@ export function EmailClient() {
 
       return () => clearInterval(interval)
     }
-  }, [fetchEmails, isInitialLoading, isLoadingReadStatus])
+  }, [fetchEmails, isLoadingReadStatus])
 
-  // Efecto para resetear paginación cuando cambian los filtros
+  // Efecto para resetear y cargar correos cuando cambia el filtro de destinatario
   useEffect(() => {
     setCurrentPage(1)
     setEmails([])
@@ -392,7 +337,7 @@ export function EmailClient() {
     if (!isLoadingReadStatus) {
       fetchEmails(1, false)
     }
-  }, [emailFilter, subFilter, isLoadingReadStatus])
+  }, [recipientFilter, isLoadingReadStatus, fetchEmails])
 
   // Determinar qué correos mostrar (búsqueda o normales)
   const displayEmails = useMemo(() => {
@@ -417,6 +362,8 @@ export function EmailClient() {
         onFilterChange={setEmailFilter}
         subFilter={subFilter}
         onSubFilterChange={setSubFilter}
+        recipientFilter={recipientFilter}
+        onRecipientFilterChange={setRecipientFilter}
         currentView={currentView}
         onViewChange={setCurrentView}
       />
@@ -430,7 +377,7 @@ export function EmailClient() {
               emails={displayEmails}
               selectedEmail={selectedEmail}
               onSelectEmail={handleSelectEmail}
-              isLoading={(isLoading || isSearching || isInitialLoading) && !selectedEmail}
+              isLoading={isLoading && emails.length === 0}
               isSentView={emailFilter === 'sent'}
               currentFilter={emailFilter}
               onLoadMore={loadMoreEmails}
@@ -439,7 +386,7 @@ export function EmailClient() {
               totalCount={totalDisplayCount}
               onSearch={handleSearch}
               searchQuery={searchQuery}
-              isInitialLoading={isInitialLoading}
+              isInitialLoading={false}
               loadingProgress={loadingProgress}
             />
           </div>

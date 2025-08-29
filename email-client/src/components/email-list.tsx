@@ -257,9 +257,34 @@ export const EmailList = memo(function EmailList({
   if (emails.length === 0) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <Mail className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">No hay correos</p>
+        <div className="text-center space-y-3 max-w-sm mx-auto px-4">
+          <div className="relative">
+            <Mail className="h-12 w-12 mx-auto text-muted-foreground" />
+            <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-medium text-foreground">Bandeja vacía</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {searchQuery ? (
+                <>No se encontraron correos que coincidan con "<span className="font-medium">{searchQuery}</span>"</>
+              ) : (
+                <>La cuenta está conectada correctamente, pero no hay correos en esta carpeta.</>
+              )}
+            </p>
+            {!searchQuery && (
+              <div className="space-y-2 mt-3">
+                <p className="text-xs text-muted-foreground/80">
+                  Los nuevos correos aparecerán aquí automáticamente
+                </p>
+                <div className="flex items-center justify-center gap-2 text-xs text-green-600">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span>Conectado a Hostinger</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     )
@@ -313,7 +338,7 @@ export const EmailList = memo(function EmailList({
         <div className="p-3">
           {emails.map((email) => (
             <Card
-              key={email.email_id}
+              key={email.id}
               className={`mb-2 px-3 py-2 cursor-pointer transition-all duration-200 hover:bg-muted/50 hover:shadow-md hover:scale-[1.02] ${
                 selectedEmail?.email_id === email.email_id
                   ? 'bg-muted border-primary shadow-sm'

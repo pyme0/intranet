@@ -29,6 +29,8 @@ interface EmailSidebarProps {
   onFilterChange: (filter: 'inbox' | 'sent') => void
   subFilter: 'all' | 'marcas' | 'tomas'
   onSubFilterChange: (filter: 'all' | 'marcas' | 'tomas') => void
+  recipientFilter: 'marcas' | 'tomas'
+  onRecipientFilterChange: (filter: 'marcas' | 'tomas') => void
   currentView: 'emails' | 'postits' | 'contacts'
   onViewChange: (view: 'emails' | 'postits' | 'contacts') => void
 }
@@ -42,6 +44,8 @@ export function EmailSidebar({
   onFilterChange,
   subFilter,
   onSubFilterChange,
+  recipientFilter,
+  onRecipientFilterChange,
   currentView,
   onViewChange
 }: EmailSidebarProps) {
@@ -103,113 +107,54 @@ export function EmailSidebar({
           </Button>
         </div>
 
-        {/* Secciones de Correos - Solo mostrar si estamos en vista de correos */}
+        {/* Filtros por Destinatario - Solo mostrar si estamos en vista de correos */}
         {currentView === 'emails' && (
           <>
-            {/* Sección Principal */}
-            <Button
-              variant={emailFilter === 'inbox' ? 'default' : 'ghost'}
-              className="w-full justify-start"
-              size="sm"
-              onClick={() => onFilterChange('inbox')}
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Bandeja Principal
-              <div className="ml-auto flex items-center gap-1">
-                {emailFilter === 'inbox' && unreadCount > 0 && (
-                  <Badge variant="default" className="bg-blue-500 hover:bg-blue-600">
-                    {unreadCount}
-                  </Badge>
-                )}
-                {emailFilter === 'inbox' && emailCount > 0 && (
-                  <Badge variant="secondary" className="text-xs">
-                    {emailCount}
-                  </Badge>
-                )}
-              </div>
-            </Button>
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-muted-foreground px-2">
+                Filtrar Correos Por Destinatario
+              </h3>
 
-            {/* Filtros para Bandeja Principal */}
-            {emailFilter === 'inbox' && (
-              <div className="ml-4 space-y-1">
-                <Button
-                  variant={subFilter === 'all' ? 'secondary' : 'ghost'}
-                  className="w-full justify-start text-sm"
-                  size="sm"
-                  onClick={() => onSubFilterChange('all')}
-                >
-                  Todos los correos
-                </Button>
-                <Button
-                  variant={subFilter === 'marcas' ? 'secondary' : 'ghost'}
-                  className="w-full justify-start text-sm"
-                  size="sm"
-                  onClick={() => onSubFilterChange('marcas')}
-                >
-                  <Mail className="mr-2 h-3 w-3 text-green-600" />
-                  Correos a Marcas
-                </Button>
-                <Button
-                  variant={subFilter === 'tomas' ? 'secondary' : 'ghost'}
-                  className="w-full justify-start text-sm"
-                  size="sm"
-                  onClick={() => onSubFilterChange('tomas')}
-                >
-                  <Mail className="mr-2 h-3 w-3 text-blue-600" />
-                  Correos a Tomas
-                </Button>
-              </div>
-            )}
+              {/* Filtro para Marcas */}
+              <Button
+                variant={recipientFilter === 'marcas' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                size="sm"
+                onClick={() => onRecipientFilterChange('marcas')}
+              >
+                <Mail className="mr-2 h-4 w-4 text-green-600" />
+                Para Marcas
+                <div className="ml-auto flex items-center gap-1">
+                  {recipientFilter === 'marcas' && emailCount > 0 && (
+                    <Badge variant="secondary" className="text-xs">
+                      {emailCount}
+                    </Badge>
+                  )}
+                </div>
+              </Button>
 
-            {/* Sección Enviados */}
-            <Button
-              variant={emailFilter === 'sent' ? 'default' : 'ghost'}
-              className="w-full justify-start"
-              size="sm"
-              onClick={() => onFilterChange('sent')}
-            >
-              <Send className="mr-2 h-4 w-4 text-purple-600" />
-              Enviados
-              {emailFilter === 'sent' && emailCount > 0 && (
-                <Badge variant="secondary" className="ml-auto text-xs">
-                  {emailCount}
-                </Badge>
-              )}
-            </Button>
+              {/* Filtro para Tomás */}
+              <Button
+                variant={recipientFilter === 'tomas' ? 'default' : 'ghost'}
+                className="w-full justify-start"
+                size="sm"
+                onClick={() => onRecipientFilterChange('tomas')}
+              >
+                <Mail className="mr-2 h-4 w-4 text-blue-600" />
+                Para Tomás
+                <div className="ml-auto flex items-center gap-1">
+                  {recipientFilter === 'tomas' && emailCount > 0 && (
+                    <Badge variant="secondary" className="text-xs">
+                      {emailCount}
+                    </Badge>
+                  )}
+                </div>
+              </Button>
+            </div>
           </>
         )}
 
-        {/* Filtros para Enviados */}
-        {emailFilter === 'sent' && (
-          <div className="ml-4 space-y-1">
-            <Button
-              variant={subFilter === 'all' ? 'secondary' : 'ghost'}
-              className="w-full justify-start text-sm"
-              size="sm"
-              onClick={() => onSubFilterChange('all')}
-            >
-              Todos los enviados
-            </Button>
-            <Button
-              variant={subFilter === 'marcas' ? 'secondary' : 'ghost'}
-              className="w-full justify-start text-sm"
-              size="sm"
-              onClick={() => onSubFilterChange('marcas')}
-            >
-              <Send className="mr-2 h-3 w-3 text-green-600" />
-              Desde Marcas
-            </Button>
-            <Button
-              variant={subFilter === 'tomas' ? 'secondary' : 'ghost'}
-              className="w-full justify-start text-sm"
-              size="sm"
-              onClick={() => onSubFilterChange('tomas')}
-            >
-              <Send className="mr-2 h-3 w-3 text-blue-600" />
-              Desde Tomas
-            </Button>
-          </div>
-        )}
+
       </div>
 
       <Separator className="mb-6" />
