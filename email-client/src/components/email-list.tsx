@@ -5,11 +5,12 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Mail, MailOpen, Loader2 } from 'lucide-react'
+import { Mail, MailOpen, Loader2, Search, X } from 'lucide-react'
 import { Email } from './email-client'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface EmailListProps {
   emails: Email[]
@@ -22,6 +23,10 @@ interface EmailListProps {
   hasMore?: boolean
   isLoadingMore?: boolean
   totalCount?: number
+  onSearch?: (query: string) => void
+  searchQuery?: string
+  isInitialLoading?: boolean
+  loadingProgress?: number
 }
 
 // Función para decodificar nombres codificados en UTF-8
@@ -66,9 +71,35 @@ export function EmailList({
   onLoadMore,
   hasMore = false,
   isLoadingMore = false,
-  totalCount = 0
+  totalCount = 0,
+  onSearch,
+  searchQuery = '',
+  isInitialLoading = false,
+  loadingProgress = 0
 }: EmailListProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery)
+
+  // Sincronizar el estado local con el prop
+  useEffect(() => {
+    setLocalSearchQuery(searchQuery)
+  }, [searchQuery])
+
+  // Función para manejar la búsqueda
+  const handleSearch = (query: string) => {
+    setLocalSearchQuery(query)
+    if (onSearch) {
+      onSearch(query)
+    }
+  }
+
+  // Función para limpiar la búsqueda
+  const clearSearch = () => {
+    setLocalSearchQuery('')
+    if (onSearch) {
+      onSearch('')
+    }
+  }
 
   // Detectar scroll para cargar más correos
   useEffect(() => {
@@ -174,7 +205,19 @@ export function EmailList({
   }
 
   const cleanBody = (body: string) => {
-    return body.replace(/\n/g, ' ').trim()
+    if (!body) return ''
+
+    // Remover HTML tags si existen
+    const withoutHtml = body.replace(/<[^>]*>/g, '')
+
+    // Remover saltos de línea múltiples y espacios extra
+    const cleaned = withoutHtml
+      .replace(/\n+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+
+    // Limitar longitud para preview
+    return cleaned.length > 150 ? cleaned.substring(0, 150) + '...' : cleaned
   }
 
   if (isLoading) {
@@ -187,7 +230,24 @@ export function EmailList({
               <Mail className="h-8 w-8 text-primary/20" />
             </div>
           </div>
-          <p className="text-sm text-muted-foreground animate-pulse">Cargando correos...</p>
+          {isInitialLoading ? (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground animate-pulse">
+                Cargando correos desde el servidor...
+              </p>
+              <div className="w-48 bg-muted rounded-full h-2 mx-auto">
+                <div
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${loadingProgress}%` }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {Math.round(loadingProgress)}% completado
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground animate-pulse">Cargando correos...</p>
+          )}
         </div>
       </div>
     )
@@ -207,13 +267,44 @@ export function EmailList({
   return (
     <div className="h-screen flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b flex-shrink-0">
+      <div className="p-4 border-b flex-shrink-0 space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold">
             {isSentView ? 'Correos Enviados' : 'Bandeja Principal'}
           </h2>
           <Badge variant="secondary">{emails.length}</Badge>
         </div>
+
+        {/* Buscador */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar correos..."
+            value={localSearchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="pl-10 pr-10"
+          />
+          {localSearchQuery && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearSearch}
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-muted"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
+
+        {/* Indicador de resultados de búsqueda */}
+        {localSearchQuery && (
+          <div className="text-xs text-muted-foreground">
+            {emails.length > 0
+              ? `${emails.length} resultado${emails.length !== 1 ? 's' : ''} para "${localSearchQuery}"`
+              : `Sin resultados para "${localSearchQuery}"`
+            }
+          </div>
+        )}
       </div>
 
       {/* Email List */}

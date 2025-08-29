@@ -1,11 +1,20 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+
+// Extender Window para incluir searchTimeout
+declare global {
+  interface Window {
+    searchTimeout?: NodeJS.Timeout
+  }
+}
 import { Card } from '@/components/ui/card'
 import { EmailSidebar } from './email-sidebar'
 import { EmailList } from './email-list'
 import { EmailView } from './email-view'
 import { ComposeDialog } from './compose-dialog'
+import { PostItBoard } from './post-it-board'
+import { ContactsManager } from './contacts-manager'
 import { Toaster } from '@/components/ui/sonner'
 
 export interface Attachment {
@@ -54,10 +63,18 @@ export function EmailClient() {
     error: null,
     last_check: 'Nunca'
   })
+  const [currentView, setCurrentView] = useState<'emails' | 'postits' | 'contacts'>('emails')
+  const [composePrefilledData, setComposePrefilledData] = useState<any>(null)
   const [isComposeOpen, setIsComposeOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [emailFilter, setEmailFilter] = useState<'inbox' | 'sent'>('inbox')
   const [subFilter, setSubFilter] = useState<'all' | 'marcas' | 'tomas'>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+  const [searchResults, setSearchResults] = useState<Email[]>([])
+  const [searchTotalCount, setSearchTotalCount] = useState(0)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [loadingProgress, setLoadingProgress] = useState(0)
 
   // Estados para paginación
   const [currentPage, setCurrentPage] = useState(1)
@@ -107,7 +124,7 @@ export function EmailClient() {
       if (!append && !isPolling) setIsLoading(true)
       else if (append) setIsLoadingMore(true)
 
-      let endpoint = '/api/emails/paginated'
+      let endpoint = '/api/emails/with-preview'
       let params = new URLSearchParams()
 
       params.append('page', page.toString())
@@ -206,6 +223,101 @@ export function EmailClient() {
     }
   }, [emailFilter])
 
+  // Función para realizar búsqueda en el servidor
+  const performSearch = async (query: string, page: number = 1) => {
+    if (!query.trim()) {
+      return
+    }
+
+    try {
+      setIsSearching(true)
+
+      const accountParam = subFilter !== 'all' ?
+        (subFilter === 'tomas' ? 'tomas@patriciastocker.com' : 'marcas@patriciastocker.com') : ''
+
+      const folderParam = emailFilter === 'sent' ? 'SENT' : 'INBOX'
+
+      let url = `/api/search-emails?q=${encodeURIComponent(query)}&folder=${folderParam}&page=${page}&limit=50`
+      if (accountParam) {
+        url += `&account=${encodeURIComponent(accountParam)}`
+      }
+
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      // Marcar correos como leídos si están en el estado local
+      const emailsWithReadStatus = data.emails.map((email: Email) => ({
+        ...email,
+        read: readEmails.has(email.email_id)
+      }))
+
+      if (page === 1) {
+        setSearchResults(emailsWithReadStatus)
+      } else {
+        setSearchResults(prev => [...prev, ...emailsWithReadStatus])
+      }
+
+      setSearchTotalCount(data.total_count || 0)
+
+    } catch (error) {
+      console.error('Error en búsqueda:', error)
+      setSearchResults([])
+      setSearchTotalCount(0)
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  // Función para manejar la búsqueda con debouncing
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query)
+
+    if (!query.trim()) {
+      // Si no hay búsqueda, limpiar resultados y mostrar correos normales
+      setSearchResults([])
+      setSearchTotalCount(0)
+      setIsSearching(false)
+      return
+    }
+
+    // Cancelar búsqueda anterior si existe
+    if (window.searchTimeout) {
+      clearTimeout(window.searchTimeout)
+    }
+
+    // Mostrar estado de carga inmediatamente
+    setIsSearching(true)
+
+    // Debouncing: esperar 300ms después de que el usuario deje de escribir
+    window.searchTimeout = setTimeout(() => {
+      performSearch(query, 1)
+    }, 300)
+  }, [subFilter, emailFilter, readEmails])
+
+  // Función para verificar el estado de carga inicial
+  const checkLoadingStatus = useCallback(async () => {
+    try {
+      const response = await fetch('/api/loading-status')
+      if (response.ok) {
+        const data = await response.json()
+        setIsInitialLoading(!data.initial_load_complete)
+
+        if (data.cached_emails_count > 0) {
+          setLoadingProgress(Math.min(100, (data.cached_emails_count / 50) * 100))
+        }
+
+        return data.initial_load_complete
+      }
+    } catch (error) {
+      console.error('Error verificando estado de carga:', error)
+    }
+    return false
+  }, [])
+
   // Función para manejar selección de correo y marcarlo como leído
   const handleSelectEmail = async (email: Email) => {
     // Cargar contenido completo si es necesario
@@ -223,12 +335,38 @@ export function EmailClient() {
     loadReadStatus()
   }, [loadReadStatus])
 
-  // Efecto para cargar correos inicialmente y configurar polling
+  // Efecto para verificar carga inicial
   useEffect(() => {
-    // Solo iniciar el polling después de cargar el estado de lectura
     if (!isLoadingReadStatus) {
-      fetchEmails()
+      const checkInitialLoad = async () => {
+        const isComplete = await checkLoadingStatus()
 
+        if (!isComplete) {
+          // Si no está completa, verificar cada 2 segundos
+          const interval = setInterval(async () => {
+            const complete = await checkLoadingStatus()
+            if (complete) {
+              clearInterval(interval)
+              // Cargar correos una vez que la carga inicial esté completa
+              fetchEmails(1, false)
+            }
+          }, 2000)
+
+          return () => clearInterval(interval)
+        } else {
+          // Si ya está completa, cargar correos inmediatamente
+          setIsInitialLoading(false)
+          fetchEmails()
+        }
+      }
+
+      checkInitialLoad()
+    }
+  }, [checkLoadingStatus, fetchEmails, isLoadingReadStatus])
+
+  // Efecto para configurar polling después de la carga inicial
+  useEffect(() => {
+    if (!isInitialLoading && !isLoadingReadStatus) {
       // Polling más inteligente: 10 segundos en lugar de 2
       // Solo recargar la primera página para detectar nuevos correos (sin mostrar loading)
       const interval = setInterval(() => {
@@ -237,19 +375,30 @@ export function EmailClient() {
 
       return () => clearInterval(interval)
     }
-  }, [fetchEmails, isLoadingReadStatus])
+  }, [fetchEmails, isInitialLoading, isLoadingReadStatus])
 
   // Efecto para resetear paginación cuando cambian los filtros
   useEffect(() => {
     setCurrentPage(1)
     setEmails([])
+    setSearchQuery('') // Limpiar búsqueda al cambiar filtros
+    setSearchResults([])
+    setSearchTotalCount(0)
     if (!isLoadingReadStatus) {
       fetchEmails(1, false)
     }
   }, [emailFilter, subFilter, isLoadingReadStatus])
 
-  // Los correos ya vienen filtrados del backend
-  const filteredEmails = emails
+  // Determinar qué correos mostrar (búsqueda o normales)
+  const displayEmails = useMemo(() => {
+    if (searchQuery.trim()) {
+      return searchResults
+    }
+    return emails
+  }, [emails, searchQuery, searchResults])
+
+  // Determinar el total de correos para mostrar en el sidebar
+  const totalDisplayCount = searchQuery.trim() ? searchTotalCount : totalCount
 
   return (
     <div className="flex h-screen bg-background">
@@ -257,47 +406,81 @@ export function EmailClient() {
       <EmailSidebar
         onCompose={() => setIsComposeOpen(true)}
         connectionStatus={connectionStatus}
-        emailCount={filteredEmails.length}
-        unreadCount={filteredEmails.filter(email => !email.isRead).length}
+        emailCount={displayEmails.length}
+        unreadCount={displayEmails.filter(email => !email.isRead).length}
         emailFilter={emailFilter}
         onFilterChange={setEmailFilter}
         subFilter={subFilter}
         onSubFilterChange={setSubFilter}
+        currentView={currentView}
+        onViewChange={setCurrentView}
       />
 
-      {/* Lista de correos */}
-      <div className="w-[560px] min-w-[520px] max-w-[640px] border-r">
-        <EmailList
-          emails={filteredEmails}
-          selectedEmail={selectedEmail}
-          onSelectEmail={handleSelectEmail}
-          isLoading={isLoading}
-          isSentView={emailFilter === 'sent'}
-          currentFilter={emailFilter}
-          onLoadMore={loadMoreEmails}
-          hasMore={currentPage < totalPages}
-          isLoadingMore={isLoadingMore}
-          totalCount={totalCount}
-        />
-      </div>
+      {/* Contenido principal */}
+      {currentView === 'emails' ? (
+        <>
+          {/* Lista de correos */}
+          <div className="w-[560px] min-w-[520px] max-w-[640px] border-r">
+            <EmailList
+              emails={displayEmails}
+              selectedEmail={selectedEmail}
+              onSelectEmail={handleSelectEmail}
+              isLoading={isLoading || isSearching || isInitialLoading}
+              isSentView={emailFilter === 'sent'}
+              currentFilter={emailFilter}
+              onLoadMore={loadMoreEmails}
+              hasMore={searchQuery.trim() ? false : currentPage < totalPages}
+              isLoadingMore={isLoadingMore}
+              totalCount={totalDisplayCount}
+              onSearch={handleSearch}
+              searchQuery={searchQuery}
+              isInitialLoading={isInitialLoading}
+              loadingProgress={loadingProgress}
+            />
+          </div>
 
-      {/* Vista del correo seleccionado */}
-      <div className="flex-1">
-        <EmailView
-          email={selectedEmail}
-          onReply={() => {
-            if (selectedEmail) {
-              setIsComposeOpen(true)
-            }
+          {/* Vista del correo seleccionado */}
+          <div className="flex-1">
+            <EmailView
+              email={selectedEmail}
+              onReply={() => {
+                if (selectedEmail) {
+                  setIsComposeOpen(true)
+                }
+              }}
+            />
+          </div>
+        </>
+      ) : currentView === 'postits' ? (
+        /* Vista de Post-its */
+        <PostItBoard
+          onGenerateEmail={(emailData) => {
+            // Configurar datos pre-rellenados y abrir el composer
+            setComposePrefilledData({
+              to: emailData.to,
+              subject: emailData.subject,
+              body: emailData.body
+            })
+            setSelectedEmail(null) // Limpiar email seleccionado para que use los datos pre-rellenados
+            setIsComposeOpen(true)
           }}
         />
-      </div>
+      ) : (
+        /* Vista de Contactos */
+        <ContactsManager />
+      )}
 
       {/* Dialog para componer correos */}
       <ComposeDialog
         open={isComposeOpen}
-        onOpenChange={setIsComposeOpen}
+        onOpenChange={(open) => {
+          setIsComposeOpen(open)
+          if (!open) {
+            setComposePrefilledData(null) // Limpiar datos pre-rellenados al cerrar
+          }
+        }}
         replyTo={selectedEmail}
+        prefilledData={composePrefilledData}
       />
 
       {/* Notificaciones */}
