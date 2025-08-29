@@ -206,7 +206,9 @@ export const EmailList = memo(function EmailList({
   }
 
   const cleanBody = (body: string) => {
-    if (!body) return ''
+    if (!body) {
+      return '';
+    }
 
     // Remover HTML tags si existen
     const withoutHtml = body.replace(/<[^>]*>/g, '')
@@ -218,7 +220,7 @@ export const EmailList = memo(function EmailList({
       .trim()
 
     // Limitar longitud para preview
-    return cleaned.length > 150 ? cleaned.substring(0, 150) + '...' : cleaned
+    return cleaned.length > 150 ? cleaned.substring(0, 150) + '...' : cleaned;
   }
 
   if (isLoading) {
@@ -254,45 +256,9 @@ export const EmailList = memo(function EmailList({
     )
   }
 
-  if (emails.length === 0) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center space-y-3 max-w-sm mx-auto px-4">
-          <div className="relative">
-            <Mail className="h-12 w-12 mx-auto text-muted-foreground" />
-            <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <h3 className="font-medium text-foreground">Bandeja vacía</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {searchQuery ? (
-                <>No se encontraron correos que coincidan con "<span className="font-medium">{searchQuery}</span>"</>
-              ) : (
-                <>La cuenta está conectada correctamente, pero no hay correos en esta carpeta.</>
-              )}
-            </p>
-            {!searchQuery && (
-              <div className="space-y-2 mt-3">
-                <p className="text-xs text-muted-foreground/80">
-                  Los nuevos correos aparecerán aquí automáticamente
-                </p>
-                <div className="flex items-center justify-center gap-2 text-xs text-green-600">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span>Conectado a Hostinger</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="h-screen flex flex-col">
-      {/* Header */}
+      {/* Header - SIEMPRE VISIBLE */}
       <div className="p-4 border-b flex-shrink-0 space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold">
@@ -301,11 +267,11 @@ export const EmailList = memo(function EmailList({
           <Badge variant="secondary">{emails.length}</Badge>
         </div>
 
-        {/* Buscador */}
+        {/* Buscador - SIEMPRE VISIBLE */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar correos..."
+            placeholder="Búsqueda instantánea..."
             value={localSearchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             className="pl-10 pr-10"
@@ -333,135 +299,177 @@ export const EmailList = memo(function EmailList({
         )}
       </div>
 
-      {/* Email List */}
-      <ScrollArea className="flex-1 overflow-hidden" ref={scrollAreaRef}>
-        <div className="p-3">
-          {emails.map((email) => (
-            <Card
-              key={email.id}
-              className={`mb-2 px-3 py-2 cursor-pointer transition-all duration-200 hover:bg-muted/50 hover:shadow-md hover:scale-[1.02] ${
-                selectedEmail?.email_id === email.email_id
-                  ? 'bg-muted border-primary shadow-sm'
-                  : ''
-              } ${
-                !email.isRead
-                  ? 'border-l-4 border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/20'
-                  : 'border-l-4 border-l-transparent bg-muted/10'
-              }`}
-              onClick={() => onSelectEmail(email)}
-            >
-              <div className="flex items-start gap-2 w-full">
-                {/* Avatar */}
-                <Avatar className={`h-9 w-9 flex-shrink-0 ${
-                  !email.isRead ? 'ring-2 ring-blue-500 ring-offset-1' : ''
-                }`}>
-                  <AvatarFallback className={`text-xs ${
-                    !email.isRead ? 'bg-blue-100 text-blue-700 font-bold' : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {getInitials(isSentView ? email.to : email.from)}
-                  </AvatarFallback>
-                </Avatar>
-
-                {/* Email Content */}
-                <div className="flex-1 min-w-0 overflow-hidden max-w-full">
-                  {/* From/To and Date */}
-                  <div className="flex items-start justify-between mb-1 gap-2">
-                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                      <p className={`text-sm truncate ${
-                        !email.isRead ? 'font-bold text-foreground' : 'font-medium text-muted-foreground'
-                      }`}>
-                        {isSentView ? (
-                          <>
-                            <span className="text-xs text-muted-foreground mr-1">Para:</span>
-                            {getDisplayName(email.to)}
-                          </>
-                        ) : (
-                          getDisplayName(email.from)
-                        )}
+      {/* Contenido principal */}
+      {emails.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-3 max-w-sm mx-auto px-4">
+            {isLoading ? (
+              // Estado de carga
+              <>
+                <Loader2 className="h-8 w-8 mx-auto animate-spin text-primary" />
+                <div className="space-y-2">
+                  <h3 className="font-medium text-foreground">
+                    {searchQuery ? `Buscando "${searchQuery}"...` : 'Cargando correos...'}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {searchQuery ? 'Búsqueda instantánea en progreso...' : 'Obteniendo correos del servidor'}
+                  </p>
+                </div>
+              </>
+            ) : (
+              // Bandeja vacía o sin resultados
+              <>
+                <div className="relative">
+                  <Mail className="h-12 w-12 mx-auto text-muted-foreground" />
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-medium text-foreground">
+                    {searchQuery ? 'Sin resultados' : 'Bandeja vacía'}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {searchQuery ? (
+                      <>No se encontraron correos que coincidan con "<span className="font-medium">{searchQuery}</span>"</>
+                    ) : (
+                      <>La cuenta está conectada correctamente, pero no hay correos en esta carpeta.</>
+                    )}
+                  </p>
+                  {searchQuery ? (
+                    <div className="space-y-2 mt-3">
+                      <p className="text-xs text-muted-foreground/80">
+                        Intenta con otros términos de búsqueda
                       </p>
-                      {!email.isRead && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
-                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearSearch}
+                        className="text-xs"
+                      >
+                        Limpiar búsqueda
+                      </Button>
                     </div>
-                    <div className="text-xs text-muted-foreground flex-shrink-0 text-right leading-tight min-w-16 max-w-20">
-                      {formatDate(email.date)}
+                  ) : (
+                    <div className="space-y-2 mt-3">
+                      <p className="text-xs text-muted-foreground/80">
+                        Los nuevos correos aparecerán aquí automáticamente
+                      </p>
+                      <div className="flex items-center justify-center gap-2 text-xs text-green-600">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span>Conectado a Hostinger</span>
+                      </div>
                     </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      ) : (
+        // Lista de correos
+        <ScrollArea className="flex-1 overflow-hidden" ref={scrollAreaRef}>
+          <div className="p-3">
+            {emails.map((email) => (
+              <Card
+                key={email.id}
+                className={`mb-2 px-3 py-2 cursor-pointer transition-all duration-200 hover:bg-muted/50 hover:shadow-md hover:scale-[1.02] ${
+                  selectedEmail?.email_id === email.email_id
+                    ? 'bg-muted border-primary shadow-sm'
+                    : ''
+                } ${
+                  !email.isRead
+                    ? 'border-l-4 border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/20'
+                    : 'border-l-4 border-l-transparent bg-muted/10'
+                }`}
+                onClick={() => onSelectEmail(email)}
+              >
+                <div className="flex items-start gap-2 w-full">
+                  {/* Avatar */}
+                  <Avatar className={`h-9 w-9 flex-shrink-0 ${
+                    !email.isRead ? 'ring-2 ring-blue-500 ring-offset-1' : ''
+                  }`}>
+                    <AvatarFallback className={`text-xs ${
+                      !email.isRead ? 'bg-blue-100 text-blue-700' : 'bg-muted text-muted-foreground'
+                    }`}>
+                      {email.fromName?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {/* Email Content */}
+                  <div className="flex-1 min-w-0 space-y-1">
+                    {/* Header: From and Date */}
+                    <div className="flex items-center justify-between gap-2">
+                      <p className={`text-sm truncate ${
+                        !email.isRead ? 'font-semibold text-foreground' : 'font-medium text-muted-foreground'
+                      }`}>
+                        {email.fromName}
+                      </p>
+                      <span className="text-xs text-muted-foreground flex-shrink-0">
+                        {formatDistanceToNow(new Date(email.date), { addSuffix: true, locale: es })}
+                      </span>
+                    </div>
+
+                    {/* Subject */}
+                    <p className={`text-sm line-clamp-1 ${
+                      !email.isRead ? 'font-semibold text-foreground' : 'font-medium text-muted-foreground'
+                    }`}>
+                      {email.subject || 'Sin asunto'}
+                    </p>
+
+                    {/* Body Preview */}
+                    <p className={`text-xs line-clamp-2 overflow-hidden ${
+                      !email.isRead ? 'text-muted-foreground' : 'text-muted-foreground/80'
+                    }`}>
+                      {cleanBody(email.body) || 'Sin contenido'}
+                    </p>
                   </div>
 
-                  {/* Email Address (if different from display name) */}
-                  {isSentView ? (
-                    getDisplayName(email.to) !== getEmailAddress(email.to) && (
-                      <p className="text-xs text-muted-foreground mb-1 truncate">
-                        {getEmailAddress(email.to)}
-                      </p>
-                    )
-                  ) : (
-                    getDisplayName(email.from) !== getEmailAddress(email.from) && (
-                      <p className="text-xs text-muted-foreground mb-1 truncate">
-                        {getEmailAddress(email.from)}
-                      </p>
-                    )
-                  )}
-
-                  {/* Subject */}
-                  <p className={`text-sm mb-1 line-clamp-2 overflow-hidden ${
-                    !email.isRead ? 'font-semibold text-foreground' : 'font-normal text-muted-foreground'
-                  }`}>
-                    {email.subject || 'Sin asunto'}
-                  </p>
-
-                  {/* Body Preview */}
-                  <p className={`text-xs line-clamp-2 overflow-hidden ${
-                    !email.isRead ? 'text-muted-foreground' : 'text-muted-foreground/80'
-                  }`}>
-                    {cleanBody(email.body) || 'Sin contenido'}
-                  </p>
+                  {/* Status Icon */}
+                  <div className="flex-shrink-0">
+                    {selectedEmail?.email_id === email.email_id ? (
+                      <MailOpen className="h-4 w-4 text-primary" />
+                    ) : !email.isRead ? (
+                      <Mail className="h-4 w-4 text-blue-500" />
+                    ) : (
+                      <MailOpen className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </div>
                 </div>
+              </Card>
+            ))}
 
-                {/* Status Icon */}
-                <div className="flex-shrink-0">
-                  {selectedEmail?.email_id === email.email_id ? (
-                    <MailOpen className="h-4 w-4 text-primary" />
-                  ) : !email.isRead ? (
-                    <Mail className="h-4 w-4 text-blue-500" />
-                  ) : (
-                    <MailOpen className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </div>
+            {/* Indicador de carga más correos */}
+            {isLoadingMore && (
+              <div className="flex items-center justify-center py-4">
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <span className="text-sm text-muted-foreground">Cargando más correos...</span>
               </div>
-            </Card>
-          ))}
+            )}
 
-          {/* Indicador de carga más correos */}
-          {isLoadingMore && (
-            <div className="flex items-center justify-center py-4">
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              <span className="text-sm text-muted-foreground">Cargando más correos...</span>
-            </div>
-          )}
+            {/* Botón cargar más (fallback si el scroll infinito no funciona) */}
+            {hasMore && !isLoadingMore && onLoadMore && (
+              <div className="flex justify-center py-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onLoadMore}
+                  className="text-xs"
+                >
+                  Cargar más correos
+                </Button>
+              </div>
+            )}
 
-          {/* Botón cargar más (fallback si el scroll infinito no funciona) */}
-          {hasMore && !isLoadingMore && onLoadMore && (
-            <div className="flex justify-center py-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onLoadMore}
-                className="text-xs"
-              >
-                Cargar más correos
-              </Button>
-            </div>
-          )}
-
-          {/* Información de total de correos */}
-          {totalCount > 0 && (
-            <div className="text-center py-2 text-xs text-muted-foreground">
-              Mostrando {emails.length} de {totalCount} correos
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+            {/* Información de total de correos */}
+            {totalCount > 0 && (
+              <div className="text-center py-2 text-xs text-muted-foreground">
+                Mostrando {emails.length} de {totalCount} correos
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+      )}
     </div>
   )
 })

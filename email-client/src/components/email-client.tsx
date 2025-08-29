@@ -54,10 +54,66 @@ export interface EmailData {
 }
 
 export function EmailClient() {
+  console.log('📧 Frontend: EmailClient component renderizando...')
+
   const [emails, setEmails] = useState<Email[]>([])
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null)
   const [readEmails, setReadEmails] = useState<Set<string>>(new Set())
   const [isLoadingReadStatus, setIsLoadingReadStatus] = useState(true)
+
+  // EJECUTAR FETCH INMEDIATAMENTE AL CARGAR EL COMPONENTE
+  console.log('📧 Frontend: Componente cargando...')
+
+  // USAR useEffect PARA EJECUTAR SOLO EN EL CLIENTE
+  console.log('📧 Frontend: Configurando useEffect para cargar emails...')
+
+  useEffect(() => {
+    console.log('📧 Frontend: ¡¡¡useEffect EJECUTÁNDOSE EN EL CLIENTE!!!')
+
+    // Verificar que estamos en el cliente
+    if (typeof window !== 'undefined') {
+      console.log('📧 Frontend: ¡¡¡CARGANDO EMAILS DESDE EL CLIENTE!!!')
+
+      // Usar setTimeout para evitar problemas de hidratación
+      const timeoutId = setTimeout(() => {
+        console.log('📧 Frontend: ¡¡¡TIMEOUT EJECUTÁNDOSE - CARGANDO EMAILS!!!')
+
+        // Usar URL absoluta para evitar problemas de parsing
+        const url = `${window.location.origin}/api/emails/for-marcas?limit=5`
+        console.log(`📧 Frontend: Fetching URL: ${url}`)
+
+        fetch(url)
+          .then(response => {
+            console.log(`📧 Frontend: Response status: ${response.status}`)
+            if (response.ok) {
+              return response.json()
+            } else {
+              throw new Error(`HTTP ${response.status}`)
+            }
+          })
+          .then(data => {
+            console.log(`📧 Frontend: Recibidos ${data.emails?.length || 0} correos`)
+            console.log('📧 Frontend: Datos recibidos:', data)
+            setEmails(data.emails || [])
+            console.log('📧 Frontend: setEmails ejecutado')
+          })
+          .catch(error => {
+            console.error('📧 Frontend: Error en fetch:', error)
+          })
+      }, 500) // 500ms de delay para asegurar que estamos en el cliente
+
+      // Cleanup function
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    } else {
+      console.log('📧 Frontend: No estamos en el cliente (window undefined), no ejecutando fetch')
+    }
+  }, []) // Sin dependencias para que se ejecute solo una vez al montar
+
+  console.log('📧 Frontend: useEffect configurado correctamente')
+
+  console.log('📧 Frontend: Después de definir useEffect...')
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>({
     connected: false,
     error: null,
@@ -85,15 +141,18 @@ export function EmailClient() {
 
   // Función para cargar el estado de correos leídos desde la base de datos
   const loadReadStatus = useCallback(async () => {
+    console.log('📧 Frontend: Cargando estado de lectura...')
     try {
       const response = await fetch('/api/read-status')
       if (response.ok) {
         const data = await response.json()
         setReadEmails(new Set(data.readEmails || []))
+        console.log('📧 Frontend: Estado de lectura cargado correctamente')
       }
     } catch (error) {
       console.error('Error loading read status:', error)
     } finally {
+      console.log('📧 Frontend: Cambiando isLoadingReadStatus a false')
       setIsLoadingReadStatus(false)
     }
   }, [])
@@ -134,6 +193,7 @@ export function EmailClient() {
       // No necesitamos parámetros adicionales ya que el endpoint ya filtra por destinatario
 
       const url = `${endpoint}?${params}`
+      console.log(`📧 Fetching emails from: ${url}`)
       const response = await fetch(url)
 
       if (!response.ok) {
@@ -141,17 +201,23 @@ export function EmailClient() {
       }
       const data: EmailData = await response.json()
 
+      console.log(`✅ Fetched ${data.emails?.length || 0} emails from ${endpoint}`)
+
       // Marcar correos como leídos/no leídos usando el estado actual de readEmails
       const emailsWithReadStatus = (data.emails || []).map(email => ({
         ...email,
         isRead: readEmails.has(email.email_id)
       }))
 
+      console.log(`📧 Frontend: Setting emails state with ${emailsWithReadStatus.length} emails`);
+
       if (append) {
         setEmails(prev => [...prev, ...emailsWithReadStatus])
       } else {
         setEmails(emailsWithReadStatus)
       }
+
+      console.log(`📧 Frontend: Emails state updated`)
 
       setConnectionStatus(data.status)
       setTotalCount(data.total_found || 0)
@@ -208,9 +274,10 @@ export function EmailClient() {
     }
   }, [emailFilter])
 
-  // Función para realizar búsqueda IMAP en el servidor
-  const performSearch = async (query: string, page: number = 1) => {
+  // Función para realizar búsqueda instantánea local
+  const performInstantSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
+      console.log('⚡ Frontend: Query vacío, cancelando búsqueda')
       return
     }
 
@@ -220,40 +287,50 @@ export function EmailClient() {
       // Usar el filtro de destinatario actual (marcas o tomas)
       const recipient = recipientFilter
 
-      let url = `/api/emails/search?q=${encodeURIComponent(query)}&recipient=${recipient}&limit=20`
+      let url = `/api/instant-search?q=${encodeURIComponent(query)}&recipient=${recipient}&limit=20`
 
-      console.log(`🔍 Frontend: Buscando "${query}" para ${recipient}@`)
+      console.log(`⚡ Frontend: Búsqueda instantánea "${query}" para ${recipient}@`)
 
+      const startTime = Date.now()
       const response = await fetch(url)
+      const endTime = Date.now()
+
+      console.log(`⚡ Frontend: Response en ${endTime - startTime}ms, status: ${response.status}`)
+
       if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`❌ Frontend: Error response: ${errorText}`)
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const data = await response.json()
 
-      console.log(`✅ Frontend: Búsqueda encontró ${data.total_found} correos`)
+      console.log(`⚡ Frontend: Encontrados ${data.total_found} correos en ${data.search_time_ms}ms (total: ${endTime - startTime}ms)`)
 
       // Marcar correos como leídos si están en el estado local
-      const emailsWithReadStatus = data.emails.map((email: any) => ({
+      const emailsWithReadStatus = (data.emails || []).map((email: any) => ({
         ...email,
-        isRead: readEmails.has(email.id)
+        isRead: readEmails.has(email.email_id || email.id)
       }))
 
       // Para búsquedas, siempre reemplazar resultados (no paginación)
       setSearchResults(emailsWithReadStatus)
       setSearchTotalCount(data.total_found || 0)
 
+      console.log(`⚡ Frontend: Búsqueda instantánea completada - ${emailsWithReadStatus.length} resultados`);
+
     } catch (error) {
-      console.error('❌ Error en búsqueda:', error)
+      console.error('❌ Error en búsqueda instantánea:', error)
       setSearchResults([])
       setSearchTotalCount(0)
     } finally {
       setIsSearching(false)
     }
-  }
+  }, [recipientFilter, readEmails])
 
-  // Función para manejar la búsqueda con debouncing
+  // Función para manejar la búsqueda instantánea (SIN debouncing)
   const handleSearch = useCallback((query: string) => {
+    console.log(`⚡ Búsqueda instantánea: "${query}"`);
     setSearchQuery(query)
 
     if (!query.trim()) {
@@ -269,14 +346,11 @@ export function EmailClient() {
       clearTimeout(window.searchTimeout)
     }
 
-    // Mostrar estado de carga inmediatamente
-    setIsSearching(true)
-
-    // Debouncing: esperar 300ms después de que el usuario deje de escribir
+    // Búsqueda instantánea con debouncing mínimo (100ms) para evitar spam
     window.searchTimeout = setTimeout(() => {
-      performSearch(query, 1)
-    }, 300)
-  }, [recipientFilter, readEmails])
+      performInstantSearch(query)
+    }, 100)
+  }, [recipientFilter, readEmails, performInstantSearch])
 
 
 
@@ -304,23 +378,27 @@ export function EmailClient() {
 
   // Efecto para cargar correos inmediatamente (sin polling)
   useEffect(() => {
-    if (!isLoadingReadStatus) {
-      fetchEmails()
-    }
-  }, [isLoadingReadStatus, fetchEmails])
+    console.log(`📧 Frontend: useEffect fetchEmails - FORZANDO EJECUCIÓN`)
+    console.log('📧 Frontend: Ejecutando fetchEmails directamente...')
+    fetchEmails()
+  }, [fetchEmails])
 
   // Efecto para configurar polling después de la carga inicial
   useEffect(() => {
     if (!isLoadingReadStatus) {
       // Polling más inteligente: 10 segundos en lugar de 2
       // Solo recargar la primera página para detectar nuevos correos (sin mostrar loading)
+      // NO hacer polling si hay una búsqueda activa
       const interval = setInterval(() => {
-        fetchEmails(1, false, true) // isPolling = true
+        // Solo hacer polling si no hay búsqueda activa
+        if (!searchQuery.trim() && !isSearching) {
+          fetchEmails(1, false, true) // isPolling = true
+        }
       }, 10000)
 
       return () => clearInterval(interval)
     }
-  }, [fetchEmails, isLoadingReadStatus])
+  }, [fetchEmails, isLoadingReadStatus, searchQuery, isSearching])
 
   // Efecto para resetear y cargar correos cuando cambia el filtro de destinatario
   useEffect(() => {
@@ -340,7 +418,7 @@ export function EmailClient() {
       return searchResults
     }
     return emails
-  }, [emails, searchQuery, searchResults])
+  }, [emails, searchQuery, searchResults, isSearching])
 
   // Determinar el total de correos para mostrar en el sidebar
   const totalDisplayCount = searchQuery.trim() ? searchTotalCount : totalCount
@@ -372,7 +450,7 @@ export function EmailClient() {
               emails={displayEmails}
               selectedEmail={selectedEmail}
               onSelectEmail={handleSelectEmail}
-              isLoading={isLoading && emails.length === 0}
+              isLoading={(isLoading && emails.length === 0) || (isSearching && searchResults.length === 0)}
               isSentView={emailFilter === 'sent'}
               currentFilter={emailFilter}
               onLoadMore={loadMoreEmails}

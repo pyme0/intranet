@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
     // Transformar los datos del servidor Python al formato esperado por el frontend
     const transformedEmails = (data.emails || []).map((email: any, index: number) => ({
       id: email.email_id || index.toString(),
+      email_id: email.email_id || index.toString(), // Agregar email_id para compatibilidad
       subject: email.subject || 'Sin asunto',
       from: email.from || 'Desconocido',
       fromName: email.from?.split('<')[0]?.trim().replace(/"/g, '') || email.from || 'Desconocido',
