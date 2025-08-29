@@ -595,6 +595,124 @@ def get_emails_for_tomas():
         print(f"❌ Error buscando correos para tomas: {e}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/emails/search')
+def search_emails():
+    """ENDPOINT para búsqueda IMAP completa con filtros de destinatario"""
+    try:
+        query = request.args.get('q', '').strip()
+        recipient_filter = request.args.get('recipient', 'marcas')  # marcas o tomas
+        limit = int(request.args.get('limit', 20))  # Más resultados para búsqueda
+
+        if not query:
+            return jsonify({'error': 'Query de búsqueda requerido'}), 400
+
+        print(f"🔍 Búsqueda IMAP: '{query}' para {recipient_filter}@ - límite: {limit}")
+
+        # Conectar IMAP
+        mail = connect_imap()
+        if not mail:
+            return jsonify({'error': 'No se pudo conectar al servidor'}), 500
+
+        # Seleccionar INBOX
+        mail.select('INBOX')
+
+        # Construir criterio de búsqueda combinando destinatario y texto
+        if recipient_filter == 'marcas':
+            base_criteria = 'TO "marcas@patriciastocker.com"'
+        else:
+            base_criteria = 'TO "tomas@patriciastocker.com"'
+
+        # Para caracteres especiales, usar búsqueda más amplia y filtrar después
+        if any(ord(c) > 127 for c in query):
+            # Si hay caracteres especiales, buscar solo por destinatario y filtrar después
+            search_criteria = base_criteria
+            print(f"🔍 Query con caracteres especiales: '{query}' - usando filtrado post-búsqueda")
+        else:
+            # Para caracteres ASCII, usar búsqueda IMAP completa
+            search_criteria = f'({base_criteria}) (OR (SUBJECT "{query}") (FROM "{query}") (TEXT "{query}"))'
+            print(f"🔍 Query ASCII: '{query}' - usando búsqueda IMAP completa")
+
+        print(f"🔍 Criterio de búsqueda IMAP: {search_criteria}")
+
+        # Buscar correos usando IMAP SEARCH
+        status, messages = mail.search(None, search_criteria)
+        if status != 'OK':
+            return jsonify({'error': 'Error en búsqueda IMAP'}), 500
+
+        email_ids = messages[0].split()
+        total_found = len(email_ids)
+
+        print(f"📊 Búsqueda encontró {total_found} correos")
+
+        # Ordenar por fecha (más recientes primero) usando SORT de IMAP
+        if email_ids:
+            try:
+                # Intentar usar SORT para ordenar por fecha descendente
+                status, sorted_messages = mail.sort('(REVERSE DATE)', 'UTF-8', search_criteria)
+                if status == 'OK' and sorted_messages[0]:
+                    email_ids = sorted_messages[0].split()
+                    print(f"✅ Resultados de búsqueda ordenados por fecha usando IMAP SORT")
+                else:
+                    print(f"⚠️ SORT no disponible para búsqueda, usando orden de IDs")
+            except Exception as e:
+                print(f"⚠️ Error con SORT en búsqueda, usando orden de IDs: {e}")
+
+        # Tomar solo los más recientes
+        recent_email_ids = email_ids[:limit] if email_ids else []
+
+        emails = []
+        has_special_chars = any(ord(c) > 127 for c in query)
+        query_lower = query.lower()
+
+        for email_id in recent_email_ids:  # Ya ordenados por fecha (más recientes primero)
+            try:
+                status, msg_data = mail.fetch(email_id, '(RFC822)')
+                if status == 'OK':
+                    raw_email = msg_data[0][1]
+                    parsed = parse_email_simple(raw_email)
+                    if parsed:
+                        # Si hay caracteres especiales, filtrar manualmente
+                        if has_special_chars:
+                            subject_match = query_lower in (parsed.get('subject', '')).lower()
+                            from_match = query_lower in (parsed.get('from', '')).lower()
+                            body_match = query_lower in (parsed.get('body', '')).lower()
+                            preview_match = query_lower in (parsed.get('preview', '')).lower()
+
+                            if not (subject_match or from_match or body_match or preview_match):
+                                continue  # Skip este correo si no coincide
+
+                        parsed['email_id'] = email_id.decode()
+                        emails.append(parsed)
+
+                        # Limitar resultados para búsquedas con caracteres especiales
+                        if has_special_chars and len(emails) >= limit:
+                            break
+
+            except Exception as e:
+                print(f"⚠️ Error procesando resultado de búsqueda {email_id}: {e}")
+                continue
+
+        mail.close()
+        mail.logout()
+
+        # Ajustar total_found para búsquedas con caracteres especiales
+        final_total_found = len(emails) if has_special_chars else total_found
+
+        return jsonify({
+            'emails': emails,
+            'total_found': final_total_found,
+            'showing': len(emails),
+            'query': query,
+            'recipient_filter': recipient_filter,
+            'search_criteria': search_criteria,
+            'has_special_chars': has_special_chars,
+            'status': {'connected': True, 'error': None, 'last_check': datetime.now().isoformat()}
+        })
+
+    except Exception as e:
+        print(f"❌ Error en búsqueda de correos: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/emails/<email_id>/full')
 def get_email_full(email_id):
     """ENDPOINT para obtener contenido completo de un correo específico"""

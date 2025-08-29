@@ -208,7 +208,7 @@ export function EmailClient() {
     }
   }, [emailFilter])
 
-  // Función para realizar búsqueda en el servidor
+  // Función para realizar búsqueda IMAP en el servidor
   const performSearch = async (query: string, page: number = 1) => {
     if (!query.trim()) {
       return
@@ -217,15 +217,12 @@ export function EmailClient() {
     try {
       setIsSearching(true)
 
-      const accountParam = subFilter !== 'all' ?
-        (subFilter === 'tomas' ? 'tomas@patriciastocker.com' : 'marcas@patriciastocker.com') : ''
+      // Usar el filtro de destinatario actual (marcas o tomas)
+      const recipient = recipientFilter
 
-      const folderParam = emailFilter === 'sent' ? 'SENT' : 'INBOX'
+      let url = `/api/emails/search?q=${encodeURIComponent(query)}&recipient=${recipient}&limit=20`
 
-      let url = `/api/search-emails?q=${encodeURIComponent(query)}&folder=${folderParam}&page=${page}&limit=50`
-      if (accountParam) {
-        url += `&account=${encodeURIComponent(accountParam)}`
-      }
+      console.log(`🔍 Frontend: Buscando "${query}" para ${recipient}@`)
 
       const response = await fetch(url)
       if (!response.ok) {
@@ -234,22 +231,20 @@ export function EmailClient() {
 
       const data = await response.json()
 
+      console.log(`✅ Frontend: Búsqueda encontró ${data.total_found} correos`)
+
       // Marcar correos como leídos si están en el estado local
-      const emailsWithReadStatus = data.emails.map((email: Email) => ({
+      const emailsWithReadStatus = data.emails.map((email: any) => ({
         ...email,
-        read: readEmails.has(email.email_id)
+        isRead: readEmails.has(email.id)
       }))
 
-      if (page === 1) {
-        setSearchResults(emailsWithReadStatus)
-      } else {
-        setSearchResults(prev => [...prev, ...emailsWithReadStatus])
-      }
-
-      setSearchTotalCount(data.total_count || 0)
+      // Para búsquedas, siempre reemplazar resultados (no paginación)
+      setSearchResults(emailsWithReadStatus)
+      setSearchTotalCount(data.total_found || 0)
 
     } catch (error) {
-      console.error('Error en búsqueda:', error)
+      console.error('❌ Error en búsqueda:', error)
       setSearchResults([])
       setSearchTotalCount(0)
     } finally {
@@ -281,7 +276,7 @@ export function EmailClient() {
     window.searchTimeout = setTimeout(() => {
       performSearch(query, 1)
     }, 300)
-  }, [subFilter, emailFilter, readEmails])
+  }, [recipientFilter, readEmails])
 
 
 
