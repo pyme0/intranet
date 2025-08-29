@@ -1,0 +1,1122 @@
+Here is imapsync 2.290 on host MacBook-Pro-de-Tomas.local, a darwin system with 0.1/8.0 free GiB of RAM, 69.50% used by processes.
+with Perl 5.34.1 and Mail::IMAPClient 3.43
+Transfer started at Thursday 28 August 2025-08-28 09:29:42 -0400 -04
+PID is 4156 my PPID is 4128
+Log file is LOG_imapsync/2025_08_28_09_29_42_924_marcas_patriciastocker_com_tomas_patriciastocker_com.txt ( to change it, use --logfile path ; or use --nolog to turn off logging )
+Load is 1.61 2.00 2.98 on 8 cores
+Real user id is a1234 (uid 501)
+Effective user id is a1234 (euid 501)
+$RCSfile: imapsync,v $ $Revision: 2.290 $ $Date: 2024/08/20 10:37:23 $ 
+Command line used, run by /usr/bin/perl5.34:
+/opt/homebrew/Cellar/imapsync/2.290_1/libexec/bin/imapsync --host1 patriciastocker.com --port1 993 --user1 marcas@patriciastocker.com --password1 MASKED --ssl1 --host2 imap.hostinger.com --port2 993 --user2 tomas@patriciastocker.com --password2 MASKED --ssl2 --automap --syncinternaldates --syncacls --regextrans2 s/INBOX\.//g --nofoldersizes --useheader Message-ID --useheader Date --skipsize --allowsizemismatch --delete2
+Current directory is /Users/a1234/Desktop/Patricia-Stocker/patricia-stocker-intranet/email-sync
+Temp directory is /Users/a1234/tmp ( to change it use --tmpdir dirpath )
+Creating temp directory /Users/a1234/tmp
+kill -QUIT 4156 # special behavior: call to sub catch_exit
+kill -TERM 4156 # special behavior: call to sub catch_exit
+kill -INT 4156 # special behavior: call to sub catch_reconnect
+kill -HUP 4156 # special behavior: call to sub catch_print
+kill -USR1 4156 # special behavior: call to sub toggle_sleep
+Logging to a logfile by default. To turn off logging, use --nolog
+File /Users/a1234/tmp/imapsync.pid does not exist
+PID file is /Users/a1234/tmp/imapsync.pid ( to change it, use --pidfile filepath ; to avoid it use --pidfile "" )
+Writing my PID 4156 in /Users/a1234/tmp/imapsync.pid
+Writing also my logfile name in /Users/a1234/tmp/imapsync.pid : LOG_imapsync/2025_08_28_09_29_42_924_marcas_patriciastocker_com_tomas_patriciastocker_com.txt
+Modules version list ( use --no-modulesversion to turn off printing this Perl modules list ):
+Authen::NTLM         1.09
+CGI                  4.48
+Compress::Zlib       2.102
+Crypt::OpenSSL::RSA  0.31
+Digest::HMAC_MD5     1.01
+Digest::HMAC_SHA1    1.03
+Digest::MD5          2.58
+Digest::SHA          6.02
+Encode               3.0801
+Encode::IMAPUTF7     1.05
+File::Copy::Recursive 0.45
+File::Spec           3.80
+Getopt::Long         2.52
+HTML::Entities       3.69
+IO::Socket           1.46
+IO::Socket::INET     1.46
+IO::Socket::INET6    2.72
+IO::Socket::IP       0.42
+IO::Socket::SSL      2.068
+IO::Tee              0.65
+JSON                 4.10
+JSON::WebToken       0.10
+LWP                  6.44
+MIME::Base64         3.16
+Mail::IMAPClient     3.43
+Net::Ping            2.74
+Net::SSLeay          1.88
+Term::ReadKey        2.38
+Test::MockObject     1.20200122
+Time::HiRes          1.9767
+Unicode::String      2.10
+
+Info: will resync flags for already transferred messages. Use --noresyncflags to not resync flags.
+SSL debug mode level is --debugssl 1 (can be set from 0 meaning no debug to 4 meaning max debug)
+Host1: SSL default mode is like --sslargs1 "SSL_verify_mode=0", meaning for host1 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host1: Use --sslargs1 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host1
+Host2: SSL default mode is like --sslargs2 "SSL_verify_mode=0", meaning for host2 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host2: Use --sslargs2 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host2
+Info: will act as --uidexpunge2
+Info: turned ON syncinternaldates, will set the internal dates (arrival dates) on host2 same as host1.
+Host1: will try to use LOGIN authentication on host1
+Host2: will try to use LOGIN authentication on host2
+Host1: imap connection timeout is 120 seconds
+Host2: imap connection timeout is 120 seconds
+Host1: imap connection keepalive is on on host1. Use --nokeepalive1 to disable it.
+Host2: imap connection keepalive is on on host2. Use --nokeepalive2 to disable it.
+Host1: IMAP server [patriciastocker.com] port [993] user [marcas@patriciastocker.com]
+Host2: IMAP server [imap.hostinger.com] port [993] user [tomas@patriciastocker.com]
+Host1: connecting and login on host1 [patriciastocker.com] port [993] with user [marcas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host1 IP address: 45.239.218.18 Local IP address: 192.168.1.20
+Host1 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Dovecot ready.
+Host1 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host1: patriciastocker.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host1: success login on [patriciastocker.com] with user [marcas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host2: connecting and login on host2 [imap.hostinger.com] port [993] with user [tomas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host2 IP address: 172.65.188.64 Local IP address: 192.168.1.20
+Host2 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Server ready.
+Host2 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host2: imap.hostinger.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host2: success login on [imap.hostinger.com] with user [tomas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host1: state Authenticated
+Host2: state Authenticated
+Host1 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE NAMESPACE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host2 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host1: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host1")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+Host2: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host2")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+
+Host2: QUOTA capability found, presented in raw IMAP on next lines
+Sending: 5 GETQUOTAROOT INBOX
+Sent 22 bytes
+Read: 	* QUOTAROOT INBOX "Storage quota"
+  	* QUOTA "Storage quota" (STORAGE 1279722 10485760 MESSAGE 2494 100000)
+  	5 OK Getquotaroot completed (0.068 + 0.000 + 0.067 secs).
+
+Host2: Quota current storage is 1310435328 bytes. Limit is 10737418240 bytes. So 12.20 % full
+Host1: Compression is off. Use --compress1 to allow compression on host1
+Host2: Compression is off. Use --compress2 to allow compression on host2
+Compression often generates annoying errors, especially with SSL connexions, Gmail, Office365. So, avoid it.
+Host1: found 8 folders.
+Host2: found 6 folders.
+Host1: guessing separator from folder listing: [.]
+Host1: separator given by NAMESPACE: [.]
+Host2: guessing separator from folder listing: [.]
+Host2: separator given by NAMESPACE: [.]
+Host1: guessing prefix from folder listing: [INBOX.]
+Host1: prefix given by NAMESPACE: [INBOX.]
+Host2: guessing prefix from folder listing: [INBOX.]
+Host2: prefix given by NAMESPACE: [INBOX.]
+Host1: separator and prefix: [.][INBOX.]
+Host2: separator and prefix: [.][INBOX.]
+Including all folders found by default. Use --subscribed or --folder or --folderrec or --include to select specific folders. Use --exclude to unselect specific folders.
+Host1: Checking wanted folders exist. Use --nocheckfoldersexist to avoid this check (shared of public namespace targeted).
+Host1: Checking wanted folders are selectable. Use --nocheckselectable to avoid this check.
+Turned on automapping folders ( use --noautomap to turn off automapping )
+Host1: special INBOX.Archive        = \Archive
+Host1: special INBOX.spam           = \Junk
+Host1: special INBOX.Trash          = \Trash
+Host1: special INBOX.Sent           = \Sent
+Host1: special INBOX.Drafts         = \Drafts
+
+Host2: special INBOX.Trash          = \Trash
+Host2: special INBOX.Junk           = \Junk
+Host2: special INBOX.Sent           = \Sent
+Host2: special INBOX.Drafts         = \Drafts
+
+Host1: INBOX.Sent Items not \Sent because set to INBOX.Sent
+
+++++ Listing folders
+All foldernames are presented between brackets like [X] where X is the foldername.
+When a foldername contains non-ASCII characters it is presented in the form
+[X] = [Y] where
+X is the imap foldername you have to use in command line options and
+Y is the utf8 output just printed for convenience, to recognize it.
+
+Host1: folders list (first the raw imap format then the [X] = [Y]):
+* LIST (\HasChildren) "." INBOX
+* LIST (\HasNoChildren) "." "INBOX.Sent Items"
+* LIST (\HasNoChildren \UnMarked \Archive) "." INBOX.Archive
+* LIST (\HasNoChildren \UnMarked \Junk) "." INBOX.spam
+* LIST (\HasNoChildren \UnMarked \Trash) "." INBOX.Trash
+* LIST (\HasNoChildren \UnMarked \Sent) "." INBOX.Sent
+* LIST (\HasNoChildren) "." INBOX.Junk
+* LIST (\HasNoChildren \UnMarked \Drafts) "." INBOX.Drafts
+18 OK List completed (0.001 + 0.000 secs).
+
+[INBOX]
+[INBOX.Archive]
+[INBOX.Drafts]
+[INBOX.Junk]
+[INBOX.Sent]
+[INBOX.Sent Items]
+[INBOX.Trash]
+[INBOX.spam]
+
+Host2: folders list (first the raw imap format then the [X] = [Y]):
+* LIST (\HasChildren) "." INBOX
+* LIST (\HasNoChildren \UnMarked) "." INBOX.Archive
+* LIST (\HasNoChildren \UnMarked \Trash) "." INBOX.Trash
+* LIST (\HasNoChildren \UnMarked \Junk) "." INBOX.Junk
+* LIST (\HasNoChildren \UnMarked \Sent) "." INBOX.Sent
+* LIST (\HasNoChildren \UnMarked \Drafts) "." INBOX.Drafts
+11 OK List completed (0.001 + 0.000 secs).
+
+[INBOX]
+[INBOX.Archive]
+[INBOX.Drafts]
+[INBOX.Junk]
+[INBOX.Sent]
+[INBOX.Trash]
+
+Folders mapping from --automap feature (use --f1f2 to override any mapping):
+[INBOX.Archive]                          -> [INBOX.Archive]                         
+[INBOX.Sent]                             -> [INBOX.Sent]                            
+[INBOX.Sent Items]                       -> [INBOX.Sent]                            
+[INBOX.spam]                             -> [INBOX.Junk]                            
+[INBOX.Trash]                            -> [INBOX.Trash]                           
+[INBOX.Drafts]                           -> [INBOX.Drafts]                          
+[INBOX.Junk]                             -> [INBOX.Junk]                            
+
+Checking SEARCH ALL works on both accounts. To avoid that check, use --nochecknoabletosearch
+Host1: checking if SEARCH ALL works on INBOX
+Host1: folder [INBOX] has 14992 messages mentioned by SELECT
+Host1: folder [INBOX] has 14992 messages found by SEARCH ALL
+Host1: folder [INBOX] has the same messages count (14992) by SELECT and SEARCH ALL
+Host2: checking if SEARCH ALL works on INBOX
+Host2: folder [INBOX] has 2473 messages mentioned by SELECT
+Host2: folder [INBOX] has 2473 messages found by SEARCH ALL
+Host2: folder [INBOX] has the same messages count (2473) by SELECT and SEARCH ALL
+Good! SEARCH ALL works on both accounts.
+++++ Looping on each one of 8 folders to sync
+Folder     1/8 [INBOX]                             -> [INBOX]                            
+Host1: folder [INBOX] has 14992 messages in total (mentioned by SELECT)
+Host1: Could not getacl for INBOX: 22 BAD Error in IMAP command GETACL: Unknown command (0.001 + 0.000 secs).
+Host2: Could not getacl for INBOX: 14 BAD Error in IMAP command GETACL: Unknown command (0.001 + 0.000 secs).
+Host2: folder [INBOX] has 2473 messages in total (mentioned by SELECT)
+Host2: folder [INBOX] permanentflags: 
+Host1: folder [INBOX] considering 14992 messages
+Host2: folder [INBOX] considering 2473 messages
+Host1: parsing headers of folder [INBOX]. It can take time for huge folders. Be patient.
+Host1: INBOX/13176 size 1774 ignored (no wanted headers so we ignore this message. To solve this: use --addheader)
+Host1: INBOX/13178 size 1774 ignored (no wanted headers so we ignore this message. To solve this: use --addheader)
+Host1: INBOX/13640 size 1776 ignored (no wanted headers so we ignore this message. To solve this: use --addheader)
+Host1: INBOX/13644 size 1773 ignored (no wanted headers so we ignore this message. To solve this: use --addheader)
+Host1: INBOX/13645 size 1773 ignored (no wanted headers so we ignore this message. To solve this: use --addheader)
+Host1: INBOX/13652 size 1775 ignored (no wanted headers so we ignore this message. To solve this: use --addheader)
+Host1: INBOX/14615 size 2493 ignored (no wanted headers so we ignore this message. To solve this: use --addheader)
+Host1: folder [INBOX] selected 14992 messages, duplicates 11
+Host2: folder [INBOX] selected 2473 messages, duplicates 1
+Host2: msg INBOX/2565 marked \Deleted [duplicate] on host2 
+Host2: UidExpunging 1 message(s) in folder INBOX 
+Host2: msg INBOX/2472 marked \Deleted on host2 [GPzNvRCSNh2g31RZ6lt4Mg] 
+Host2: msg INBOX/2473 marked \Deleted on host2 [i0xfVfJyyiVhVNQvgFACDQ] 
+Host2: msg INBOX/2474 marked \Deleted on host2 [0B3QHvXn1uVb5ITz7kWlSw] 
+Host2: msg INBOX/2475 marked \Deleted on host2 [W1KlQfQzsozyWGr6LSXhjg] 
+Host2: msg INBOX/2476 marked \Deleted on host2 [UUJ+gGj6vV7PG2+uOX0X0Q] 
+Host2: msg INBOX/2477 marked \Deleted on host2 [VBxDHCOkpEzYW9OLt+6Otw] 
+Host2: msg INBOX/2478 marked \Deleted on host2 [m6UrAHWFv8bEotwgW99yFQ] 
+Host2: msg INBOX/2479 marked \Deleted on host2 [SblVEflkIcOz7oE0/Kw10w] 
+Host2: msg INBOX/2480 marked \Deleted on host2 [BECg9YRma2/Tw6gE4QuL+Q] 
+Host2: msg INBOX/2481 marked \Deleted on host2 [dlhTmc4YCD9ZPFwLFlCyrw] 
+Host2: msg INBOX/2482 marked \Deleted on host2 [2prvfRm7SP2KAvCBRL0VlA] 
+Host2: msg INBOX/2483 marked \Deleted on host2 [ZWHL4ypCfHxry9BvzZAxGA] 
+Host2: msg INBOX/2484 marked \Deleted on host2 [pGcH7LishaeihhLn+YO0Rg] 
+Host2: msg INBOX/2485 marked \Deleted on host2 [yC9ZrZnhC/CgtLM6N1Ghzg] 
+Host2: msg INBOX/2486 marked \Deleted on host2 [T1Mclw7uD/cQiOtAEXKGVw] 
+Host2: msg INBOX/2487 marked \Deleted on host2 [/MK2kFKuo3lusPaDkczeXw] 
+Host2: msg INBOX/2488 marked \Deleted on host2 [1NSCbpLj+zqdvabGZfXu1Q] 
+Host2: msg INBOX/2489 marked \Deleted on host2 [6oh99+e1F3clzyp33emW9A] 
+Host2: msg INBOX/2490 marked \Deleted on host2 [xPqbpHz/iXmO1sLGnclUSg] 
+Host2: msg INBOX/2491 marked \Deleted on host2 [U8aWRM7Kb57ajj9OYovN4w] 
+Host2: msg INBOX/2492 marked \Deleted on host2 [1HpS3z0QHCiWiWwIU5BzJw] 
+Host2: msg INBOX/2493 marked \Deleted on host2 [g2YCzvf3pDT9uOwUX0gvGw] 
+Host2: msg INBOX/2494 marked \Deleted on host2 [tgtBjflsphNVhgeCl5MoMg] 
+Host2: msg INBOX/2495 marked \Deleted on host2 [g/1zmcWFrm+Oa8t2FSOBpg] 
+Host2: msg INBOX/2496 marked \Deleted on host2 [Axo0fpa26prri9rJimYopg] 
+Host2: msg INBOX/2497 marked \Deleted on host2 [cg7AY451SGLzpQUtTHtp7Q] 
+Host2: msg INBOX/2498 marked \Deleted on host2 [VMHsbHVo2/8WFmK9EXiShA] 
+Host2: msg INBOX/2499 marked \Deleted on host2 [yooVe7IYRp/UZzMKBErGSQ] 
+Host2: msg INBOX/2500 marked \Deleted on host2 [mUi7LB8y/vAziDvOMeVBlg] 
+Host2: msg INBOX/2501 marked \Deleted on host2 [Nx4EtI5GD7BQiJNMoIRpCw] 
+Host2: msg INBOX/2502 marked \Deleted on host2 [kSIKZKEr0mZgDKqZpuLX0w] 
+Host2: msg INBOX/2503 marked \Deleted on host2 [dfv40qwA/4MrBOUEBJVM9w] 
+Host2: msg INBOX/2504 marked \Deleted on host2 [rgE5wQ/fSactoWdKCXGRAw] 
+Host2: msg INBOX/2505 marked \Deleted on host2 [Dfed3VzlrtLn7fQ+YiSVTQ] 
+Host2: msg INBOX/2506 marked \Deleted on host2 [2yzsvEyaCJC8IQVu3vthag] 
+Host2: msg INBOX/2507 marked \Deleted on host2 [Dbilwc+mJZCmtdN3hcn4oA] 
+Host2: msg INBOX/2508 marked \Deleted on host2 [Fmfl/SMmscZzE9hQWOBpgQ] 
+Host2: msg INBOX/2509 marked \Deleted on host2 [GfZfEHqBEzPHlUYtnhiKtQ] 
+Host2: msg INBOX/2510 marked \Deleted on host2 [qjD7Vx6kMOfjhaOd7Pmo5g] 
+Host2: msg INBOX/2511 marked \Deleted on host2 [Cahh0ogXd9xTBSMRrQXdvg] 
+Host2: msg INBOX/2512 marked \Deleted on host2 [k95jwBi2PO0TZAnNhgYLdQ] 
+Host2: msg INBOX/2513 marked \Deleted on host2 [JzSZ5T5No3XspbUSnfwoFw] 
+Host2: msg INBOX/2514 marked \Deleted on host2 [VRu2e/bI5xK9xlCpZMpFEQ] 
+Host2: msg INBOX/2515 marked \Deleted on host2 [Vtd4RLzGf6sy5Ifb0ao58g] 
+Host2: msg INBOX/2516 marked \Deleted on host2 [u1yjSoV4GM5G+pWRAwvPDA] 
+Host2: msg INBOX/2517 marked \Deleted on host2 [yRanqY5mhl8X2ruuxdVvTg] 
+Host2: msg INBOX/2518 marked \Deleted on host2 [6EaSBx+CNFXyz0A4eef+LA] 
+Host2: msg INBOX/2519 marked \Deleted on host2 [qmxy7kB1EZ5AlBlh3IiC/g] 
+Host2: msg INBOX/2520 marked \Deleted on host2 [kgtoYtrtTWhMUMYXSnFAnw] 
+Host2: msg INBOX/2521 marked \Deleted on host2 [aXhqEIDWqaMNdh6LBM24kg] 
+Host2: msg INBOX/2522 marked \Deleted on host2 [xfkM7BFmew5+rEjeCl83zA] 
+Host2: msg INBOX/2523 marked \Deleted on host2 [HHFKrtTXHEgbqIebIUM/Mg] 
+Host2: msg INBOX/2524 marked \Deleted on host2 [5GdVM1KPpEn8QiOB4Xn29A] 
+Host2: msg INBOX/2525 marked \Deleted on host2 [ujbZk3vpm4uiG3S+gqllNw] 
+Host2: msg INBOX/2526 marked \Deleted on host2 [MaW3+U4iWQrzFPg0G2BJog] 
+Host2: msg INBOX/2527 marked \Deleted on host2 [vpJtnwCrkHSjIbY1jYXYVA] 
+Host2: msg INBOX/2528 marked \Deleted on host2 [wzBfzKEqcBq+KohgnOaHwQ] 
+Host2: msg INBOX/2529 marked \Deleted on host2 [jftu00Z1yvir3Je6H4kl1w] 
+Host2: msg INBOX/2530 marked \Deleted on host2 [faq579Ef+kdgy6E1X6fo8Q] 
+Host2: msg INBOX/2531 marked \Deleted on host2 [khCF+QgWP1+dKnG/lVNZNg] 
+Host2: msg INBOX/2532 marked \Deleted on host2 [UIMdY6LexRqFO0U49f+cfg] 
+Host2: msg INBOX/2533 marked \Deleted on host2 [y/nbHBybUvIyQoCTDUyQRw] 
+Host2: msg INBOX/2534 marked \Deleted on host2 [VcQGde1SFs4VWG1ObjLQ5w] 
+Host2: msg INBOX/2535 marked \Deleted on host2 [L2HogNr+1VddtF9uL4A+Nw] 
+Host2: msg INBOX/2536 marked \Deleted on host2 [Vc/Q7jsU4MxvROrPY31IWg] 
+Host2: msg INBOX/2537 marked \Deleted on host2 [ShoY+E7h1d8tGszjeLz3tg] 
+Host2: msg INBOX/2538 marked \Deleted on host2 [w9U/VnMdso6lnKPm5l51SQ] 
+Host2: msg INBOX/2539 marked \Deleted on host2 [qTq2NTBAgVMa7J4zgiiM+Q] 
+Host2: msg INBOX/2540 marked \Deleted on host2 [Sc+qZuUIHNHbxAL1fxYkhw] 
+Host2: msg INBOX/2541 marked \Deleted on host2 [/Ej12i3/994o+/KmYVomUQ] 
+Host2: msg INBOX/2542 marked \Deleted on host2 [NFSQq9Btnn+UHqbj9dDb0A] 
+Host2: msg INBOX/2543 marked \Deleted on host2 [7d8v2P6pTBwOMP0dGplmzg] 
+Host2: msg INBOX/2544 marked \Deleted on host2 [eaGKjf/9yC1CS3iNoBaxDw] 
+Host2: msg INBOX/2545 marked \Deleted on host2 [CBcqWiaoISHTPrcGqZ/DlA] 
+Host2: msg INBOX/2546 marked \Deleted on host2 [DDDhs1OdCM1bw10GtCHxOQ] 
+Host2: msg INBOX/2547 marked \Deleted on host2 [83J6u1c19Ym/YlflmYZuwg] 
+Host2: msg INBOX/2548 marked \Deleted on host2 [EuVgced61Oqans2tBvriTQ] 
+Host2: msg INBOX/2549 marked \Deleted on host2 [MFAUngmnw8XWeQUgq0Zpnw] 
+Host2: msg INBOX/2550 marked \Deleted on host2 [Z3xegA4QiTVCj/V55l3ufw] 
+Host2: msg INBOX/2551 marked \Deleted on host2 [rkU3f0PKavIYBxTqTMn8Wg] 
+Host2: msg INBOX/2552 marked \Deleted on host2 [AfGcMPG7qctR7QHRZ8BWLA] 
+Host2: msg INBOX/2553 marked \Deleted on host2 [GcPyvn+WdySQHAnLp4J+2w] 
+Host2: msg INBOX/2554 marked \Deleted on host2 [cSH9G9K/5g1LdYg1S+L8jw] 
+Host2: msg INBOX/2555 marked \Deleted on host2 [tcGAqUULRGHkhcnAsa2fWw] 
+Host2: msg INBOX/2556 marked \Deleted on host2 [MFJHNcIzWq+7eHj2ZH7zeg] 
+Host2: msg INBOX/2557 marked \Deleted on host2 [J85JlBu+SVfNlDpoyel9iw] 
+Host2: msg INBOX/2558 marked \Deleted on host2 [oVV/rdlvyRVI5iazxp1mLg] 
+Host2: msg INBOX/2559 marked \Deleted on host2 [l7DC+5iz4ClG40lmma+8bA] 
+Host2: msg INBOX/2560 marked \Deleted on host2 [KZbuhbXKnLjnTLBjZYnZiw] 
+Host2: msg INBOX/2561 marked \Deleted on host2 [il+l/4SOBP/qKmGvVlU00Q] 
+Host2: msg INBOX/2562 marked \Deleted on host2 [/E4Xb9fTbXoxLY/h3z/qEA] 
+Host2: msg INBOX/2563 marked \Deleted on host2 [6+WX1G35ZDe1gFXPFIx5bg] 
+Host2: msg INBOX/2564 marked \Deleted on host2 [GdHdqT9meSf/E4ADdufYqg] 
+Host2: msg INBOX/2566 marked \Deleted on host2 [AgHUSDSCPa14IeHPCm5uqw] 
+Host2: msg INBOX/2567 marked \Deleted on host2 [Ow59lp2IPdlS7KQqGLiy8w] 
+Host2: msg INBOX/2568 marked \Deleted on host2 [3m0QDx2qG/It09IHO+a29Q] 
+Host2: msg INBOX/2569 marked \Deleted on host2 [EMOxNL3zWTgkfoHWkLDeEg] 
+Host2: msg INBOX/2570 marked \Deleted on host2 [zIsPRh3MjH/W2R0648uGgA] 
+Host2: msg INBOX/2571 marked \Deleted on host2 [FLihgBa55e9c75fJIY0VWg] 
+Host2: msg INBOX/2572 marked \Deleted on host2 [+LzR0EE9GU7Rq8spst70qg] 
+Host2: UidExpunging 100 message(s) in folder INBOX 
+msg INBOX/2362 {76869}        copied to INBOX/2573       0.04 msgs/s  2.858 KiB/s 75.067 KiB copied 
+msg INBOX/2363 {759976}       copied to INBOX/2574       0.07 msgs/s  29.664 KiB/s 817.231 KiB copied 
+msg INBOX/2364 {205751}       copied to INBOX/2575       0.11 msgs/s  36.168 KiB/s 0.994 MiB copied 
+msg INBOX/2365 {41448}        copied to INBOX/2576       0.14 msgs/s  36.900 KiB/s 1.034 MiB copied 
+msg INBOX/2366 {21314}        copied to INBOX/2577       0.17 msgs/s  36.942 KiB/s 1.054 MiB copied 
+msg INBOX/2367 {113219}       copied to INBOX/2578       0.20 msgs/s  39.943 KiB/s 1.162 MiB copied 
+msg INBOX/2368 {113456}       copied to INBOX/2579       0.23 msgs/s  42.821 KiB/s 1.270 MiB copied 
+msg INBOX/2369 {165522}       copied to INBOX/2580       0.26 msgs/s  47.232 KiB/s 1.428 MiB copied 
+msg INBOX/2370 {113373}       copied to INBOX/2581       0.29 msgs/s  49.911 KiB/s 1.536 MiB copied 
+msg INBOX/2371 {165351}       copied to INBOX/2582       0.31 msgs/s  54.051 KiB/s 1.694 MiB copied 
+msg INBOX/2372 {113455}       copied to INBOX/2583       0.34 msgs/s  56.491 KiB/s 1.802 MiB copied 
+msg INBOX/2373 {5581}         copied to INBOX/2584       0.36 msgs/s  55.756 KiB/s 1.808 MiB copied 
+msg INBOX/2374 {111720}       copied to INBOX/2585       0.38 msgs/s  58.038 KiB/s 1.914 MiB copied 
+msg INBOX/2375 {7616}         copied to INBOX/2586       0.41 msgs/s  57.367 KiB/s 1.921 MiB copied 
+msg INBOX/2376 {7621}         copied to INBOX/2587       0.43 msgs/s  56.715 KiB/s 1.929 MiB copied 
+msg INBOX/2377 {632576}       copied to INBOX/2588       0.45 msgs/s  72.801 KiB/s 2.532 MiB copied 
+msg INBOX/2378 {178045}       copied to INBOX/2589       0.47 msgs/s  76.417 KiB/s 2.702 MiB copied 
+msg INBOX/2379 {14504}        copied to INBOX/2590       0.49 msgs/s  75.662 KiB/s 2.715 MiB copied 
+msg INBOX/2380 {34972}        copied to INBOX/2591       0.51 msgs/s  75.476 KiB/s 2.749 MiB copied 
+msg INBOX/2381 {2321089}      copied to INBOX/2592       0.52 msgs/s  131.052 KiB/s 4.962 MiB copied 
+msg INBOX/2382 {2292625}      copied to INBOX/2593       0.52 msgs/s  181.167 KiB/s 7.149 MiB copied 
+msg INBOX/2383 {329822}       copied to INBOX/2594       0.54 msgs/s  186.331 KiB/s 7.463 MiB copied 
+msg INBOX/2384 {327221}       copied to INBOX/2595       0.55 msgs/s  191.205 KiB/s 7.775 MiB copied 
+msg INBOX/2385 {313227}       copied to INBOX/2596       0.57 msgs/s  195.783 KiB/s 8.074 MiB copied 
+msg INBOX/2386 {569105}       copied to INBOX/2597       0.58 msgs/s  205.656 KiB/s 8.617 MiB copied 
+msg INBOX/2387 {807173}       copied to INBOX/2598       0.60 msgs/s  220.273 KiB/s 9.387 MiB copied 
+msg INBOX/2388 {715893}       copied to INBOX/2599       0.61 msgs/s  232.665 KiB/s 10.069 MiB copied 
+msg INBOX/2389 {516048}       copied to INBOX/2600       0.62 msgs/s  240.451 KiB/s 10.562 MiB copied 
+msg INBOX/2390 {73643}        copied to INBOX/2601       0.64 msgs/s  239.124 KiB/s 10.632 MiB copied 
+msg INBOX/2391 {7420}         copied to INBOX/2602       0.65 msgs/s  236.586 KiB/s 10.639 MiB copied 
+msg INBOX/2392 {103081}       copied to INBOX/2603       0.67 msgs/s  235.925 KiB/s 10.737 MiB copied 
+msg INBOX/2393 {52693}        copied to INBOX/2604       0.68 msgs/s  234.361 KiB/s 10.787 MiB copied 
+msg INBOX/2394 {199153}       copied to INBOX/2605       0.69 msgs/s  235.616 KiB/s 10.977 MiB copied 
+msg INBOX/2395 {146120}       copied to INBOX/2606       0.70 msgs/s  235.786 KiB/s 11.117 MiB copied 
+msg INBOX/2396 {112889}       copied to INBOX/2607       0.72 msgs/s  235.403 KiB/s 11.224 MiB copied 
+msg INBOX/2397 {113192}       copied to INBOX/2608       0.73 msgs/s  234.758 KiB/s 11.332 MiB copied 
+msg INBOX/2398 {146154}       copied to INBOX/2609       0.74 msgs/s  234.890 KiB/s 11.472 MiB copied 
+msg INBOX/2399 {5594}         copied to INBOX/2610       0.75 msgs/s  232.569 KiB/s 11.477 MiB copied 
+msg INBOX/2400 {480337}       copied to INBOX/2611       0.76 msgs/s  238.651 KiB/s 11.935 MiB copied 
+msg INBOX/2401 {114756}       copied to INBOX/2612       0.77 msgs/s  238.213 KiB/s 12.045 MiB copied 
+msg INBOX/2402 {7591}         copied to INBOX/2613       0.78 msgs/s  235.966 KiB/s 12.052 MiB copied 
+msg INBOX/2403 {16974}        copied to INBOX/2614       0.79 msgs/s  233.870 KiB/s 12.068 MiB copied 
+msg INBOX/2404 {30733}        copied to INBOX/2615       0.81 msgs/s  232.083 KiB/s 12.097 MiB copied 
+msg INBOX/2405 {75002}        copied to INBOX/2616       0.82 msgs/s  231.016 KiB/s 12.169 MiB copied 
+msg INBOX/2406 {1167811}      copied to INBOX/2617       0.82 msgs/s  248.092 KiB/s 13.283 MiB copied 
+msg INBOX/2407 {505001}       copied to INBOX/2618       0.83 msgs/s  253.999 KiB/s 13.764 MiB copied 
+msg INBOX/2408 {6840}         copied to INBOX/2619       0.84 msgs/s  251.714 KiB/s 13.771 MiB copied 
+msg INBOX/2409 {683567}       copied to INBOX/2620       0.85 msgs/s  260.229 KiB/s 14.423 MiB copied 
+msg INBOX/2410 {38652}        copied to INBOX/2621       0.86 msgs/s  258.467 KiB/s 14.459 MiB copied 
+msg INBOX/2411 {125948}       copied to INBOX/2622       0.86 msgs/s  258.096 KiB/s 14.580 MiB copied 
+msg INBOX/2412 {226004}       copied to INBOX/2623       0.87 msgs/s  259.253 KiB/s 14.795 MiB copied 
+msg INBOX/2413 {612307}       copied to INBOX/2624       0.88 msgs/s  266.279 KiB/s 15.379 MiB copied 
+msg INBOX/2414 {336917}       copied to INBOX/2625       0.89 msgs/s  268.862 KiB/s 15.700 MiB copied 
+msg INBOX/2415 {17143}        copied to INBOX/2626       0.89 msgs/s  266.414 KiB/s 15.717 MiB copied 
+msg INBOX/2416 {117523}       copied to INBOX/2627       0.90 msgs/s  265.870 KiB/s 15.829 MiB copied 
+msg INBOX/2417 {117861}       copied to INBOX/2628       0.91 msgs/s  265.370 KiB/s 15.941 MiB copied 
+msg INBOX/2418 {189005}       copied to INBOX/2629       0.92 msgs/s  265.847 KiB/s 16.121 MiB copied 
+msg INBOX/2419 {414867}       copied to INBOX/2630       0.92 msgs/s  269.683 KiB/s 16.517 MiB copied 
+msg INBOX/2420 {415667}       copied to INBOX/2631       0.93 msgs/s  273.515 KiB/s 16.913 MiB copied 
+msg INBOX/2421 {44895}        copied to INBOX/2632       0.94 msgs/s  271.953 KiB/s 16.956 MiB copied 
+msg INBOX/2422 {7388}         copied to INBOX/2633       0.95 msgs/s  269.851 KiB/s 16.963 MiB copied 
+msg INBOX/2423 {96030}        copied to INBOX/2634       0.95 msgs/s  268.942 KiB/s 17.055 MiB copied 
+msg INBOX/2424 {12727852}     copied to INBOX/2635       0.93 msgs/s  439.231 KiB/s 29.193 MiB copied 
+msg INBOX/2425 {16824473}     copied to INBOX/2636       0.89 msgs/s  642.466 KiB/s 45.238 MiB copied 
+msg INBOX/2426 {7469}         copied to INBOX/2637       0.89 msgs/s  637.918 KiB/s 45.245 MiB copied 
+msg INBOX/2427 {2578806}      copied to INBOX/2638       0.90 msgs/s  662.526 KiB/s 47.705 MiB copied 
+msg INBOX/2428 {1980}         copied to INBOX/2639       0.90 msgs/s  657.786 KiB/s 47.707 MiB copied 
+msg INBOX/2429 {2233}         copied to INBOX/2640       0.91 msgs/s  653.219 KiB/s 47.709 MiB copied 
+msg INBOX/2430 {55246}        copied to INBOX/2641       0.92 msgs/s  649.340 KiB/s 47.761 MiB copied 
+msg INBOX/2431 {2463621}      copied to INBOX/2642       0.91 msgs/s  669.990 KiB/s 50.111 MiB copied 
+msg INBOX/2432 {756656}       copied to INBOX/2643       0.92 msgs/s  672.924 KiB/s 50.832 MiB copied 
+msg INBOX/2433 {439917}       copied to INBOX/2644       0.92 msgs/s  673.163 KiB/s 51.252 MiB copied 
+msg INBOX/2434 {22179}        copied to INBOX/2645       0.93 msgs/s  668.974 KiB/s 51.273 MiB copied 
+msg INBOX/2435 {74697}        copied to INBOX/2646       0.94 msgs/s  665.374 KiB/s 51.344 MiB copied 
+msg INBOX/2436 {13289}        copied to INBOX/2647       0.94 msgs/s  661.168 KiB/s 51.357 MiB copied 
+msg INBOX/2437 {12881686}     copied to INBOX/2648       0.92 msgs/s  788.465 KiB/s 63.642 MiB copied 
+msg INBOX/2438 {12875701}     copied to INBOX/2649       0.90 msgs/s  905.961 KiB/s 75.921 MiB copied 
+msg INBOX/2439 {18873}        copied to INBOX/2650       0.90 msgs/s  900.677 KiB/s 75.939 MiB copied 
+msg INBOX/2440 {19014}        copied to INBOX/2651       0.91 msgs/s  895.374 KiB/s 75.957 MiB copied 
+msg INBOX/2441 {51896}        copied to INBOX/2652       0.92 msgs/s  890.304 KiB/s 76.007 MiB copied 
+msg INBOX/2442 {19438}        copied to INBOX/2653       0.92 msgs/s  885.175 KiB/s 76.025 MiB copied 
+msg INBOX/2443 {53839}        copied to INBOX/2654       0.92 msgs/s  878.314 KiB/s 76.077 MiB copied 
+msg INBOX/2444 {183398}       copied to INBOX/2655       0.93 msgs/s  874.738 KiB/s 76.252 MiB copied 
+msg INBOX/2445 {615702}       copied to INBOX/2656       0.93 msgs/s  872.710 KiB/s 76.839 MiB copied 
+msg INBOX/2446 {32726}        copied to INBOX/2657       0.94 msgs/s  867.959 KiB/s 76.870 MiB copied 
+msg INBOX/2447 {4854}         copied to INBOX/2658       0.94 msgs/s  863.051 KiB/s 76.875 MiB copied 
+msg INBOX/2448 {10979}        copied to INBOX/2659       0.95 msgs/s  858.240 KiB/s 76.885 MiB copied 
+msg INBOX/2449 {13693}        copied to INBOX/2660       0.95 msgs/s  853.221 KiB/s 76.898 MiB copied 
+msg INBOX/2450 {791152}       copied to INBOX/2661       0.96 msgs/s  854.429 KiB/s 77.653 MiB copied 
+msg INBOX/2451 {42459}        copied to INBOX/2662       0.96 msgs/s  849.711 KiB/s 77.693 MiB copied 
+msg INBOX/2452 {34971}        copied to INBOX/2663       0.97 msgs/s  844.943 KiB/s 77.726 MiB copied 
+msg INBOX/2453 {1297559}      copied to INBOX/2664       0.97 msgs/s  849.959 KiB/s 78.964 MiB copied 
+msg INBOX/2454 {2453248}      copied to INBOX/2665       0.97 msgs/s  864.172 KiB/s 81.304 MiB copied 
+msg INBOX/2455 {2456948}      copied to INBOX/2666       0.96 msgs/s  878.515 KiB/s 83.647 MiB copied 
+msg INBOX/2456 {75861}        copied to INBOX/2667       0.97 msgs/s  873.568 KiB/s 83.719 MiB copied 
+msg INBOX/2457 {1274840}      copied to INBOX/2668       0.97 msgs/s  878.129 KiB/s 84.935 MiB copied 
+msg INBOX/2458 {4940}         copied to INBOX/2669       0.97 msgs/s  873.315 KiB/s 84.940 MiB copied 
+msg INBOX/2459 {814724}       copied to INBOX/2670       0.98 msgs/s  875.045 KiB/s 85.716 MiB copied 
+msg INBOX/2460 {29787}        copied to INBOX/2671       0.98 msgs/s  868.714 KiB/s 85.745 MiB copied 
+msg INBOX/2461 {34237}        copied to INBOX/2672       0.98 msgs/s  864.414 KiB/s 85.778 MiB copied 
+msg INBOX/2462 {1962}         copied to INBOX/2673       0.99 msgs/s  859.776 KiB/s 85.779 MiB copied 
+msg INBOX/2463 {168267}       copied to INBOX/2674       0.99 msgs/s  856.600 KiB/s 85.940 MiB copied 
+msg INBOX/2464 {113183}       copied to INBOX/2675       1.00 msgs/s  853.071 KiB/s 86.048 MiB copied 
+msg INBOX/2465 {113150}       copied to INBOX/2676       1.00 msgs/s  849.639 KiB/s 86.156 MiB copied 
+msg INBOX/2466 {113180}       copied to INBOX/2677       1.01 msgs/s  846.188 KiB/s 86.264 MiB copied 
+msg INBOX/2467 {112983}       copied to INBOX/2678       1.01 msgs/s  842.853 KiB/s 86.371 MiB copied 
+msg INBOX/2468 {33696}        copied to INBOX/2679       1.01 msgs/s  838.895 KiB/s 86.404 MiB copied 
+msg INBOX/2469 {32162}        copied to INBOX/2680       1.02 msgs/s  835.019 KiB/s 86.434 MiB copied 
+msg INBOX/2470 {110042}       copied to INBOX/2681       1.02 msgs/s  830.607 KiB/s 86.539 MiB copied 
+msg INBOX/2471 {272200}       copied to INBOX/2682       1.03 msgs/s  828.332 KiB/s 86.799 MiB copied 
+msg INBOX/2472 {22744}        copied to INBOX/2683       1.03 msgs/s  824.449 KiB/s 86.820 MiB copied 
+msg INBOX/2473 {128527}       copied to INBOX/2684       1.03 msgs/s  821.229 KiB/s 86.943 MiB copied 
+msg INBOX/2474 {35103}        copied to INBOX/2685       1.04 msgs/s  817.541 KiB/s 86.977 MiB copied 
+msg INBOX/2475 {5500}         copied to INBOX/2686       1.04 msgs/s  813.705 KiB/s 86.982 MiB copied 
+msg INBOX/2476 {114968}       copied to INBOX/2687       1.05 msgs/s  810.511 KiB/s 87.091 MiB copied 
+msg INBOX/2477 {257828}       copied to INBOX/2688       1.05 msgs/s  808.022 KiB/s 87.337 MiB copied 
+msg INBOX/2478 {35986}        copied to INBOX/2689       1.05 msgs/s  804.072 KiB/s 87.372 MiB copied 
+msg INBOX/2479 {6843}         copied to INBOX/2690       1.05 msgs/s  799.760 KiB/s 87.378 MiB copied 
+msg INBOX/2480 {16640771}     copied to INBOX/2691       1.02 msgs/s  909.647 KiB/s 103.248 MiB copied 
+msg INBOX/2481 {16640910}     copied to INBOX/2692       0.99 msgs/s  0.986 MiB/s 119.118 MiB copied 
+msg INBOX/2482 {4994155}      copied to INBOX/2693       0.99 msgs/s  1.010 MiB/s 123.881 MiB copied 
+msg INBOX/2483 {113163}       copied to INBOX/2694       0.99 msgs/s  1.004 MiB/s 123.989 MiB copied 
+msg INBOX/2484 {1573339}      copied to INBOX/2695       0.99 msgs/s  1.008 MiB/s 125.489 MiB copied 
+msg INBOX/2485 {854756}       copied to INBOX/2696       0.99 msgs/s  1.009 MiB/s 126.304 MiB copied 
+msg INBOX/2486 {861336}       copied to INBOX/2697       0.99 msgs/s  1.009 MiB/s 127.126 MiB copied 
+msg INBOX/2487 {82619}        copied to INBOX/2698       1.00 msgs/s  1.005 MiB/s 127.205 MiB copied 
+msg INBOX/2488 {70034}        copied to INBOX/2699       1.00 msgs/s  1.001 MiB/s 127.271 MiB copied 
+msg INBOX/2489 {723452}       copied to INBOX/2700       1.00 msgs/s  1.001 MiB/s 127.961 MiB copied 
+msg INBOX/2490 {119919}       copied to INBOX/2701       1.01 msgs/s  0.998 MiB/s 128.076 MiB copied 
+msg INBOX/2491 {183401}       copied to INBOX/2702       1.01 msgs/s  0.995 MiB/s 128.251 MiB copied 
+msg INBOX/2492 {14078}        copied to INBOX/2703       1.01 msgs/s  0.991 MiB/s 128.264 MiB copied 
+msg INBOX/2493 {14034}        copied to INBOX/2704       1.02 msgs/s  0.987 MiB/s 128.277 MiB copied 
+msg INBOX/2494 {14012}        copied to INBOX/2705       1.02 msgs/s  0.983 MiB/s 128.291 MiB copied 
+msg INBOX/2495 {17173}        copied to INBOX/2706       1.02 msgs/s  0.977 MiB/s 128.307 MiB copied 
+msg INBOX/2496 {96853}        copied to INBOX/2707       1.02 msgs/s  996.781 KiB/s 128.399 MiB copied 
+msg INBOX/2497 {8327}         copied to INBOX/2708       1.03 msgs/s  992.895 KiB/s 128.407 MiB copied 
+msg INBOX/2498 {569369}       copied to INBOX/2709       1.03 msgs/s  991.622 KiB/s 128.950 MiB copied 
+msg INBOX/2499 {12906}        copied to INBOX/2710       1.03 msgs/s  987.711 KiB/s 128.963 MiB copied 
+msg INBOX/2500 {16623}        copied to INBOX/2711       1.04 msgs/s  983.748 KiB/s 128.979 MiB copied 
+msg INBOX/2501 {20303}        copied to INBOX/2712       1.04 msgs/s  978.770 KiB/s 128.998 MiB copied 
+msg INBOX/2502 {45775}        copied to INBOX/2713       1.04 msgs/s  975.166 KiB/s 129.042 MiB copied 
+msg INBOX/2503 {76167}        copied to INBOX/2714       1.04 msgs/s  971.780 KiB/s 129.114 MiB copied 
+msg INBOX/2504 {118604}       copied to INBOX/2715       1.05 msgs/s  968.606 KiB/s 129.227 MiB copied 
+msg INBOX/2505 {80972}        copied to INBOX/2716       1.05 msgs/s  965.349 KiB/s 129.305 MiB copied 
+msg INBOX/2506 {13392}        copied to INBOX/2717       1.05 msgs/s  961.695 KiB/s 129.317 MiB copied 
+msg INBOX/2507 {2547}         copied to INBOX/2718       1.06 msgs/s  958.055 KiB/s 129.320 MiB copied 
+msg INBOX/2508 {2553}         copied to INBOX/2719       1.06 msgs/s  954.059 KiB/s 129.322 MiB copied 
+msg INBOX/2509 {2549}         copied to INBOX/2720       1.06 msgs/s  950.522 KiB/s 129.325 MiB copied 
+msg INBOX/2510 {113226}       copied to INBOX/2721       1.07 msgs/s  947.376 KiB/s 129.433 MiB copied 
+msg INBOX/2511 {217589}       copied to INBOX/2722       1.07 msgs/s  944.834 KiB/s 129.640 MiB copied 
+msg INBOX/2512 {41223}        copied to INBOX/2723       1.07 msgs/s  941.617 KiB/s 129.679 MiB copied 
+msg INBOX/2513 {7620}         copied to INBOX/2724       1.07 msgs/s  938.182 KiB/s 129.687 MiB copied 
+msg INBOX/2514 {627230}       copied to INBOX/2725       1.07 msgs/s  937.147 KiB/s 130.285 MiB copied 
+msg INBOX/2515 {242786}       copied to INBOX/2726       1.08 msgs/s  934.476 KiB/s 130.516 MiB copied 
+msg INBOX/2516 {18233}        copied to INBOX/2727       1.08 msgs/s  931.193 KiB/s 130.534 MiB copied 
+msg INBOX/2517 {6790}         copied to INBOX/2728       1.08 msgs/s  927.867 KiB/s 130.540 MiB copied 
+msg INBOX/2518 {183300}       copied to INBOX/2729       1.09 msgs/s  925.314 KiB/s 130.715 MiB copied 
+msg INBOX/2519 {574185}       copied to INBOX/2730       1.09 msgs/s  924.618 KiB/s 131.263 MiB copied 
+msg INBOX/2520 {113001}       copied to INBOX/2731       1.09 msgs/s  921.818 KiB/s 131.370 MiB copied 
+msg INBOX/2521 {113044}       copied to INBOX/2732       1.09 msgs/s  919.047 KiB/s 131.478 MiB copied 
+msg INBOX/2522 {113147}       copied to INBOX/2733       1.09 msgs/s  916.242 KiB/s 131.586 MiB copied 
+msg INBOX/2523 {587977}       copied to INBOX/2734       1.10 msgs/s  915.519 KiB/s 132.147 MiB copied 
+msg INBOX/2524 {36482}        copied to INBOX/2735       1.10 msgs/s  912.246 KiB/s 132.182 MiB copied 
+msg INBOX/2525 {183314}       copied to INBOX/2736       1.10 msgs/s  909.281 KiB/s 132.356 MiB copied 
+msg INBOX/2526 {1014358}      copied to INBOX/2737       1.10 msgs/s  910.179 KiB/s 133.324 MiB copied 
+msg INBOX/2527 {41140}        copied to INBOX/2738       1.10 msgs/s  907.178 KiB/s 133.363 MiB copied 
+msg INBOX/2528 {44252}        copied to INBOX/2739       1.11 msgs/s  904.289 KiB/s 133.405 MiB copied 
+msg INBOX/2529 {569272}       copied to INBOX/2740       1.11 msgs/s  903.225 KiB/s 133.948 MiB copied 
+msg INBOX/2530 {388134}       copied to INBOX/2741       1.11 msgs/s  901.843 KiB/s 134.318 MiB copied 
+msg INBOX/2531 {64700}        copied to INBOX/2742       1.11 msgs/s  899.032 KiB/s 134.380 MiB copied 
+msg INBOX/2532 {13792}        copied to INBOX/2743       1.11 msgs/s  896.034 KiB/s 134.393 MiB copied 
+msg INBOX/2533 {19516}        copied to INBOX/2744       1.12 msgs/s  893.047 KiB/s 134.412 MiB copied 
+msg INBOX/2534 {91498}        copied to INBOX/2745       1.12 msgs/s  890.357 KiB/s 134.499 MiB copied 
+msg INBOX/2535 {484430}       copied to INBOX/2746       1.12 msgs/s  889.541 KiB/s 134.961 MiB copied 
+msg INBOX/2536 {16935}        copied to INBOX/2747       1.12 msgs/s  886.582 KiB/s 134.977 MiB copied 
+msg INBOX/2537 {14566}        copied to INBOX/2748       1.13 msgs/s  883.694 KiB/s 134.991 MiB copied 
+msg INBOX/2538 {446324}       copied to INBOX/2749       1.13 msgs/s  882.531 KiB/s 135.417 MiB copied 
+msg INBOX/2539 {20983}        copied to INBOX/2750       1.13 msgs/s  879.708 KiB/s 135.437 MiB copied 
+msg INBOX/2540 {6825}         copied to INBOX/2751       1.13 msgs/s  876.818 KiB/s 135.443 MiB copied 
+msg INBOX/2541 {331260}       copied to INBOX/2752       1.13 msgs/s  875.472 KiB/s 135.759 MiB copied 
+msg INBOX/2542 {112861}       copied to INBOX/2753       1.14 msgs/s  872.897 KiB/s 135.867 MiB copied 
+msg INBOX/2543 {112863}       copied to INBOX/2754       1.14 msgs/s  870.115 KiB/s 135.974 MiB copied 
+msg INBOX/2544 {112865}       copied to INBOX/2755       1.14 msgs/s  867.752 KiB/s 136.082 MiB copied 
+msg INBOX/2545 {483705}       copied to INBOX/2756       1.14 msgs/s  866.702 KiB/s 136.543 MiB copied 
+msg INBOX/2546 {9730}         copied to INBOX/2757       1.14 msgs/s  863.971 KiB/s 136.553 MiB copied 
+msg INBOX/2547 {11568}        copied to INBOX/2758       1.15 msgs/s  861.228 KiB/s 136.564 MiB copied 
+msg INBOX/2548 {17165}        copied to INBOX/2759       1.15 msgs/s  858.301 KiB/s 136.580 MiB copied 
+msg INBOX/2549 {633408}       copied to INBOX/2760       1.15 msgs/s  857.536 KiB/s 137.184 MiB copied 
+msg INBOX/2550 {137217}       copied to INBOX/2761       1.15 msgs/s  855.440 KiB/s 137.315 MiB copied 
+msg INBOX/2551 {7713549}      copied to INBOX/2762       1.14 msgs/s  885.784 KiB/s 144.671 MiB copied 
+msg INBOX/2552 {76493}        copied to INBOX/2763       1.14 msgs/s  883.255 KiB/s 144.744 MiB copied 
+msg INBOX/2553 {31564}        copied to INBOX/2764       1.14 msgs/s  880.526 KiB/s 144.774 MiB copied 
+msg INBOX/2554 {56057}        copied to INBOX/2765       1.14 msgs/s  877.635 KiB/s 144.828 MiB copied 
+msg INBOX/2555 {145776}       copied to INBOX/2766       1.14 msgs/s  874.399 KiB/s 144.967 MiB copied 
+msg INBOX/2556 {53807}        copied to INBOX/2767       1.14 msgs/s  871.937 KiB/s 145.018 MiB copied 
+msg INBOX/2557 {435103}       copied to INBOX/2768       1.15 msgs/s  871.000 KiB/s 145.433 MiB copied 
+msg INBOX/2558 {112841}       copied to INBOX/2769       1.15 msgs/s  868.712 KiB/s 145.541 MiB copied 
+msg INBOX/2559 {5695}         copied to INBOX/2770       1.15 msgs/s  865.777 KiB/s 145.546 MiB copied 
+msg INBOX/2560 {1629514}      copied to INBOX/2771       1.15 msgs/s  869.057 KiB/s 147.100 MiB copied 
+msg INBOX/2561 {93506}        copied to INBOX/2772       1.15 msgs/s  866.872 KiB/s 147.189 MiB copied 
+msg INBOX/2562 {11453}        copied to INBOX/2773       1.15 msgs/s  864.309 KiB/s 147.200 MiB copied 
+msg INBOX/2563 {38610}        copied to INBOX/2774       1.15 msgs/s  861.858 KiB/s 147.237 MiB copied 
+msg INBOX/2564 {149231}       copied to INBOX/2775       1.16 msgs/s  859.919 KiB/s 147.379 MiB copied 
+msg INBOX/2565 {433215}       copied to INBOX/2776       1.16 msgs/s  859.148 KiB/s 147.792 MiB copied 
+msg INBOX/2566 {914792}       copied to INBOX/2777       1.16 msgs/s  860.469 KiB/s 148.665 MiB copied 
+msg INBOX/2567 {114935}       copied to INBOX/2778       1.16 msgs/s  858.395 KiB/s 148.774 MiB copied 
+msg INBOX/2568 {857057}       copied to INBOX/2779       1.16 msgs/s  858.843 KiB/s 149.592 MiB copied 
+msg INBOX/2569 {48621}        copied to INBOX/2780       1.16 msgs/s  856.517 KiB/s 149.638 MiB copied 
+msg INBOX/2570 {55467}        copied to INBOX/2781       1.16 msgs/s  854.216 KiB/s 149.691 MiB copied 
+msg INBOX/2571 {581966}       copied to INBOX/2782       1.17 msgs/s  853.989 KiB/s 150.246 MiB copied 
+msg INBOX/2572 {698112}       copied to INBOX/2783       1.17 msgs/s  854.171 KiB/s 150.912 MiB copied 
+msg INBOX/2573 {50353}        copied to INBOX/2784       1.17 msgs/s  851.875 KiB/s 150.960 MiB copied 
+msg INBOX/2574 {113583}       copied to INBOX/2785       1.17 msgs/s  849.874 KiB/s 151.068 MiB copied 
+msg INBOX/2575 {113383}       copied to INBOX/2786       1.17 msgs/s  847.867 KiB/s 151.176 MiB copied 
+msg INBOX/2576 {211425}       copied to INBOX/2787       1.17 msgs/s  846.242 KiB/s 151.378 MiB copied 
+msg INBOX/2577 {211660}       copied to INBOX/2788       1.18 msgs/s  844.654 KiB/s 151.580 MiB copied 
+msg INBOX/2578 {211348}       copied to INBOX/2789       1.18 msgs/s  842.999 KiB/s 151.781 MiB copied 
+msg INBOX/2579 {211401}       copied to INBOX/2790       1.18 msgs/s  841.272 KiB/s 151.983 MiB copied 
+msg INBOX/2580 {163280}       copied to INBOX/2791       1.18 msgs/s  839.479 KiB/s 152.139 MiB copied 
+msg INBOX/2581 {163822}       copied to INBOX/2792       1.18 msgs/s  837.691 KiB/s 152.295 MiB copied 
+msg INBOX/2582 {163986}       copied to INBOX/2793       1.18 msgs/s  835.984 KiB/s 152.451 MiB copied 
+msg INBOX/2583 {7590}         copied to INBOX/2794       1.19 msgs/s  833.669 KiB/s 152.459 MiB copied 
+msg INBOX/2584 {7613}         copied to INBOX/2795       1.19 msgs/s  831.337 KiB/s 152.466 MiB copied 
+msg INBOX/2585 {7623}         copied to INBOX/2796       1.19 msgs/s  829.081 KiB/s 152.473 MiB copied 
+msg INBOX/2586 {7593}         copied to INBOX/2797       1.19 msgs/s  826.697 KiB/s 152.480 MiB copied 
+msg INBOX/2587 {24608}        copied to INBOX/2798       1.19 msgs/s  824.069 KiB/s 152.504 MiB copied 
+msg INBOX/2588 {204829}       copied to INBOX/2799       1.19 msgs/s  822.398 KiB/s 152.699 MiB copied 
+msg INBOX/2589 {1795}         copied to INBOX/2800       1.20 msgs/s  819.918 KiB/s 152.701 MiB copied 
+msg INBOX/2590 {76792}        copied to INBOX/2801       1.20 msgs/s  817.981 KiB/s 152.774 MiB copied 
+msg INBOX/2591 {128325}       copied to INBOX/2802       1.20 msgs/s  816.250 KiB/s 152.896 MiB copied 
+msg INBOX/2592 {134024}       copied to INBOX/2803       1.20 msgs/s  814.576 KiB/s 153.024 MiB copied 
+msg INBOX/2593 {3071042}      copied to INBOX/2804       1.20 msgs/s  824.485 KiB/s 155.953 MiB copied 
+msg INBOX/2594 {1051766}      copied to INBOX/2805       1.20 msgs/s  826.342 KiB/s 156.956 MiB copied 
+msg INBOX/2595 {6840}         copied to INBOX/2806       1.20 msgs/s  824.167 KiB/s 156.963 MiB copied 
+msg INBOX/2596 {72281}        copied to INBOX/2807       1.20 msgs/s  822.278 KiB/s 157.032 MiB copied 
+msg INBOX/2597 {1915}         copied to INBOX/2808       1.20 msgs/s  818.666 KiB/s 157.033 MiB copied 
+msg INBOX/2598 {586596}       copied to INBOX/2809       1.20 msgs/s  818.343 KiB/s 157.593 MiB copied 
+msg INBOX/2599 {113083}       copied to INBOX/2810       1.20 msgs/s  816.504 KiB/s 157.701 MiB copied 
+msg INBOX/2600 {113077}       copied to INBOX/2811       1.20 msgs/s  814.691 KiB/s 157.808 MiB copied 
+msg INBOX/2601 {10790}        copied to INBOX/2812       1.21 msgs/s  812.234 KiB/s 157.819 MiB copied 
+msg INBOX/2602 {1795832}      copied to INBOX/2813       1.20 msgs/s  816.193 KiB/s 159.531 MiB copied 
+msg INBOX/2603 {1817766}      copied to INBOX/2814       1.20 msgs/s  820.205 KiB/s 161.265 MiB copied 
+msg INBOX/2604 {2174951}      copied to INBOX/2815       1.20 msgs/s  825.370 KiB/s 163.339 MiB copied 
+msg INBOX/2605 {9531}         copied to INBOX/2816       1.20 msgs/s  823.196 KiB/s 163.348 MiB copied 
+msg INBOX/2606 {129732}       copied to INBOX/2817       1.20 msgs/s  821.489 KiB/s 163.472 MiB copied 
+msg INBOX/2607 {89490}        copied to INBOX/2818       1.20 msgs/s  819.711 KiB/s 163.557 MiB copied 
+msg INBOX/2608 {61617}        copied to INBOX/2819       1.21 msgs/s  817.813 KiB/s 163.616 MiB copied 
+msg INBOX/2609 {2581920}      copied to INBOX/2820       1.20 msgs/s  824.876 KiB/s 166.078 MiB copied 
+msg INBOX/2610 {2610222}      copied to INBOX/2821       1.20 msgs/s  831.806 KiB/s 168.568 MiB copied 
+msg INBOX/2611 {580328}       copied to INBOX/2822       1.20 msgs/s  831.897 KiB/s 169.121 MiB copied 
+msg INBOX/2612 {587304}       copied to INBOX/2823       1.20 msgs/s  831.922 KiB/s 169.681 MiB copied 
+msg INBOX/2613 {31534}        copied to INBOX/2824       1.20 msgs/s  829.931 KiB/s 169.711 MiB copied 
+msg INBOX/2614 {608446}       copied to INBOX/2825       1.20 msgs/s  829.889 KiB/s 170.292 MiB copied 
+msg INBOX/2615 {17389}        copied to INBOX/2826       1.21 msgs/s  827.880 KiB/s 170.308 MiB copied 
+msg INBOX/2616 {17794}        copied to INBOX/2827       1.21 msgs/s  825.881 KiB/s 170.325 MiB copied 
+msg INBOX/2617 {1663544}      copied to INBOX/2828       1.21 msgs/s  828.964 KiB/s 171.912 MiB copied 
+msg INBOX/2618 {3774}         copied to INBOX/2829       1.21 msgs/s  826.938 KiB/s 171.915 MiB copied 
+msg INBOX/2619 {20002}        copied to INBOX/2830       1.21 msgs/s  824.983 KiB/s 171.934 MiB copied 
+msg INBOX/2620 {81287}        copied to INBOX/2831       1.21 msgs/s  823.194 KiB/s 172.012 MiB copied 
+msg INBOX/2621 {41764}        copied to INBOX/2832       1.21 msgs/s  821.316 KiB/s 172.052 MiB copied 
+msg INBOX/2622 {255987}       copied to INBOX/2833       1.21 msgs/s  819.437 KiB/s 172.296 MiB copied 
+msg INBOX/2623 {562165}       copied to INBOX/2834       1.21 msgs/s  819.141 KiB/s 172.832 MiB copied 
+msg INBOX/2624 {113075}       copied to INBOX/2835       1.21 msgs/s  817.576 KiB/s 172.940 MiB copied 
+msg INBOX/2625 {113094}       copied to INBOX/2836       1.22 msgs/s  815.913 KiB/s 173.048 MiB copied 
+msg INBOX/2626 {113070}       copied to INBOX/2837       1.22 msgs/s  814.339 KiB/s 173.155 MiB copied 
+msg INBOX/2627 {113369}       copied to INBOX/2838       1.22 msgs/s  812.398 KiB/s 173.264 MiB copied 
+msg INBOX/2628 {117950}       copied to INBOX/2839       1.22 msgs/s  810.769 KiB/s 173.376 MiB copied 
+msg INBOX/2629 {76131}        copied to INBOX/2840       1.22 msgs/s  808.996 KiB/s 173.449 MiB copied 
+msg INBOX/2630 {24724}        copied to INBOX/2841       1.22 msgs/s  807.171 KiB/s 173.472 MiB copied 
+msg INBOX/2631 {1941}         copied to INBOX/2842       1.22 msgs/s  805.288 KiB/s 173.474 MiB copied 
+msg INBOX/2632 {1867}         copied to INBOX/2843       1.23 msgs/s  803.390 KiB/s 173.476 MiB copied 
+msg INBOX/2633 {613618}       copied to INBOX/2844       1.23 msgs/s  802.877 KiB/s 174.061 MiB copied 
+msg INBOX/2634 {112995}       copied to INBOX/2845       1.23 msgs/s  801.358 KiB/s 174.169 MiB copied 
+msg INBOX/2635 {112967}       copied to INBOX/2846       1.23 msgs/s  799.847 KiB/s 174.277 MiB copied 
+msg INBOX/2636 {112880}       copied to INBOX/2847       1.23 msgs/s  798.324 KiB/s 174.384 MiB copied 
+msg INBOX/2637 {112910}       copied to INBOX/2848       1.23 msgs/s  796.722 KiB/s 174.492 MiB copied 
+msg INBOX/2638 {112826}       copied to INBOX/2849       1.23 msgs/s  794.952 KiB/s 174.599 MiB copied 
+msg INBOX/2639 {6835}         copied to INBOX/2850       1.23 msgs/s  793.130 KiB/s 174.606 MiB copied 
+msg INBOX/2640 {6873}         copied to INBOX/2851       1.23 msgs/s  791.324 KiB/s 174.613 MiB copied 
+msg INBOX/2641 {6959}         copied to INBOX/2852       1.24 msgs/s  789.525 KiB/s 174.619 MiB copied 
+msg INBOX/2642 {80127}        copied to INBOX/2853       1.24 msgs/s  787.927 KiB/s 174.696 MiB copied 
+msg INBOX/2643 {54244}        copied to INBOX/2854       1.24 msgs/s  786.269 KiB/s 174.747 MiB copied 
+msg INBOX/2644 {14051}        copied to INBOX/2855       1.24 msgs/s  784.475 KiB/s 174.761 MiB copied 
+msg INBOX/2645 {20945}        copied to INBOX/2856       1.24 msgs/s  782.690 KiB/s 174.781 MiB copied 
+msg INBOX/2646 {5289}         copied to INBOX/2857       1.24 msgs/s  780.938 KiB/s 174.786 MiB copied 
+msg INBOX/2647 {96062}        copied to INBOX/2858       1.24 msgs/s  779.355 KiB/s 174.877 MiB copied 
+msg INBOX/2648 {1656215}      copied to INBOX/2859       1.24 msgs/s  782.632 KiB/s 176.457 MiB copied 
+msg INBOX/2649 {320666}       copied to INBOX/2860       1.24 msgs/s  781.771 KiB/s 176.763 MiB copied 
+msg INBOX/2650 {8550}         copied to INBOX/2861       1.25 msgs/s  779.845 KiB/s 176.771 MiB copied 
+msg INBOX/2651 {1775}         copied to INBOX/2862       1.25 msgs/s  778.101 KiB/s 176.772 MiB copied 
+msg INBOX/2652 {24745}        copied to INBOX/2863       1.25 msgs/s  776.421 KiB/s 176.796 MiB copied 
+msg INBOX/2653 {24938}        copied to INBOX/2864       1.25 msgs/s  774.744 KiB/s 176.820 MiB copied 
+msg INBOX/2654 {3564326}      copied to INBOX/2865       1.24 msgs/s  783.281 KiB/s 180.219 MiB copied 
+msg INBOX/2655 {473279}       copied to INBOX/2866       1.24 msgs/s  783.023 KiB/s 180.670 MiB copied 
+msg INBOX/2656 {6874}         copied to INBOX/2867       1.25 msgs/s  781.336 KiB/s 180.677 MiB copied 
+msg INBOX/2657 {13568}        copied to INBOX/2868       1.25 msgs/s  779.660 KiB/s 180.690 MiB copied 
+msg INBOX/2658 {13615}        copied to INBOX/2869       1.25 msgs/s  777.982 KiB/s 180.703 MiB copied 
+msg INBOX/2659 {21999}        copied to INBOX/2870       1.25 msgs/s  776.260 KiB/s 180.724 MiB copied 
+msg INBOX/2660 {1905}         copied to INBOX/2871       1.25 msgs/s  774.545 KiB/s 180.726 MiB copied 
+msg INBOX/2661 {1937}         copied to INBOX/2872       1.25 msgs/s  772.684 KiB/s 180.728 MiB copied 
+msg INBOX/2662 {1932}         copied to INBOX/2873       1.25 msgs/s  771.013 KiB/s 180.729 MiB copied 
+msg INBOX/2663 {1844}         copied to INBOX/2874       1.26 msgs/s  769.374 KiB/s 180.731 MiB copied 
+msg INBOX/2664 {503280}       copied to INBOX/2875       1.26 msgs/s  769.275 KiB/s 181.211 MiB copied 
+msg INBOX/2665 {582277}       copied to INBOX/2876       1.26 msgs/s  769.473 KiB/s 181.766 MiB copied 
+msg INBOX/2666 {4259}         copied to INBOX/2877       1.26 msgs/s  767.846 KiB/s 181.770 MiB copied 
+msg INBOX/2667 {4154}         copied to INBOX/2878       1.26 msgs/s  766.231 KiB/s 181.774 MiB copied 
+msg INBOX/2668 {4044}         copied to INBOX/2879       1.26 msgs/s  764.585 KiB/s 181.778 MiB copied 
+msg INBOX/2669 {43463}        copied to INBOX/2880       1.26 msgs/s  763.066 KiB/s 181.820 MiB copied 
+msg INBOX/2670 {22009}        copied to INBOX/2881       1.26 msgs/s  761.490 KiB/s 181.841 MiB copied 
+msg INBOX/2671 {10702}        copied to INBOX/2882       1.27 msgs/s  759.893 KiB/s 181.851 MiB copied 
+msg INBOX/2672 {1928}         copied to INBOX/2883       1.27 msgs/s  758.296 KiB/s 181.853 MiB copied 
+msg INBOX/2673 {97112}        copied to INBOX/2884       1.27 msgs/s  756.956 KiB/s 181.945 MiB copied 
+msg INBOX/2674 {16301}        copied to INBOX/2885       1.27 msgs/s  755.405 KiB/s 181.961 MiB copied 
+msg INBOX/2675 {28256}        copied to INBOX/2886       1.27 msgs/s  753.806 KiB/s 181.988 MiB copied 
+msg INBOX/2676 {325752}       copied to INBOX/2887       1.27 msgs/s  753.161 KiB/s 182.299 MiB copied 
+msg INBOX/2677 {1783}         copied to INBOX/2888       1.27 msgs/s  751.572 KiB/s 182.300 MiB copied 
+msg INBOX/2678 {74391}        copied to INBOX/2889       1.27 msgs/s  750.195 KiB/s 182.371 MiB copied 
+msg INBOX/2679 {442906}       copied to INBOX/2890       1.27 msgs/s  749.473 KiB/s 182.794 MiB copied 
+msg INBOX/2680 {22010}        copied to INBOX/2891       1.27 msgs/s  747.978 KiB/s 182.815 MiB copied 
+msg INBOX/2681 {2030171}      copied to INBOX/2892       1.27 msgs/s  750.987 KiB/s 184.751 MiB copied 
+msg INBOX/2682 {80704}        copied to INBOX/2893       1.27 msgs/s  749.649 KiB/s 184.828 MiB copied 
+msg INBOX/2683 {4962}         copied to INBOX/2894       1.27 msgs/s  748.118 KiB/s 184.832 MiB copied 
+msg INBOX/2684 {58813}        copied to INBOX/2895       1.27 msgs/s  746.721 KiB/s 184.888 MiB copied 
+msg INBOX/2685 {63402}        copied to INBOX/2896       1.28 msgs/s  745.365 KiB/s 184.949 MiB copied 
+msg INBOX/2686 {44217}        copied to INBOX/2897       1.28 msgs/s  743.713 KiB/s 184.991 MiB copied 
+msg INBOX/2687 {2082002}      copied to INBOX/2898       1.27 msgs/s  747.544 KiB/s 186.977 MiB copied 
+msg INBOX/2688 {2429}         copied to INBOX/2899       1.27 msgs/s  746.036 KiB/s 186.979 MiB copied 
+msg INBOX/2689 {113456}       copied to INBOX/2900       1.28 msgs/s  744.845 KiB/s 187.087 MiB copied 
+msg INBOX/2690 {113729}       copied to INBOX/2901       1.28 msgs/s  743.461 KiB/s 187.196 MiB copied 
+msg INBOX/2691 {113315}       copied to INBOX/2902       1.28 msgs/s  742.282 KiB/s 187.304 MiB copied 
+msg INBOX/2692 {294126}       copied to INBOX/2903       1.28 msgs/s  741.453 KiB/s 187.584 MiB copied 
+msg INBOX/2693 {920404}       copied to INBOX/2904       1.28 msgs/s  742.524 KiB/s 188.462 MiB copied 
+msg INBOX/2694 {64103}        copied to INBOX/2905       1.28 msgs/s  741.191 KiB/s 188.523 MiB copied 
+msg INBOX/2695 {87803}        copied to INBOX/2906       1.28 msgs/s  739.921 KiB/s 188.607 MiB copied 
+msg INBOX/2696 {102987}       copied to INBOX/2907       1.28 msgs/s  738.752 KiB/s 188.705 MiB copied 
+msg INBOX/2697 {75862}        copied to INBOX/2908       1.28 msgs/s  737.448 KiB/s 188.777 MiB copied 
+msg INBOX/2698 {17001}        copied to INBOX/2909       1.28 msgs/s  736.024 KiB/s 188.794 MiB copied 
+msg INBOX/2699 {54804}        copied to INBOX/2910       1.28 msgs/s  734.665 KiB/s 188.846 MiB copied 
+msg INBOX/2700 {62259}        copied to INBOX/2911       1.29 msgs/s  733.356 KiB/s 188.905 MiB copied 
+msg INBOX/2701 {419886}       copied to INBOX/2912       1.29 msgs/s  732.999 KiB/s 189.306 MiB copied 
+msg INBOX/2702 {38779}        copied to INBOX/2913       1.29 msgs/s  731.665 KiB/s 189.343 MiB copied 
+msg INBOX/2703 {21999}        copied to INBOX/2914       1.29 msgs/s  730.312 KiB/s 189.364 MiB copied 
+msg INBOX/2704 {5627}         copied to INBOX/2915       1.29 msgs/s  728.892 KiB/s 189.369 MiB copied 
+msg INBOX/2705 {113485}       copied to INBOX/2916       1.29 msgs/s  727.706 KiB/s 189.477 MiB copied 
+msg INBOX/2706 {122881}       copied to INBOX/2917       1.29 msgs/s  726.597 KiB/s 189.594 MiB copied 
+msg INBOX/2707 {88754}        copied to INBOX/2918       1.29 msgs/s  725.401 KiB/s 189.679 MiB copied 
+msg INBOX/2708 {5598}         copied to INBOX/2919       1.29 msgs/s  724.015 KiB/s 189.684 MiB copied 
+msg INBOX/2709 {995349}       copied to INBOX/2920       1.29 msgs/s  725.315 KiB/s 190.634 MiB copied 
+msg INBOX/2710 {7618}         copied to INBOX/2921       1.29 msgs/s  723.925 KiB/s 190.641 MiB copied 
+msg INBOX/2711 {578324}       copied to INBOX/2922       1.29 msgs/s  723.626 KiB/s 191.192 MiB copied 
+msg INBOX/2712 {131693}       copied to INBOX/2923       1.29 msgs/s  722.059 KiB/s 191.318 MiB copied 
+msg INBOX/2713 {67318}        copied to INBOX/2924       1.29 msgs/s  720.856 KiB/s 191.382 MiB copied 
+msg INBOX/2714 {6975}         copied to INBOX/2925       1.30 msgs/s  719.494 KiB/s 191.389 MiB copied 
+msg INBOX/2715 {6986}         copied to INBOX/2926       1.30 msgs/s  718.143 KiB/s 191.396 MiB copied 
+msg INBOX/2716 {287673}       copied to INBOX/2927       1.30 msgs/s  717.526 KiB/s 191.670 MiB copied 
+msg INBOX/2717 {397923}       copied to INBOX/2928       1.30 msgs/s  717.153 KiB/s 192.049 MiB copied 
+msg INBOX/2718 {2028}         copied to INBOX/2929       1.30 msgs/s  715.730 KiB/s 192.051 MiB copied 
+msg INBOX/2719 {340369}       copied to INBOX/2930       1.30 msgs/s  715.282 KiB/s 192.376 MiB copied 
+msg INBOX/2720 {13223}        copied to INBOX/2931       1.30 msgs/s  713.974 KiB/s 192.389 MiB copied 
+msg INBOX/2721 {382426}       copied to INBOX/2932       1.30 msgs/s  713.615 KiB/s 192.753 MiB copied 
+msg INBOX/2722 {251460}       copied to INBOX/2933       1.30 msgs/s  712.962 KiB/s 192.993 MiB copied 
+msg INBOX/2723 {224612}       copied to INBOX/2934       1.30 msgs/s  712.176 KiB/s 193.207 MiB copied 
+msg INBOX/2724 {627096}       copied to INBOX/2935       1.30 msgs/s  712.528 KiB/s 193.805 MiB copied 
+msg INBOX/2725 {37191}        copied to INBOX/2936       1.30 msgs/s  711.318 KiB/s 193.841 MiB copied 
+msg INBOX/2726 {34398}        copied to INBOX/2937       1.31 msgs/s  710.109 KiB/s 193.874 MiB copied 
+msg INBOX/2727 {108560}       copied to INBOX/2938       1.31 msgs/s  709.071 KiB/s 193.977 MiB copied 
+msg INBOX/2728 {232303}       copied to INBOX/2939       1.31 msgs/s  708.390 KiB/s 194.199 MiB copied 
+msg INBOX/2729 {22104}        copied to INBOX/2940       1.31 msgs/s  707.138 KiB/s 194.220 MiB copied 
+msg INBOX/2730 {135606}       copied to INBOX/2941       1.31 msgs/s  706.172 KiB/s 194.349 MiB copied 
+msg INBOX/2731 {246716}       copied to INBOX/2942       1.31 msgs/s  705.525 KiB/s 194.584 MiB copied 
+msg INBOX/2732 {312729}       copied to INBOX/2943       1.31 msgs/s  705.068 KiB/s 194.883 MiB copied 
+msg INBOX/2733 {262440}       copied to INBOX/2944       1.31 msgs/s  704.477 KiB/s 195.133 MiB copied 
+msg INBOX/2734 {44850}        copied to INBOX/2945       1.31 msgs/s  703.297 KiB/s 195.176 MiB copied 
+msg INBOX/2735 {916823}       copied to INBOX/2946       1.31 msgs/s  704.233 KiB/s 196.050 MiB copied 
+msg INBOX/2736 {260181}       copied to INBOX/2947       1.31 msgs/s  703.579 KiB/s 196.298 MiB copied 
+msg INBOX/2737 {6678907}      copied to INBOX/2948       1.31 msgs/s  720.715 KiB/s 202.668 MiB copied 
+msg INBOX/2738 {112915}       copied to INBOX/2949       1.31 msgs/s  719.737 KiB/s 202.775 MiB copied 
+msg INBOX/2739 {113438}       copied to INBOX/2950       1.31 msgs/s  718.778 KiB/s 202.883 MiB copied 
+msg INBOX/2740 {343430}       copied to INBOX/2951       1.31 msgs/s  718.464 KiB/s 203.211 MiB copied 
+msg INBOX/2741 {135146}       copied to INBOX/2952       1.31 msgs/s  717.491 KiB/s 203.340 MiB copied 
+msg INBOX/2742 {12677045}     copied to INBOX/2953       1.29 msgs/s  749.487 KiB/s 215.430 MiB copied 
+msg INBOX/2743 {7649}         copied to INBOX/2954       1.30 msgs/s  748.178 KiB/s 215.437 MiB copied 
+msg INBOX/2744 {253392}       copied to INBOX/2955       1.30 msgs/s  747.510 KiB/s 215.679 MiB copied 
+msg INBOX/2745 {9289}         copied to INBOX/2956       1.30 msgs/s  746.176 KiB/s 215.687 MiB copied 
+msg INBOX/2746 {13202124}     copied to INBOX/2957       1.28 msgs/s  779.353 KiB/s 228.278 MiB copied 
+msg INBOX/2747 {1998308}      copied to INBOX/2958       1.28 msgs/s  783.075 KiB/s 230.184 MiB copied 
+msg INBOX/2748 {298281}       copied to INBOX/2959       1.28 msgs/s  782.500 KiB/s 230.468 MiB copied 
+msg INBOX/2749 {1970116}      copied to INBOX/2960       1.28 msgs/s  786.144 KiB/s 232.347 MiB copied 
+msg INBOX/2750 {74539}        copied to INBOX/2961       1.28 msgs/s  784.978 KiB/s 232.418 MiB copied 
+msg INBOX/2751 {75695}        copied to INBOX/2962       1.28 msgs/s  783.786 KiB/s 232.490 MiB copied 
+msg INBOX/2752 {309733}       copied to INBOX/2963       1.28 msgs/s  782.958 KiB/s 232.786 MiB copied 
+msg INBOX/2753 {138103}       copied to INBOX/2964       1.29 msgs/s  781.911 KiB/s 232.917 MiB copied 
+msg INBOX/2754 {1292827}      copied to INBOX/2965       1.28 msgs/s  783.851 KiB/s 234.150 MiB copied 
+msg INBOX/2755 {1508769}      copied to INBOX/2966       1.28 msgs/s  785.855 KiB/s 235.589 MiB copied 
+msg INBOX/2756 {1509278}      copied to INBOX/2967       1.28 msgs/s  788.302 KiB/s 237.029 MiB copied 
+msg INBOX/2757 {48535}        copied to INBOX/2968       1.28 msgs/s  787.061 KiB/s 237.075 MiB copied 
+msg INBOX/2758 {13543}        copied to INBOX/2969       1.28 msgs/s  785.747 KiB/s 237.088 MiB copied 
+msg INBOX/2759 {227268}       copied to INBOX/2970       1.29 msgs/s  784.991 KiB/s 237.305 MiB copied 
+msg INBOX/2760 {255904}       copied to INBOX/2971       1.29 msgs/s  784.274 KiB/s 237.549 MiB copied 
+msg INBOX/2761 {1749660}      copied to INBOX/2972       1.29 msgs/s  787.244 KiB/s 239.217 MiB copied 
+msg INBOX/2762 {192201}       copied to INBOX/2973       1.29 msgs/s  786.412 KiB/s 239.400 MiB copied 
+msg INBOX/2763 {622024}       copied to INBOX/2974       1.29 msgs/s  786.629 KiB/s 239.994 MiB copied 
+msg INBOX/2764 {335580}       copied to INBOX/2975       1.29 msgs/s  785.797 KiB/s 240.314 MiB copied 
+msg INBOX/2765 {113067}       copied to INBOX/2976       1.29 msgs/s  784.715 KiB/s 240.422 MiB copied 
+msg INBOX/2766 {113080}       copied to INBOX/2977       1.29 msgs/s  783.584 KiB/s 240.529 MiB copied 
+msg INBOX/2767 {113068}       copied to INBOX/2978       1.29 msgs/s  782.499 KiB/s 240.637 MiB copied 
+msg INBOX/2768 {6943}         copied to INBOX/2979       1.29 msgs/s  781.238 KiB/s 240.644 MiB copied 
+msg INBOX/2769 {255165}       copied to INBOX/2980       1.29 msgs/s  780.393 KiB/s 240.887 MiB copied 
+msg INBOX/2770 {1252492}      copied to INBOX/2981       1.29 msgs/s  781.537 KiB/s 242.082 MiB copied 
+msg INBOX/2771 {6757}         copied to INBOX/2982       1.29 msgs/s  780.271 KiB/s 242.088 MiB copied 
+msg INBOX/2772 {312958}       copied to INBOX/2983       1.29 msgs/s  779.625 KiB/s 242.387 MiB copied 
+msg INBOX/2773 {289114}       copied to INBOX/2984       1.29 msgs/s  778.983 KiB/s 242.662 MiB copied 
+msg INBOX/2774 {807421}       copied to INBOX/2985       1.29 msgs/s  779.426 KiB/s 243.432 MiB copied 
+msg INBOX/2775 {807421}       copied to INBOX/2986       1.29 msgs/s  779.952 KiB/s 244.202 MiB copied 
+msg INBOX/2776 {31568}        copied to INBOX/2987       1.29 msgs/s  778.656 KiB/s 244.232 MiB copied 
+msg INBOX/2777 {2100732}      copied to INBOX/2988       1.29 msgs/s  781.615 KiB/s 246.236 MiB copied 
+msg INBOX/2778 {44644}        copied to INBOX/2989       1.29 msgs/s  780.443 KiB/s 246.278 MiB copied 
+msg INBOX/2779 {22103}        copied to INBOX/2990       1.29 msgs/s  779.235 KiB/s 246.299 MiB copied 
+msg INBOX/2780 {141679}       copied to INBOX/2991       1.29 msgs/s  778.290 KiB/s 246.435 MiB copied 
+msg INBOX/2781 {34007}        copied to INBOX/2992       1.29 msgs/s  777.094 KiB/s 246.467 MiB copied 
+msg INBOX/2782 {494642}       copied to INBOX/2993       1.29 msgs/s  776.933 KiB/s 246.939 MiB copied 
+msg INBOX/2783 {292920}       copied to INBOX/2994       1.29 msgs/s  776.289 KiB/s 247.218 MiB copied 
+msg INBOX/2784 {11455}        copied to INBOX/2995       1.30 msgs/s  775.060 KiB/s 247.229 MiB copied 
+msg INBOX/2785 {41427}        copied to INBOX/2996       1.30 msgs/s  773.883 KiB/s 247.269 MiB copied 
+msg INBOX/2786 {332426}       copied to INBOX/2997       1.30 msgs/s  773.399 KiB/s 247.586 MiB copied 
+msg INBOX/2787 {101666}       copied to INBOX/2998       1.30 msgs/s  772.394 KiB/s 247.683 MiB copied 
+msg INBOX/2788 {206024}       copied to INBOX/2999       1.30 msgs/s  771.669 KiB/s 247.879 MiB copied 
+msg INBOX/2789 {1980948}      copied to INBOX/3000       1.30 msgs/s  775.048 KiB/s 249.768 MiB copied 
+msg INBOX/2790 {173240}       copied to INBOX/3001       1.30 msgs/s  774.005 KiB/s 249.933 MiB copied 
+msg INBOX/2791 {81541}        copied to INBOX/3002       1.30 msgs/s  772.974 KiB/s 250.011 MiB copied 
+msg INBOX/2792 {23675}        copied to INBOX/3003       1.30 msgs/s  771.826 KiB/s 250.034 MiB copied 
+msg INBOX/2793 {6958}         copied to INBOX/3004       1.30 msgs/s  770.622 KiB/s 250.040 MiB copied 
+msg INBOX/2794 {67372}        copied to INBOX/3005       1.30 msgs/s  769.547 KiB/s 250.105 MiB copied 
+msg INBOX/2795 {958060}       copied to INBOX/3006       1.30 msgs/s  770.556 KiB/s 251.018 MiB copied 
+msg INBOX/2796 {965425}       copied to INBOX/3007       1.30 msgs/s  771.699 KiB/s 251.939 MiB copied 
+msg INBOX/2797 {52493}        copied to INBOX/3008       1.30 msgs/s  770.612 KiB/s 251.989 MiB copied 
+msg INBOX/2798 {65386}        copied to INBOX/3009       1.30 msgs/s  769.569 KiB/s 252.051 MiB copied 
+msg INBOX/2799 {118560}       copied to INBOX/3010       1.30 msgs/s  768.568 KiB/s 252.164 MiB copied 
+msg INBOX/2800 {20200}        copied to INBOX/3011       1.30 msgs/s  767.404 KiB/s 252.184 MiB copied 
+msg INBOX/2801 {20215}        copied to INBOX/3012       1.31 msgs/s  766.226 KiB/s 252.203 MiB copied 
+msg INBOX/2802 {14103}        copied to INBOX/3013       1.31 msgs/s  765.058 KiB/s 252.216 MiB copied 
+msg INBOX/2803 {14100}        copied to INBOX/3014       1.31 msgs/s  763.902 KiB/s 252.230 MiB copied 
+msg INBOX/2804 {14079}        copied to INBOX/3015       1.31 msgs/s  762.749 KiB/s 252.243 MiB copied 
+msg INBOX/2805 {1184916}      copied to INBOX/3016       1.31 msgs/s  763.979 KiB/s 253.373 MiB copied 
+msg INBOX/2806 {63232}        copied to INBOX/3017       1.31 msgs/s  762.948 KiB/s 253.434 MiB copied 
+msg INBOX/2807 {112745}       copied to INBOX/3018       1.31 msgs/s  762.006 KiB/s 253.541 MiB copied 
+msg INBOX/2808 {192578}       copied to INBOX/3019       1.31 msgs/s  761.261 KiB/s 253.725 MiB copied 
+msg INBOX/2809 {9414}         copied to INBOX/3020       1.31 msgs/s  760.100 KiB/s 253.734 MiB copied 
+msg INBOX/2810 {335451}       copied to INBOX/3021       1.31 msgs/s  759.522 KiB/s 254.054 MiB copied 
+msg INBOX/2811 {34952}        copied to INBOX/3022       1.31 msgs/s  758.449 KiB/s 254.087 MiB copied 
+msg INBOX/2812 {2390060}      copied to INBOX/3023       1.31 msgs/s  762.107 KiB/s 256.366 MiB copied 
+msg INBOX/2813 {264890}       copied to INBOX/3024       1.31 msgs/s  761.577 KiB/s 256.619 MiB copied 
+msg INBOX/2814 {150666}       copied to INBOX/3025       1.31 msgs/s  760.785 KiB/s 256.763 MiB copied 
+msg INBOX/2815 {284182}       copied to INBOX/3026       1.31 msgs/s  760.287 KiB/s 257.034 MiB copied 
+msg INBOX/2816 {690982}       copied to INBOX/3027       1.31 msgs/s  760.712 KiB/s 257.693 MiB copied 
+msg INBOX/2817 {40958}        copied to INBOX/3028       1.31 msgs/s  759.668 KiB/s 257.732 MiB copied 
+msg INBOX/2818 {702459}       copied to INBOX/3029       1.31 msgs/s  760.088 KiB/s 258.402 MiB copied 
+msg INBOX/2819 {41118}        copied to INBOX/3030       1.31 msgs/s  759.050 KiB/s 258.441 MiB copied 
+msg INBOX/2820 {41066}        copied to INBOX/3031       1.31 msgs/s  757.998 KiB/s 258.480 MiB copied 
+msg INBOX/2821 {232488}       copied to INBOX/3032       1.32 msgs/s  757.386 KiB/s 258.702 MiB copied 
+msg INBOX/2822 {6999}         copied to INBOX/3033       1.32 msgs/s  756.236 KiB/s 258.708 MiB copied 
+msg INBOX/2823 {6977}         copied to INBOX/3034       1.32 msgs/s  755.138 KiB/s 258.715 MiB copied 
+msg INBOX/2824 {7016}         copied to INBOX/3035       1.32 msgs/s  754.021 KiB/s 258.722 MiB copied 
+msg INBOX/2825 {707184}       copied to INBOX/3036       1.32 msgs/s  754.555 KiB/s 259.396 MiB copied 
+msg INBOX/2826 {685345}       copied to INBOX/3037       1.32 msgs/s  754.965 KiB/s 260.050 MiB copied 
+msg INBOX/2827 {9317}         copied to INBOX/3038       1.32 msgs/s  753.856 KiB/s 260.059 MiB copied 
+msg INBOX/2828 {233957}       copied to INBOX/3039       1.32 msgs/s  753.176 KiB/s 260.282 MiB copied 
+msg INBOX/2829 {262280}       copied to INBOX/3040       1.32 msgs/s  752.495 KiB/s 260.532 MiB copied 
+msg INBOX/2830 {1893}         copied to INBOX/3041       1.32 msgs/s  751.092 KiB/s 260.534 MiB copied 
+msg INBOX/2831 {1915}         copied to INBOX/3042       1.32 msgs/s  749.985 KiB/s 260.536 MiB copied 
+msg INBOX/2832 {10511}        copied to INBOX/3043       1.32 msgs/s  748.922 KiB/s 260.546 MiB copied 
+msg INBOX/2833 {199493}       copied to INBOX/3044       1.32 msgs/s  748.202 KiB/s 260.736 MiB copied 
+msg INBOX/2834 {40951}        copied to INBOX/3045       1.32 msgs/s  747.032 KiB/s 260.775 MiB copied 
+msg INBOX/2835 {41358}        copied to INBOX/3046       1.32 msgs/s  745.988 KiB/s 260.814 MiB copied 
+msg INBOX/2836 {261763}       copied to INBOX/3047       1.32 msgs/s  745.427 KiB/s 261.064 MiB copied 
+msg INBOX/2837 {41058}        copied to INBOX/3048       1.33 msgs/s  744.442 KiB/s 261.103 MiB copied 
+msg INBOX/2838 {392435}       copied to INBOX/3049       1.33 msgs/s  744.195 KiB/s 261.477 MiB copied 
+msg INBOX/2839 {29385}        copied to INBOX/3050       1.33 msgs/s  743.191 KiB/s 261.505 MiB copied 
+msg INBOX/2840 {1983129}      copied to INBOX/3051       1.33 msgs/s  746.217 KiB/s 263.397 MiB copied 
+msg INBOX/2841 {1983155}      copied to INBOX/3052       1.32 msgs/s  749.386 KiB/s 265.288 MiB copied 
+msg INBOX/2842 {18431}        copied to INBOX/3053       1.32 msgs/s  748.333 KiB/s 265.306 MiB copied 
+msg INBOX/2843 {18755}        copied to INBOX/3054       1.33 msgs/s  747.289 KiB/s 265.323 MiB copied 
+msg INBOX/2844 {47286}        copied to INBOX/3055       1.33 msgs/s  746.319 KiB/s 265.369 MiB copied 
+msg INBOX/2845 {47984}        copied to INBOX/3056       1.33 msgs/s  745.174 KiB/s 265.414 MiB copied 
+msg INBOX/2846 {424252}       copied to INBOX/3057       1.33 msgs/s  744.713 KiB/s 265.819 MiB copied 
+msg INBOX/2847 {690605}       copied to INBOX/3058       1.33 msgs/s  745.040 KiB/s 266.478 MiB copied 
+msg INBOX/2848 {303661}       copied to INBOX/3059       1.33 msgs/s  744.486 KiB/s 266.767 MiB copied 
+msg INBOX/2849 {6941}         copied to INBOX/3060       1.33 msgs/s  743.223 KiB/s 266.774 MiB copied 
+msg INBOX/2850 {6958}         copied to INBOX/3061       1.33 msgs/s  742.181 KiB/s 266.780 MiB copied 
+msg INBOX/2851 {6931}         copied to INBOX/3062       1.33 msgs/s  741.127 KiB/s 266.787 MiB copied 
+msg INBOX/2852 {30061}        copied to INBOX/3063       1.33 msgs/s  740.087 KiB/s 266.816 MiB copied 
+msg INBOX/2853 {354288}       copied to INBOX/3064       1.33 msgs/s  739.759 KiB/s 267.154 MiB copied 
+msg INBOX/2854 {1865}         copied to INBOX/3065       1.33 msgs/s  738.672 KiB/s 267.155 MiB copied 
+msg INBOX/2855 {113098}       copied to INBOX/3066       1.33 msgs/s  737.828 KiB/s 267.263 MiB copied 
+msg INBOX/2856 {112904}       copied to INBOX/3067       1.33 msgs/s  737.023 KiB/s 267.371 MiB copied 
+msg INBOX/2857 {124708}       copied to INBOX/3068       1.33 msgs/s  736.238 KiB/s 267.490 MiB copied 
+msg INBOX/2858 {120517}       copied to INBOX/3069       1.33 msgs/s  735.457 KiB/s 267.605 MiB copied 
+msg INBOX/2859 {441224}       copied to INBOX/3070       1.33 msgs/s  735.339 KiB/s 268.025 MiB copied 
+msg INBOX/2860 {274922}       copied to INBOX/3071       1.33 msgs/s  734.896 KiB/s 268.288 MiB copied 
+msg INBOX/2861 {249087}       copied to INBOX/3072       1.34 msgs/s  734.396 KiB/s 268.525 MiB copied 
+msg INBOX/2862 {224540}       copied to INBOX/3073       1.34 msgs/s  733.717 KiB/s 268.739 MiB copied 
+msg INBOX/2863 {20215}        copied to INBOX/3074       1.34 msgs/s  732.562 KiB/s 268.759 MiB copied 
+msg INBOX/2864 {17197}        copied to INBOX/3075       1.34 msgs/s  731.256 KiB/s 268.775 MiB copied 
+msg INBOX/2865 {17171}        copied to INBOX/3076       1.34 msgs/s  730.183 KiB/s 268.791 MiB copied 
+msg INBOX/2866 {3527}         copied to INBOX/3077       1.34 msgs/s  729.161 KiB/s 268.795 MiB copied 
+msg INBOX/2867 {85033}        copied to INBOX/3078       1.34 msgs/s  728.265 KiB/s 268.876 MiB copied 
+msg INBOX/2868 {206516}       copied to INBOX/3079       1.34 msgs/s  727.615 KiB/s 269.073 MiB copied 
+msg INBOX/2869 {75500}        copied to INBOX/3080       1.34 msgs/s  726.724 KiB/s 269.145 MiB copied 
+msg INBOX/2870 {440187}       copied to INBOX/3081       1.34 msgs/s  726.499 KiB/s 269.565 MiB copied 
+msg INBOX/2871 {77384}        copied to INBOX/3082       1.34 msgs/s  725.639 KiB/s 269.638 MiB copied 
+msg INBOX/2872 {253768}       copied to INBOX/3083       1.34 msgs/s  725.079 KiB/s 269.880 MiB copied 
+msg INBOX/2873 {6721}         copied to INBOX/3084       1.34 msgs/s  724.100 KiB/s 269.887 MiB copied 
+msg INBOX/2874 {340426}       copied to INBOX/3085       1.34 msgs/s  723.782 KiB/s 270.211 MiB copied 
+msg INBOX/2875 {4597}         copied to INBOX/3086       1.34 msgs/s  722.805 KiB/s 270.216 MiB copied 
+msg INBOX/2876 {349968}       copied to INBOX/3087       1.34 msgs/s  722.281 KiB/s 270.550 MiB copied 
+msg INBOX/2877 {6962}         copied to INBOX/3088       1.34 msgs/s  721.305 KiB/s 270.556 MiB copied 
+msg INBOX/2878 {226769}       copied to INBOX/3089       1.34 msgs/s  720.697 KiB/s 270.773 MiB copied 
+msg INBOX/2879 {24372}        copied to INBOX/3090       1.34 msgs/s  719.771 KiB/s 270.796 MiB copied 
+msg INBOX/2880 {1259569}      copied to INBOX/3091       1.34 msgs/s  720.935 KiB/s 271.997 MiB copied 
+msg INBOX/2881 {335441}       copied to INBOX/3092       1.34 msgs/s  720.399 KiB/s 272.317 MiB copied 
+msg INBOX/2882 {2295323}      copied to INBOX/3093       1.34 msgs/s  723.446 KiB/s 274.506 MiB copied 
+msg INBOX/2883 {113071}       copied to INBOX/3094       1.34 msgs/s  722.685 KiB/s 274.614 MiB copied 
+msg INBOX/2884 {113091}       copied to INBOX/3095       1.34 msgs/s  721.926 KiB/s 274.722 MiB copied 
+msg INBOX/2885 {118883}       copied to INBOX/3096       1.34 msgs/s  721.186 KiB/s 274.835 MiB copied 
+msg INBOX/2886 {118758}       copied to INBOX/3097       1.34 msgs/s  720.451 KiB/s 274.948 MiB copied 
+msg INBOX/2887 {118742}       copied to INBOX/3098       1.34 msgs/s  719.693 KiB/s 275.061 MiB copied 
+msg INBOX/2888 {118821}       copied to INBOX/3099       1.34 msgs/s  718.931 KiB/s 275.175 MiB copied 
+msg INBOX/2889 {132023}       copied to INBOX/3100       1.35 msgs/s  718.206 KiB/s 275.301 MiB copied 
+msg INBOX/2890 {556851}       copied to INBOX/3101       1.35 msgs/s  718.241 KiB/s 275.832 MiB copied 
+msg INBOX/2891 {7150}         copied to INBOX/3102       1.35 msgs/s  717.306 KiB/s 275.839 MiB copied 
+msg INBOX/2892 {255560}       copied to INBOX/3103       1.35 msgs/s  716.803 KiB/s 276.082 MiB copied 
+msg INBOX/2893 {278566}       copied to INBOX/3104       1.35 msgs/s  716.305 KiB/s 276.348 MiB copied 
+msg INBOX/2894 {2242793}      copied to INBOX/3105       1.34 msgs/s  719.288 KiB/s 278.487 MiB copied 
+msg INBOX/2895 {477088}       copied to INBOX/3106       1.34 msgs/s  719.215 KiB/s 278.942 MiB copied 
+msg INBOX/2896 {7650}         copied to INBOX/3107       1.35 msgs/s  718.274 KiB/s 278.949 MiB copied 
+msg INBOX/2897 {17258}        copied to INBOX/3108       1.35 msgs/s  717.354 KiB/s 278.966 MiB copied 
+msg INBOX/2898 {39533}        copied to INBOX/3109       1.35 msgs/s  716.484 KiB/s 279.003 MiB copied 
+msg INBOX/2899 {13234}        copied to INBOX/3110       1.35 msgs/s  715.556 KiB/s 279.016 MiB copied 
+msg INBOX/2900 {2304951}      copied to INBOX/3111       1.35 msgs/s  718.589 KiB/s 281.214 MiB copied 
+msg INBOX/2901 {207649}       copied to INBOX/3112       1.35 msgs/s  718.041 KiB/s 281.412 MiB copied 
+msg INBOX/2902 {10103}        copied to INBOX/3113       1.35 msgs/s  717.128 KiB/s 281.422 MiB copied 
+msg INBOX/2903 {2199449}      copied to INBOX/3114       1.34 msgs/s  720.145 KiB/s 283.519 MiB copied 
+msg INBOX/2904 {309159}       copied to INBOX/3115       1.34 msgs/s  719.768 KiB/s 283.814 MiB copied 
+msg INBOX/2905 {6363}         copied to INBOX/3116       1.35 msgs/s  718.865 KiB/s 283.820 MiB copied 
+msg INBOX/2906 {255285}       copied to INBOX/3117       1.35 msgs/s  718.408 KiB/s 284.064 MiB copied 
+msg INBOX/2907 {231817}       copied to INBOX/3118       1.35 msgs/s  717.899 KiB/s 284.285 MiB copied 
+msg INBOX/2908 {192265}       copied to INBOX/3119       1.35 msgs/s  717.340 KiB/s 284.468 MiB copied 
+msg INBOX/2909 {241568}       copied to INBOX/3120       1.35 msgs/s  716.840 KiB/s 284.698 MiB copied 
+msg INBOX/2910 {237653}       copied to INBOX/3121       1.35 msgs/s  716.025 KiB/s 284.925 MiB copied 
+msg INBOX/2911 {627811}       copied to INBOX/3122       1.35 msgs/s  716.153 KiB/s 285.524 MiB copied 
+msg INBOX/2912 {358146}       copied to INBOX/3123       1.35 msgs/s  715.882 KiB/s 285.865 MiB copied 
+msg INBOX/2913 {149665}       copied to INBOX/3124       1.35 msgs/s  715.250 KiB/s 286.008 MiB copied 
+msg INBOX/2914 {207932}       copied to INBOX/3125       1.35 msgs/s  714.686 KiB/s 286.206 MiB copied 
+msg INBOX/2915 {312535}       copied to INBOX/3126       1.35 msgs/s  714.273 KiB/s 286.504 MiB copied 
+msg INBOX/2916 {288566}       copied to INBOX/3127       1.35 msgs/s  713.857 KiB/s 286.780 MiB copied 
+msg INBOX/2917 {16640}        copied to INBOX/3128       1.35 msgs/s  712.979 KiB/s 286.796 MiB copied 
+msg INBOX/2918 {8480}         copied to INBOX/3129       1.35 msgs/s  712.084 KiB/s 286.804 MiB copied 
+msg INBOX/2919 {39324}        copied to INBOX/3130       1.35 msgs/s  711.252 KiB/s 286.841 MiB copied 
+msg INBOX/2920 {21347}        copied to INBOX/3131       1.35 msgs/s  710.391 KiB/s 286.861 MiB copied 
+msg INBOX/2921 {40400}        copied to INBOX/3132       1.35 msgs/s  709.441 KiB/s 286.900 MiB copied 
+msg INBOX/2922 {13873}        copied to INBOX/3133       1.35 msgs/s  708.551 KiB/s 286.913 MiB copied 
+msg INBOX/2923 {13061}        copied to INBOX/3134       1.35 msgs/s  707.684 KiB/s 286.926 MiB copied 
+msg INBOX/2924 {61115}        copied to INBOX/3135       1.35 msgs/s  706.883 KiB/s 286.984 MiB copied 
+msg INBOX/2925 {67291}        copied to INBOX/3136       1.35 msgs/s  706.108 KiB/s 287.048 MiB copied 
+msg INBOX/2926 {283591}       copied to INBOX/3137       1.36 msgs/s  705.655 KiB/s 287.319 MiB copied 
+msg INBOX/2927 {272101}       copied to INBOX/3138       1.36 msgs/s  705.068 KiB/s 287.578 MiB copied 
+msg INBOX/2928 {261916}       copied to INBOX/3139       1.36 msgs/s  704.589 KiB/s 287.828 MiB copied 
+msg INBOX/2929 {224071}       copied to INBOX/3140       1.36 msgs/s  704.094 KiB/s 288.042 MiB copied 
+msg INBOX/2930 {9820}         copied to INBOX/3141       1.36 msgs/s  703.194 KiB/s 288.051 MiB copied 
+msg INBOX/2931 {112415}       copied to INBOX/3142       1.36 msgs/s  702.434 KiB/s 288.158 MiB copied 
+msg INBOX/2932 {167033}       copied to INBOX/3143       1.36 msgs/s  701.832 KiB/s 288.317 MiB copied 
+msg INBOX/2933 {166911}       copied to INBOX/3144       1.36 msgs/s  701.215 KiB/s 288.477 MiB copied 
+msg INBOX/2934 {1199520}      copied to INBOX/3145       1.36 msgs/s  702.427 KiB/s 289.621 MiB copied 
+msg INBOX/2935 {77940}        copied to INBOX/3146       1.36 msgs/s  701.707 KiB/s 289.695 MiB copied 
+msg INBOX/2936 {132836}       copied to INBOX/3147       1.36 msgs/s  701.056 KiB/s 289.822 MiB copied 
+msg INBOX/2937 {322003}       copied to INBOX/3148       1.36 msgs/s  700.785 KiB/s 290.129 MiB copied 
+msg INBOX/2938 {80655}        copied to INBOX/3149       1.36 msgs/s  700.077 KiB/s 290.206 MiB copied 
+msg INBOX/2939 {254897}       copied to INBOX/3150       1.36 msgs/s  699.685 KiB/s 290.449 MiB copied 
+msg INBOX/2940 {63438}        copied to INBOX/3151       1.36 msgs/s  698.949 KiB/s 290.509 MiB copied 
+msg INBOX/2941 {226075}       copied to INBOX/3152       1.36 msgs/s  698.516 KiB/s 290.725 MiB copied 
+msg INBOX/2942 {440996}       copied to INBOX/3153       1.36 msgs/s  698.497 KiB/s 291.145 MiB copied 
+msg INBOX/2943 {277051}       copied to INBOX/3154       1.36 msgs/s  698.172 KiB/s 291.410 MiB copied 
+msg INBOX/2944 {7101}         copied to INBOX/3155       1.36 msgs/s  697.334 KiB/s 291.416 MiB copied 
+msg INBOX/2945 {341350}       copied to INBOX/3156       1.36 msgs/s  697.109 KiB/s 291.742 MiB copied 
+msg INBOX/2946 {104434}       copied to INBOX/3157       1.36 msgs/s  696.460 KiB/s 291.841 MiB copied 
+msg INBOX/2947 {462760}       copied to INBOX/3158       1.36 msgs/s  696.485 KiB/s 292.283 MiB copied 
+msg INBOX/2948 {508837}       copied to INBOX/3159       1.36 msgs/s  696.587 KiB/s 292.768 MiB copied 
+msg INBOX/2949 {315293}       copied to INBOX/3160       1.36 msgs/s  696.315 KiB/s 293.069 MiB copied 
+msg INBOX/2950 {162201}       copied to INBOX/3161       1.36 msgs/s  695.784 KiB/s 293.223 MiB copied 
+msg INBOX/2951 {15055}        copied to INBOX/3162       1.37 msgs/s  694.915 KiB/s 293.238 MiB copied 
+msg INBOX/2952 {25942}        copied to INBOX/3163       1.37 msgs/s  694.102 KiB/s 293.263 MiB copied 
+msg INBOX/2953 {706801}       copied to INBOX/3164       1.37 msgs/s  694.377 KiB/s 293.937 MiB copied 
+msg INBOX/2954 {279251}       copied to INBOX/3165       1.37 msgs/s  694.026 KiB/s 294.203 MiB copied 
+msg INBOX/2955 {193581}       copied to INBOX/3166       1.37 msgs/s  693.500 KiB/s 294.388 MiB copied 
+msg INBOX/2956 {112522}       copied to INBOX/3167       1.37 msgs/s  692.862 KiB/s 294.495 MiB copied 
+msg INBOX/2957 {112522}       copied to INBOX/3168       1.37 msgs/s  692.177 KiB/s 294.602 MiB copied 
+msg INBOX/2958 {112527}       copied to INBOX/3169       1.37 msgs/s  691.454 KiB/s 294.709 MiB copied 
+msg INBOX/2959 {40503}        copied to INBOX/3170       1.37 msgs/s  690.702 KiB/s 294.748 MiB copied 
+msg INBOX/2960 {254594}       copied to INBOX/3171       1.37 msgs/s  690.344 KiB/s 294.991 MiB copied 
+msg INBOX/2961 {526972}       copied to INBOX/3172       1.37 msgs/s  690.502 KiB/s 295.493 MiB copied 
+msg INBOX/2962 {440502}       copied to INBOX/3173       1.37 msgs/s  690.471 KiB/s 295.914 MiB copied 
+msg INBOX/2963 {52270}        copied to INBOX/3174       1.37 msgs/s  689.744 KiB/s 295.963 MiB copied 
+msg INBOX/2964 {42164}        copied to INBOX/3175       1.37 msgs/s  688.981 KiB/s 296.004 MiB copied 
+msg INBOX/2965 {214149}       copied to INBOX/3176       1.37 msgs/s  688.538 KiB/s 296.208 MiB copied 
+msg INBOX/2966 {529744}       copied to INBOX/3177       1.37 msgs/s  688.408 KiB/s 296.713 MiB copied 
+msg INBOX/2967 {518965}       copied to INBOX/3178       1.37 msgs/s  688.365 KiB/s 297.208 MiB copied 
+msg INBOX/2968 {726832}       copied to INBOX/3179       1.37 msgs/s  688.551 KiB/s 297.901 MiB copied 
+msg INBOX/2969 {221746}       copied to INBOX/3180       1.37 msgs/s  688.138 KiB/s 298.113 MiB copied 
+msg INBOX/2970 {23422}        copied to INBOX/3181       1.37 msgs/s  687.334 KiB/s 298.135 MiB copied 
+msg INBOX/2971 {19857}        copied to INBOX/3182       1.37 msgs/s  686.555 KiB/s 298.154 MiB copied 
+msg INBOX/2972 {285322}       copied to INBOX/3183       1.37 msgs/s  686.225 KiB/s 298.426 MiB copied 
+msg INBOX/2973 {503265}       copied to INBOX/3184       1.37 msgs/s  686.119 KiB/s 298.906 MiB copied 
+msg INBOX/2974 {6488}         copied to INBOX/3185       1.37 msgs/s  685.205 KiB/s 298.912 MiB copied 
+msg INBOX/2975 {6468}         copied to INBOX/3186       1.37 msgs/s  684.419 KiB/s 298.918 MiB copied 
+msg INBOX/2976 {6470}         copied to INBOX/3187       1.37 msgs/s  683.627 KiB/s 298.924 MiB copied 
+msg INBOX/2977 {6469}         copied to INBOX/3188       1.37 msgs/s  682.846 KiB/s 298.931 MiB copied 
+msg INBOX/2978 {6467}         copied to INBOX/3189       1.37 msgs/s  682.058 KiB/s 298.937 MiB copied 
+msg INBOX/2979 {6489}         copied to INBOX/3190       1.38 msgs/s  681.281 KiB/s 298.943 MiB copied 
+msg INBOX/2980 {6473}         copied to INBOX/3191       1.38 msgs/s  680.492 KiB/s 298.949 MiB copied 
+msg INBOX/2981 {6487}         copied to INBOX/3192       1.38 msgs/s  679.698 KiB/s 298.955 MiB copied 
+msg INBOX/2982 {6471}         copied to INBOX/3193       1.38 msgs/s  678.583 KiB/s 298.961 MiB copied 
+msg INBOX/2983 {6490}         copied to INBOX/3194       1.38 msgs/s  677.817 KiB/s 298.968 MiB copied 
+msg INBOX/2984 {6475}         copied to INBOX/3195       1.38 msgs/s  677.041 KiB/s 298.974 MiB copied 
+msg INBOX/2985 {6465}         copied to INBOX/3196       1.38 msgs/s  676.268 KiB/s 298.980 MiB copied 
+msg INBOX/2986 {6468}         copied to INBOX/3197       1.38 msgs/s  675.413 KiB/s 298.986 MiB copied 
+msg INBOX/2987 {392523}       copied to INBOX/3198       1.38 msgs/s  675.162 KiB/s 299.361 MiB copied 
+msg INBOX/2988 {112500}       copied to INBOX/3199       1.38 msgs/s  674.553 KiB/s 299.468 MiB copied 
+msg INBOX/2989 {112519}       copied to INBOX/3200       1.38 msgs/s  673.948 KiB/s 299.575 MiB copied 
+msg INBOX/2990 {112495}       copied to INBOX/3201       1.38 msgs/s  673.339 KiB/s 299.682 MiB copied 
+msg INBOX/2991 {112523}       copied to INBOX/3202       1.38 msgs/s  672.717 KiB/s 299.790 MiB copied 
+msg INBOX/2992 {112975}       copied to INBOX/3203       1.38 msgs/s  672.135 KiB/s 299.897 MiB copied 
+msg INBOX/2993 {274490}       copied to INBOX/3204       1.38 msgs/s  671.642 KiB/s 300.159 MiB copied 
+msg INBOX/2994 {7732553}      copied to INBOX/3205       1.37 msgs/s  683.036 KiB/s 307.534 MiB copied 
+msg INBOX/2995 {1741682}      copied to INBOX/3206       1.37 msgs/s  685.001 KiB/s 309.195 MiB copied 
+msg INBOX/2996 {251044}       copied to INBOX/3207       1.37 msgs/s  684.642 KiB/s 309.434 MiB copied 
+msg INBOX/2997 {233279}       copied to INBOX/3208       1.37 msgs/s  684.257 KiB/s 309.656 MiB copied 
+msg INBOX/2998 {498072}       copied to INBOX/3209       1.37 msgs/s  684.255 KiB/s 310.131 MiB copied 
+msg INBOX/2999 {19614}        copied to INBOX/3210       1.37 msgs/s  683.527 KiB/s 310.150 MiB copied 
+msg INBOX/3000 {19622}        copied to INBOX/3211       1.37 msgs/s  682.783 KiB/s 310.169 MiB copied 
+msg INBOX/3001 {19616}        copied to INBOX/3212       1.37 msgs/s  681.919 KiB/s 310.188 MiB copied 
+msg INBOX/3002 {19626}        copied to INBOX/3213       1.37 msgs/s  681.172 KiB/s 310.206 MiB copied 
+msg INBOX/3003 {19622}        copied to INBOX/3214       1.38 msgs/s  680.431 KiB/s 310.225 MiB copied 
+msg INBOX/3004 {19620}        copied to INBOX/3215       1.38 msgs/s  679.700 KiB/s 310.244 MiB copied 
+msg INBOX/3005 {19626}        copied to INBOX/3216       1.38 msgs/s  678.704 KiB/s 310.262 MiB copied 
+msg INBOX/3006 {19620}        copied to INBOX/3217       1.38 msgs/s  677.975 KiB/s 310.281 MiB copied 
+msg INBOX/3007 {19622}        copied to INBOX/3218       1.38 msgs/s  677.251 KiB/s 310.300 MiB copied 
+msg INBOX/3008 {19621}        copied to INBOX/3219       1.38 msgs/s  676.491 KiB/s 310.319 MiB copied 
+msg INBOX/3009 {19621}        copied to INBOX/3220       1.38 msgs/s  675.755 KiB/s 310.337 MiB copied 
+msg INBOX/3010 {19640}        copied to INBOX/3221       1.38 msgs/s  674.935 KiB/s 310.356 MiB copied 
+msg INBOX/3011 {19615}        copied to INBOX/3222       1.38 msgs/s  674.221 KiB/s 310.375 MiB copied 
+msg INBOX/3012 {13517}        copied to INBOX/3223       1.38 msgs/s  673.475 KiB/s 310.388 MiB copied 
+msg INBOX/3013 {13491}        copied to INBOX/3224       1.38 msgs/s  672.753 KiB/s 310.400 MiB copied 
+msg INBOX/3014 {13494}        copied to INBOX/3225       1.38 msgs/s  672.028 KiB/s 310.413 MiB copied 
+msg INBOX/3015 {13486}        copied to INBOX/3226       1.38 msgs/s  671.311 KiB/s 310.426 MiB copied 
+msg INBOX/3016 {19122}        copied to INBOX/3227       1.38 msgs/s  670.585 KiB/s 310.444 MiB copied 
+msg INBOX/3017 {402775}       copied to INBOX/3228       1.38 msgs/s  670.448 KiB/s 310.829 MiB copied 
+msg INBOX/3018 {339904}       copied to INBOX/3229       1.38 msgs/s  670.245 KiB/s 311.153 MiB copied 
+msg INBOX/3019 {74502}        copied to INBOX/3230       1.38 msgs/s  669.633 KiB/s 311.224 MiB copied 
+msg INBOX/3020 {468868}       copied to INBOX/3231       1.38 msgs/s  669.615 KiB/s 311.671 MiB copied 
+msg INBOX/3021 {7651}         copied to INBOX/3232       1.38 msgs/s  668.780 KiB/s 311.678 MiB copied 
+msg INBOX/3022 {6526}         copied to INBOX/3233       1.38 msgs/s  668.057 KiB/s 311.684 MiB copied 
+msg INBOX/3023 {6503}         copied to INBOX/3234       1.38 msgs/s  667.334 KiB/s 311.691 MiB copied 
+msg INBOX/3024 {580098}       copied to INBOX/3235       1.38 msgs/s  667.446 KiB/s 312.244 MiB copied 
+msg INBOX/3025 {226840}       copied to INBOX/3236       1.38 msgs/s  667.039 KiB/s 312.460 MiB copied 
+msg INBOX/3026 {279266}       copied to INBOX/3237       1.38 msgs/s  666.758 KiB/s 312.727 MiB copied 
+msg INBOX/3027 {241437}       copied to INBOX/3238       1.38 msgs/s  666.405 KiB/s 312.957 MiB copied 
+msg INBOX/3028 {1524}         copied to INBOX/3239       1.39 msgs/s  665.624 KiB/s 312.958 MiB copied 
+msg INBOX/3029 {1465}         copied to INBOX/3240       1.39 msgs/s  664.904 KiB/s 312.960 MiB copied 
+msg INBOX/3030 {86331}        copied to INBOX/3241       1.39 msgs/s  664.308 KiB/s 313.042 MiB copied 
+msg INBOX/3031 {334925}       copied to INBOX/3242       1.39 msgs/s  664.079 KiB/s 313.361 MiB copied 
+msg INBOX/3032 {112894}       copied to INBOX/3243       1.39 msgs/s  663.534 KiB/s 313.469 MiB copied 
+msg INBOX/3033 {112809}       copied to INBOX/3244       1.39 msgs/s  662.975 KiB/s 313.577 MiB copied 
+msg INBOX/3034 {120906}       copied to INBOX/3245       1.39 msgs/s  662.446 KiB/s 313.692 MiB copied 
+msg INBOX/3035 {112830}       copied to INBOX/3246       1.39 msgs/s  661.776 KiB/s 313.800 MiB copied 
+msg INBOX/3036 {120817}       copied to INBOX/3247       1.39 msgs/s  661.100 KiB/s 313.915 MiB copied 
+msg INBOX/3037 {247454}       copied to INBOX/3248       1.39 msgs/s  660.765 KiB/s 314.151 MiB copied 
+msg INBOX/3038 {2196408}      copied to INBOX/3249       1.39 msgs/s  663.409 KiB/s 316.245 MiB copied 
+msg INBOX/3039 {1293516}      copied to INBOX/3250       1.39 msgs/s  664.676 KiB/s 317.479 MiB copied 
+msg INBOX/3040 {1298458}      copied to INBOX/3251       1.39 msgs/s  665.878 KiB/s 318.717 MiB copied 
+msg INBOX/3041 {61223}        copied to INBOX/3252       1.39 msgs/s  665.269 KiB/s 318.776 MiB copied 
+msg INBOX/3042 {145666}       copied to INBOX/3253       1.39 msgs/s  664.785 KiB/s 318.915 MiB copied 
+msg INBOX/3043 {40494}        copied to INBOX/3254       1.39 msgs/s  664.139 KiB/s 318.953 MiB copied 
+msg INBOX/3044 {226207}       copied to INBOX/3255       1.39 msgs/s  663.789 KiB/s 319.169 MiB copied 
+msg INBOX/3045 {7757462}      copied to INBOX/3256       1.38 msgs/s  674.781 KiB/s 326.567 MiB copied 
+msg INBOX/3046 {704057}       copied to INBOX/3257       1.38 msgs/s  675.067 KiB/s 327.238 MiB copied 
+msg INBOX/3047 {1205681}      copied to INBOX/3258       1.38 msgs/s  676.050 KiB/s 328.388 MiB copied 
+msg INBOX/3048 {86173}        copied to INBOX/3259       1.38 msgs/s  675.459 KiB/s 328.470 MiB copied 
+msg INBOX/3049 {7098}         copied to INBOX/3260       1.38 msgs/s  674.761 KiB/s 328.477 MiB copied 
+msg INBOX/3050 {7093}         copied to INBOX/3261       1.38 msgs/s  674.067 KiB/s 328.484 MiB copied 
+msg INBOX/3051 {19637}        copied to INBOX/3262       1.38 msgs/s  673.398 KiB/s 328.503 MiB copied 
+msg INBOX/3052 {19776}        copied to INBOX/3263       1.38 msgs/s  672.696 KiB/s 328.522 MiB copied 
+msg INBOX/3053 {74848}        copied to INBOX/3264       1.38 msgs/s  672.108 KiB/s 328.593 MiB copied 
+msg INBOX/3054 {41218}        copied to INBOX/3265       1.38 msgs/s  671.463 KiB/s 328.632 MiB copied 
+msg INBOX/3055 {46415}        copied to INBOX/3266       1.38 msgs/s  670.799 KiB/s 328.677 MiB copied 
+msg INBOX/3056 {1414689}      copied to INBOX/3267       1.38 msgs/s  672.081 KiB/s 330.026 MiB copied 
+msg INBOX/3057 {1415705}      copied to INBOX/3268       1.38 msgs/s  673.434 KiB/s 331.376 MiB copied 
+msg INBOX/3058 {285280}       copied to INBOX/3269       1.38 msgs/s  673.164 KiB/s 331.648 MiB copied 
+msg INBOX/3059 {326871}       copied to INBOX/3270       1.38 msgs/s  672.927 KiB/s 331.960 MiB copied 
+msg INBOX/3060 {713533}       copied to INBOX/3271       1.38 msgs/s  673.310 KiB/s 332.640 MiB copied 
+msg INBOX/3061 {300354}       copied to INBOX/3272       1.38 msgs/s  673.049 KiB/s 332.927 MiB copied 
+msg INBOX/3062 {6576}         copied to INBOX/3273       1.38 msgs/s  672.363 KiB/s 332.933 MiB copied 
+msg INBOX/3063 {272008}       copied to INBOX/3274       1.38 msgs/s  672.055 KiB/s 333.192 MiB copied 
+msg INBOX/3064 {621753}       copied to INBOX/3275       1.38 msgs/s  672.259 KiB/s 333.785 MiB copied 
+msg INBOX/3065 {337099}       copied to INBOX/3276       1.38 msgs/s  672.040 KiB/s 334.107 MiB copied 
+msg INBOX/3066 {2166417}      copied to INBOX/3277       1.38 msgs/s  674.346 KiB/s 336.173 MiB copied 
+msg INBOX/3067 {254630}       copied to INBOX/3278       1.38 msgs/s  674.029 KiB/s 336.416 MiB copied 
+msg INBOX/3068 {7538}         copied to INBOX/3279       1.38 msgs/s  673.343 KiB/s 336.423 MiB copied 
+msg INBOX/3069 {270168}       copied to INBOX/3280       1.38 msgs/s  672.992 KiB/s 336.680 MiB copied 
+msg INBOX/3070 {312401}       copied to INBOX/3281       1.38 msgs/s  672.724 KiB/s 336.978 MiB copied 
+msg INBOX/3071 {288417}       copied to INBOX/3282       1.38 msgs/s  672.444 KiB/s 337.253 MiB copied 
+msg INBOX/3072 {215352}       copied to INBOX/3283       1.38 msgs/s  672.004 KiB/s 337.459 MiB copied 
+msg INBOX/3073 {567951}       copied to INBOX/3284       1.38 msgs/s  672.098 KiB/s 338.000 MiB copied 
+msg INBOX/3074 {7757482}      copied to INBOX/3285       1.38 msgs/s  682.538 KiB/s 345.398 MiB copied 
+msg INBOX/3075 {5362348}      copied to INBOX/3286       1.37 msgs/s  689.609 KiB/s 350.512 MiB copied 
+msg INBOX/3076 {13790}        copied to INBOX/3287       1.37 msgs/s  688.938 KiB/s 350.526 MiB copied 
+msg INBOX/3077 {21166}        copied to INBOX/3288       1.37 msgs/s  688.273 KiB/s 350.546 MiB copied 
+msg INBOX/3078 {129833}       copied to INBOX/3289       1.37 msgs/s  687.776 KiB/s 350.670 MiB copied 
+msg INBOX/3079 {149632}       copied to INBOX/3290       1.37 msgs/s  687.303 KiB/s 350.812 MiB copied 
+msg INBOX/3080 {211162}       copied to INBOX/3291       1.37 msgs/s  686.906 KiB/s 351.014 MiB copied 
+msg INBOX/3081 {641231}       copied to INBOX/3292       1.37 msgs/s  687.115 KiB/s 351.625 MiB copied 
+msg INBOX/3082 {259520}       copied to INBOX/3293       1.37 msgs/s  686.806 KiB/s 351.873 MiB copied 
+msg INBOX/3083 {5873}         copied to INBOX/3294       1.37 msgs/s  686.134 KiB/s 351.878 MiB copied 
+msg INBOX/3084 {112491}       copied to INBOX/3295       1.38 msgs/s  685.588 KiB/s 351.986 MiB copied 
+msg INBOX/3085 {112629}       copied to INBOX/3296       1.38 msgs/s  685.061 KiB/s 352.093 MiB copied 
+msg INBOX/3086 {112487}       copied to INBOX/3297       1.38 msgs/s  684.543 KiB/s 352.200 MiB copied 
+msg INBOX/3087 {112487}       copied to INBOX/3298       1.38 msgs/s  683.959 KiB/s 352.308 MiB copied 
+msg INBOX/3088 {112351}       copied to INBOX/3299       1.38 msgs/s  683.436 KiB/s 352.415 MiB copied 
+msg INBOX/3089 {112349}       copied to INBOX/3300       1.38 msgs/s  682.820 KiB/s 352.522 MiB copied 
+msg INBOX/3090 {1375342}      copied to INBOX/3301       1.38 msgs/s  683.810 KiB/s 353.833 MiB copied 
+msg INBOX/3091 {764462}       copied to INBOX/3302       1.38 msgs/s  684.164 KiB/s 354.562 MiB copied 
+msg INBOX/3092 {1089092}      copied to INBOX/3303       1.38 msgs/s  684.992 KiB/s 355.601 MiB copied 
+msg INBOX/3093 {442479}       copied to INBOX/3304       1.38 msgs/s  684.966 KiB/s 356.023 MiB copied 
+msg INBOX/3094 {13080}        copied to INBOX/3305       1.38 msgs/s  684.308 KiB/s 356.036 MiB copied 
+msg INBOX/3095 {260113}       copied to INBOX/3306       1.38 msgs/s  684.019 KiB/s 356.284 MiB copied 
+msg INBOX/3096 {285081}       copied to INBOX/3307       1.38 msgs/s  683.792 KiB/s 356.556 MiB copied 
+msg INBOX/3097 {2017150}      copied to INBOX/3308       1.37 msgs/s  685.725 KiB/s 358.479 MiB copied 
+msg INBOX/3098 {6758}         copied to INBOX/3309       1.38 msgs/s  685.059 KiB/s 358.486 MiB copied 
+msg INBOX/3099 {692721}       copied to INBOX/3310       1.38 msgs/s  685.419 KiB/s 359.146 MiB copied 
+msg INBOX/3100 {162380}       copied to INBOX/3311       1.38 msgs/s  684.981 KiB/s 359.301 MiB copied 
+msg INBOX/3101 {2546965}      copied to INBOX/3312       1.37 msgs/s  688.050 KiB/s 361.730 MiB copied 
+msg INBOX/3102 {283547}       copied to INBOX/3313       1.37 msgs/s  687.773 KiB/s 362.001 MiB copied 
+msg INBOX/3103 {235863}       copied to INBOX/3314       1.38 msgs/s  687.415 KiB/s 362.225 MiB copied 
+msg INBOX/3104 {6534}         copied to INBOX/3315       1.38 msgs/s  686.768 KiB/s 362.232 MiB copied 
+msg INBOX/3105 {654787}       copied to INBOX/3316       1.38 msgs/s  686.917 KiB/s 362.856 MiB copied 
+msg INBOX/3106 {212158}       copied to INBOX/3317       1.38 msgs/s  686.553 KiB/s 363.058 MiB copied 
+msg INBOX/3107 {261820}       copied to INBOX/3318       1.38 msgs/s  686.225 KiB/s 363.308 MiB copied 
+msg INBOX/3108 {224039}       copied to INBOX/3319       1.38 msgs/s  685.858 KiB/s 363.522 MiB copied 
+msg INBOX/3109 {2625235}      copied to INBOX/3320       1.37 msgs/s  688.605 KiB/s 366.025 MiB copied 
+msg INBOX/3110 {112556}       copied to INBOX/3321       1.37 msgs/s  688.090 KiB/s 366.133 MiB copied 
+msg INBOX/3111 {112560}       copied to INBOX/3322       1.38 msgs/s  687.575 KiB/s 366.240 MiB copied 
+msg INBOX/3112 {112547}       copied to INBOX/3323       1.37 msgs/s  686.805 KiB/s 366.347 MiB copied 
+msg INBOX/3113 {112808}       copied to INBOX/3324       1.38 msgs/s  686.270 KiB/s 366.455 MiB copied 
+msg INBOX/3114 {112893}       copied to INBOX/3325       1.38 msgs/s  685.768 KiB/s 366.563 MiB copied 
+msg INBOX/3115 {112933}       copied to INBOX/3326       1.38 msgs/s  685.153 KiB/s 366.670 MiB copied 
+msg INBOX/3116 {440396}       copied to INBOX/3327       1.38 msgs/s  685.132 KiB/s 367.090 MiB copied 
+msg INBOX/3117 {7415}         copied to INBOX/3328       1.38 msgs/s  684.471 KiB/s 367.097 MiB copied 
+msg INBOX/3118 {10618}        copied to INBOX/3329       1.38 msgs/s  683.837 KiB/s 367.108 MiB copied 
+msg INBOX/3119 {17739}        copied to INBOX/3330       1.38 msgs/s  683.200 KiB/s 367.125 MiB copied 
+msg INBOX/3120 {6836}         copied to INBOX/3331       1.38 msgs/s  682.561 KiB/s 367.131 MiB copied 
+msg INBOX/3121 {353803}       copied to INBOX/3332       1.38 msgs/s  682.374 KiB/s 367.468 MiB copied 
+msg INBOX/3122 {1648178}      copied to INBOX/3333       1.38 msgs/s  683.922 KiB/s 369.040 MiB copied 
+msg INBOX/3123 {1665680}      copied to INBOX/3334       1.38 msgs/s  685.449 KiB/s 370.629 MiB copied 
+msg INBOX/3124 {392410}       copied to INBOX/3335       1.38 msgs/s  685.330 KiB/s 371.003 MiB copied 
+msg INBOX/3125 {119143}       copied to INBOX/3336       1.38 msgs/s  684.792 KiB/s 371.117 MiB copied 
+msg INBOX/3126 {119020}       copied to INBOX/3337       1.38 msgs/s  684.206 KiB/s 371.230 MiB copied 
+msg INBOX/3127 {119054}       copied to INBOX/3338       1.38 msgs/s  683.713 KiB/s 371.344 MiB copied 
+msg INBOX/3128 {339834}       copied to INBOX/3339       1.38 msgs/s  683.470 KiB/s 371.668 MiB copied 
+msg INBOX/3129 {274556}       copied to INBOX/3340       1.38 msgs/s  683.147 KiB/s 371.930 MiB copied 
+msg INBOX/3130 {367210}       copied to INBOX/3341       1.38 msgs/s  683.015 KiB/s 372.280 MiB copied 
+msg INBOX/3131 {18366}        copied to INBOX/3342       1.38 msgs/s  682.400 KiB/s 372.297 MiB copied 
+msg INBOX/3132 {206065}       copied to INBOX/3343       1.38 msgs/s  682.009 KiB/s 372.494 MiB copied 
+msg INBOX/3133 {251042}       copied to INBOX/3344       1.38 msgs/s  681.683 KiB/s 372.733 MiB copied 
+msg INBOX/3134 {233429}       copied to INBOX/3345       1.38 msgs/s  681.343 KiB/s 372.956 MiB copied 
+msg INBOX/3135 {19504}        copied to INBOX/3346       1.38 msgs/s  680.742 KiB/s 372.974 MiB copied 
+msg INBOX/3136 {13772}        copied to INBOX/3347       1.38 msgs/s  680.133 KiB/s 372.988 MiB copied 
+msg INBOX/3137 {36236}        copied to INBOX/3348       1.38 msgs/s  679.541 KiB/s 373.022 MiB copied 
+msg INBOX/3138 {4545}         copied to INBOX/3349       1.38 msgs/s  678.918 KiB/s 373.027 MiB copied 
+msg INBOX/3139 {93186}        copied to INBOX/3350       1.38 msgs/s  678.403 KiB/s 373.115 MiB copied 
+msg INBOX/3140 {503351}       copied to INBOX/3351       1.38 msgs/s  678.484 KiB/s 373.595 MiB copied 
+msg INBOX/3141 {6887}         copied to INBOX/3352       1.38 msgs/s  677.874 KiB/s 373.602 MiB copied 
+msg INBOX/3142 {6795}         copied to INBOX/3353       1.38 msgs/s  677.263 KiB/s 373.608 MiB copied 
+msg INBOX/3143 {28016}        copied to INBOX/3354       1.38 msgs/s  676.681 KiB/s 373.635 MiB copied 
+msg INBOX/3144 {231837}       copied to INBOX/3355       1.38 msgs/s  676.204 KiB/s 373.856 MiB copied 
+msg INBOX/3145 {9029}         copied to INBOX/3356       1.38 msgs/s  675.589 KiB/s 373.865 MiB copied 
+msg INBOX/3146 {93989}        copied to INBOX/3357       1.38 msgs/s  675.076 KiB/s 373.955 MiB copied 
+msg INBOX/3147 {2955123}      copied to INBOX/3358       1.38 msgs/s  678.210 KiB/s 376.773 MiB copied 
+msg INBOX/3148 {226797}       copied to INBOX/3359       1.38 msgs/s  677.895 KiB/s 376.989 MiB copied 
+msg INBOX/3149 {17428073}     copied to INBOX/3360       1.37 msgs/s  699.951 KiB/s 393.610 MiB copied 
+msg INBOX/3150 {17428073}     copied to INBOX/3361       1.35 msgs/s  721.168 KiB/s 410.230 MiB copied 
+msg INBOX/3151 {28121694}     copied to INBOX/3362       1.33 msgs/s  754.254 KiB/s 437.049 MiB copied 
+msg INBOX/3152 {7666}         copied to INBOX/3363       1.33 msgs/s  753.508 KiB/s 437.057 MiB copied 
+msg INBOX/3153 {17462489}     copied to INBOX/3364       1.32 msgs/s  774.017 KiB/s 453.710 MiB copied 

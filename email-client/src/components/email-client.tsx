@@ -186,7 +186,7 @@ export function EmailClient() {
       setIsLoading(false)
       setIsLoadingMore(false)
     }
-  }, [emailFilter, subFilter, readEmails, pageSize])
+  }, [emailFilter, subFilter, pageSize])
 
   // Función para cargar más correos (scroll infinito)
   const loadMoreEmails = useCallback(() => {
@@ -319,16 +319,21 @@ export function EmailClient() {
   }, [])
 
   // Función para manejar selección de correo y marcarlo como leído
-  const handleSelectEmail = async (email: Email) => {
-    // Cargar contenido completo si es necesario
+  const handleSelectEmail = useCallback(async (email: Email) => {
+    // Seleccionar inmediatamente para UX rápida
+    setSelectedEmail(email)
+
+    // Cargar contenido completo en background si es necesario
     const fullEmail = await loadEmailContent(email)
-    setSelectedEmail(fullEmail)
+    if (fullEmail !== email) {
+      setSelectedEmail(fullEmail)
+    }
 
     // Marcar como leído en la base de datos
     if (!readEmails.has(email.email_id)) {
       markAsRead(email.email_id)
     }
-  }
+  }, [loadEmailContent, readEmails, markAsRead])
 
   // Efecto para cargar el estado de correos leídos al inicializar
   useEffect(() => {
@@ -425,7 +430,7 @@ export function EmailClient() {
               emails={displayEmails}
               selectedEmail={selectedEmail}
               onSelectEmail={handleSelectEmail}
-              isLoading={isLoading || isSearching || isInitialLoading}
+              isLoading={(isLoading || isSearching || isInitialLoading) && !selectedEmail}
               isSentView={emailFilter === 'sent'}
               currentFilter={emailFilter}
               onLoadMore={loadMoreEmails}

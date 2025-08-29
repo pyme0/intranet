@@ -14,9 +14,14 @@ interface ComposeDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   replyTo?: Email | null
+  prefilledData?: {
+    to?: string
+    subject?: string
+    body?: string
+  }
 }
 
-export function ComposeDialog({ open, onOpenChange, replyTo }: ComposeDialogProps) {
+export function ComposeDialog({ open, onOpenChange, replyTo, prefilledData }: ComposeDialogProps) {
   const [to, setTo] = useState('')
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
@@ -44,12 +49,19 @@ export function ComposeDialog({ open, onOpenChange, replyTo }: ComposeDialogProp
       
       setBody(`\n\n--- Mensaje original ---\n${originalBody}`)
     } else if (open && !replyTo) {
-      // Limpiar campos para nuevo correo
-      setTo('')
-      setSubject('')
-      setBody('')
+      // Usar datos pre-rellenados si están disponibles
+      if (prefilledData) {
+        setTo(prefilledData.to || '')
+        setSubject(prefilledData.subject || '')
+        setBody(prefilledData.body || '')
+      } else {
+        // Limpiar campos para nuevo correo
+        setTo('')
+        setSubject('')
+        setBody('')
+      }
     }
-  }, [replyTo, open])
+  }, [replyTo, open, prefilledData])
 
   const handleSend = async () => {
     if (!to.trim() || !subject.trim() || !body.trim()) {

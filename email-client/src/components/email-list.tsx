@@ -10,7 +10,8 @@ import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Mail, MailOpen, Loader2, Search, X } from 'lucide-react'
 import { Email } from './email-client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, memo } from 'react'
+import { EmailSkeleton } from './email-skeleton'
 
 interface EmailListProps {
   emails: Email[]
@@ -61,7 +62,7 @@ const decodeEmailName = (encodedName: string): string => {
   }
 }
 
-export function EmailList({
+export const EmailList = memo(function EmailList({
   emails,
   selectedEmail,
   onSelectEmail,
@@ -246,7 +247,7 @@ export function EmailList({
               </p>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground animate-pulse">Cargando correos...</p>
+            <EmailSkeleton count={8} />
           )}
         </div>
       </div>
@@ -438,4 +439,4 @@ export function EmailList({
       </ScrollArea>
     </div>
   )
-}
+})

@@ -13,7 +13,9 @@ import {
   Plus,
   Wifi,
   WifiOff,
-  Clock
+  Clock,
+  StickyNote,
+  Users
 } from 'lucide-react'
 import { ConnectionStatus } from './email-client'
 import { ThemeToggle } from './theme-toggle'
@@ -27,6 +29,8 @@ interface EmailSidebarProps {
   onFilterChange: (filter: 'inbox' | 'sent') => void
   subFilter: 'all' | 'marcas' | 'tomas'
   onSubFilterChange: (filter: 'all' | 'marcas' | 'tomas') => void
+  currentView: 'emails' | 'postits' | 'contacts'
+  onViewChange: (view: 'emails' | 'postits' | 'contacts') => void
 }
 
 export function EmailSidebar({
@@ -37,7 +41,9 @@ export function EmailSidebar({
   emailFilter,
   onFilterChange,
   subFilter,
-  onSubFilterChange
+  onSubFilterChange,
+  currentView,
+  onViewChange
 }: EmailSidebarProps) {
   return (
     <div className="w-64 border-r bg-muted/10 p-4">
@@ -66,76 +72,112 @@ export function EmailSidebar({
 
       {/* Navigation */}
       <div className="space-y-2 mb-6">
-        {/* Sección Principal */}
-        <Button
-          variant={emailFilter === 'inbox' ? 'default' : 'ghost'}
-          className="w-full justify-start"
-          size="sm"
-          onClick={() => onFilterChange('inbox')}
-        >
-          <Mail className="mr-2 h-4 w-4" />
-          Bandeja Principal
-          <div className="ml-auto flex items-center gap-1">
-            {emailFilter === 'inbox' && unreadCount > 0 && (
-              <Badge variant="default" className="bg-blue-500 hover:bg-blue-600">
-                {unreadCount}
-              </Badge>
-            )}
-            {emailFilter === 'inbox' && emailCount > 0 && (
-              <Badge variant="secondary" className="text-xs">
-                {emailCount}
-              </Badge>
-            )}
-          </div>
-        </Button>
+        {/* Selector de Vista */}
+        <div className="grid grid-cols-3 gap-1 p-1 bg-muted rounded-lg mb-4">
+          <Button
+            variant={currentView === 'emails' ? 'default' : 'ghost'}
+            className="h-8 text-xs"
+            size="sm"
+            onClick={() => onViewChange('emails')}
+          >
+            <Mail className="mr-1 h-3 w-3" />
+            Correos
+          </Button>
+          <Button
+            variant={currentView === 'postits' ? 'default' : 'ghost'}
+            className="h-8 text-xs"
+            size="sm"
+            onClick={() => onViewChange('postits')}
+          >
+            <StickyNote className="mr-1 h-3 w-3" />
+            Notas
+          </Button>
+          <Button
+            variant={currentView === 'contacts' ? 'default' : 'ghost'}
+            className="h-8 text-xs"
+            size="sm"
+            onClick={() => onViewChange('contacts')}
+          >
+            <Users className="mr-1 h-3 w-3" />
+            Contactos
+          </Button>
+        </div>
 
-        {/* Filtros para Bandeja Principal */}
-        {emailFilter === 'inbox' && (
-          <div className="ml-4 space-y-1">
+        {/* Secciones de Correos - Solo mostrar si estamos en vista de correos */}
+        {currentView === 'emails' && (
+          <>
+            {/* Sección Principal */}
             <Button
-              variant={subFilter === 'all' ? 'secondary' : 'ghost'}
-              className="w-full justify-start text-sm"
+              variant={emailFilter === 'inbox' ? 'default' : 'ghost'}
+              className="w-full justify-start"
               size="sm"
-              onClick={() => onSubFilterChange('all')}
+              onClick={() => onFilterChange('inbox')}
             >
-              Todos los correos
+              <Mail className="mr-2 h-4 w-4" />
+              Bandeja Principal
+              <div className="ml-auto flex items-center gap-1">
+                {emailFilter === 'inbox' && unreadCount > 0 && (
+                  <Badge variant="default" className="bg-blue-500 hover:bg-blue-600">
+                    {unreadCount}
+                  </Badge>
+                )}
+                {emailFilter === 'inbox' && emailCount > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {emailCount}
+                  </Badge>
+                )}
+              </div>
             </Button>
+
+            {/* Filtros para Bandeja Principal */}
+            {emailFilter === 'inbox' && (
+              <div className="ml-4 space-y-1">
+                <Button
+                  variant={subFilter === 'all' ? 'secondary' : 'ghost'}
+                  className="w-full justify-start text-sm"
+                  size="sm"
+                  onClick={() => onSubFilterChange('all')}
+                >
+                  Todos los correos
+                </Button>
+                <Button
+                  variant={subFilter === 'marcas' ? 'secondary' : 'ghost'}
+                  className="w-full justify-start text-sm"
+                  size="sm"
+                  onClick={() => onSubFilterChange('marcas')}
+                >
+                  <Mail className="mr-2 h-3 w-3 text-green-600" />
+                  Correos a Marcas
+                </Button>
+                <Button
+                  variant={subFilter === 'tomas' ? 'secondary' : 'ghost'}
+                  className="w-full justify-start text-sm"
+                  size="sm"
+                  onClick={() => onSubFilterChange('tomas')}
+                >
+                  <Mail className="mr-2 h-3 w-3 text-blue-600" />
+                  Correos a Tomas
+                </Button>
+              </div>
+            )}
+
+            {/* Sección Enviados */}
             <Button
-              variant={subFilter === 'marcas' ? 'secondary' : 'ghost'}
-              className="w-full justify-start text-sm"
+              variant={emailFilter === 'sent' ? 'default' : 'ghost'}
+              className="w-full justify-start"
               size="sm"
-              onClick={() => onSubFilterChange('marcas')}
+              onClick={() => onFilterChange('sent')}
             >
-              <Mail className="mr-2 h-3 w-3 text-green-600" />
-              Correos a Marcas
+              <Send className="mr-2 h-4 w-4 text-purple-600" />
+              Enviados
+              {emailFilter === 'sent' && emailCount > 0 && (
+                <Badge variant="secondary" className="ml-auto text-xs">
+                  {emailCount}
+                </Badge>
+              )}
             </Button>
-            <Button
-              variant={subFilter === 'tomas' ? 'secondary' : 'ghost'}
-              className="w-full justify-start text-sm"
-              size="sm"
-              onClick={() => onSubFilterChange('tomas')}
-            >
-              <Mail className="mr-2 h-3 w-3 text-blue-600" />
-              Correos a Tomas
-            </Button>
-          </div>
+          </>
         )}
-
-        {/* Sección Enviados */}
-        <Button
-          variant={emailFilter === 'sent' ? 'default' : 'ghost'}
-          className="w-full justify-start"
-          size="sm"
-          onClick={() => onFilterChange('sent')}
-        >
-          <Send className="mr-2 h-4 w-4 text-purple-600" />
-          Enviados
-          {emailFilter === 'sent' && emailCount > 0 && (
-            <Badge variant="secondary" className="ml-auto text-xs">
-              {emailCount}
-            </Badge>
-          )}
-        </Button>
 
         {/* Filtros para Enviados */}
         {emailFilter === 'sent' && (

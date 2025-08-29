@@ -1,0 +1,120 @@
+Here is imapsync 2.290 on host MacBook-Pro-de-Tomas.local, a darwin system with 0.1/8.0 free GiB of RAM, 71.00% used by processes.
+with Perl 5.34.1 and Mail::IMAPClient 3.43
+Transfer started at Thursday 28 August 2025-08-28 09:28:38 -0400 -04
+PID is 3998 my PPID is 3780
+Log file is LOG_imapsync/2025_08_28_09_28_38_525_marcas_patriciastocker_com_tomas_patriciastocker_com.txt ( to change it, use --logfile path ; or use --nolog to turn off logging )
+Load is 1.84 2.12 3.10 on 8 cores
+Real user id is a1234 (uid 501)
+Effective user id is a1234 (euid 501)
+$RCSfile: imapsync,v $ $Revision: 2.290 $ $Date: 2024/08/20 10:37:23 $ 
+Command line used, run by /usr/bin/perl5.34:
+/opt/homebrew/Cellar/imapsync/2.290_1/libexec/bin/imapsync --host1 patriciastocker.com --port1 993 --user1 marcas@patriciastocker.com --password1 MASKED --ssl1 --host2 imap.hostinger.com --port2 993 --user2 tomas@patriciastocker.com --password2 MASKED --ssl2 --justlogin
+Current directory is /Users/a1234/Desktop/Patricia-Stocker/patricia-stocker-intranet/email-sync
+Temp directory is /Users/a1234/tmp ( to change it use --tmpdir dirpath )
+Creating temp directory /Users/a1234/tmp
+kill -QUIT 3998 # special behavior: call to sub catch_exit
+kill -TERM 3998 # special behavior: call to sub catch_exit
+kill -INT 3998 # special behavior: call to sub catch_reconnect
+kill -HUP 3998 # special behavior: call to sub catch_print
+kill -USR1 3998 # special behavior: call to sub toggle_sleep
+Logging to a logfile by default. To turn off logging, use --nolog
+File /Users/a1234/tmp/imapsync.pid does not exist
+PID file is /Users/a1234/tmp/imapsync.pid ( to change it, use --pidfile filepath ; to avoid it use --pidfile "" )
+Writing my PID 3998 in /Users/a1234/tmp/imapsync.pid
+Writing also my logfile name in /Users/a1234/tmp/imapsync.pid : LOG_imapsync/2025_08_28_09_28_38_525_marcas_patriciastocker_com_tomas_patriciastocker_com.txt
+Modules version list ( use --no-modulesversion to turn off printing this Perl modules list ):
+Authen::NTLM         1.09
+CGI                  4.48
+Compress::Zlib       2.102
+Crypt::OpenSSL::RSA  0.31
+Digest::HMAC_MD5     1.01
+Digest::HMAC_SHA1    1.03
+Digest::MD5          2.58
+Digest::SHA          6.02
+Encode               3.0801
+Encode::IMAPUTF7     1.05
+File::Copy::Recursive 0.45
+File::Spec           3.80
+Getopt::Long         2.52
+HTML::Entities       3.69
+IO::Socket           1.46
+IO::Socket::INET     1.46
+IO::Socket::INET6    2.72
+IO::Socket::IP       0.42
+IO::Socket::SSL      2.068
+IO::Tee              0.65
+JSON                 4.10
+JSON::WebToken       0.10
+LWP                  6.44
+MIME::Base64         3.16
+Mail::IMAPClient     3.43
+Net::Ping            2.74
+Net::SSLeay          1.88
+Term::ReadKey        2.38
+Test::MockObject     1.20200122
+Time::HiRes          1.9767
+Unicode::String      2.10
+
+Info: will resync flags for already transferred messages. Use --noresyncflags to not resync flags.
+SSL debug mode level is --debugssl 1 (can be set from 0 meaning no debug to 4 meaning max debug)
+Host1: SSL default mode is like --sslargs1 "SSL_verify_mode=0", meaning for host1 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host1: Use --sslargs1 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host1
+Host2: SSL default mode is like --sslargs2 "SSL_verify_mode=0", meaning for host2 SSL_VERIFY_NONE, ie, do not check the server certificate.
+Host2: Use --sslargs2 SSL_verify_mode=1 to have SSL_VERIFY_PEER, ie, check the server certificate. of host2
+Info: turned ON syncinternaldates, will set the internal dates (arrival dates) on host2 same as host1.
+Host1: will try to use LOGIN authentication on host1
+Host2: will try to use LOGIN authentication on host2
+Host1: imap connection timeout is 120 seconds
+Host2: imap connection timeout is 120 seconds
+Host1: imap connection keepalive is on on host1. Use --nokeepalive1 to disable it.
+Host2: imap connection keepalive is on on host2. Use --nokeepalive2 to disable it.
+Host1: IMAP server [patriciastocker.com] port [993] user [marcas@patriciastocker.com]
+Host2: IMAP server [imap.hostinger.com] port [993] user [tomas@patriciastocker.com]
+Host1: connecting and login on host1 [patriciastocker.com] port [993] with user [marcas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host1 IP address: 45.239.218.18 Local IP address: 192.168.1.20
+Host1 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Dovecot ready.
+Host1 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE NAMESPACE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host1: patriciastocker.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host1: success login on [patriciastocker.com] with user [marcas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host2: connecting and login on host2 [imap.hostinger.com] port [993] with user [tomas@patriciastocker.com]
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+DEBUG: .../IO/Socket/SSL.pm:1177: global error: Undefined SSL object
+Host2 IP address: 172.65.188.64 Local IP address: 192.168.1.20
+Host2 banner: * OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN] Server ready.
+Host2 capability before authentication: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN AUTH=LOGIN AUTH
+Host2: imap.hostinger.com says it has CAPABILITY for AUTHENTICATE LOGIN
+Host2: success login on [imap.hostinger.com] with user [tomas@patriciastocker.com] auth [LOGIN] or [LOGIN]
+Host1: state Authenticated
+Host2: state Authenticated
+Host1 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE NAMESPACE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host2 capability once authenticated: IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY PREVIEW STATUS=SIZE SAVEDATE LITERAL+ NOTIFY SPECIAL-USE COMPRESS=DEFLATE QUOTA THREAD I18NLEVEL CONTEXT SNIPPET PREVIEW STATUS COMPRESS
+Host1: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host1")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+Host2: found ID capability. Sending/receiving ID, presented in raw IMAP for now.
+In order to avoid sending/receiving ID, use option --noid
+Sending: 4 ID ("name" "imapsync" "version" "2.290" "os" "darwin" "vendor" "Gilles LAMIRAL" "support-url" "https://imapsync.lamiral.info/" "date" "20-Aug-2024 10:37:23 +0000" "side" "host2")
+Sent 182 bytes
+Read: 	* ID ("name" "Dovecot")
+  	4 OK ID completed (0.001 + 0.000 secs).
+
+Host2: QUOTA capability found, presented in raw IMAP on next lines
+Sending: 5 GETQUOTAROOT INBOX
+Sent 22 bytes
+Read: 	* QUOTAROOT INBOX "Storage quota"
+  	* QUOTA "Storage quota" (STORAGE 1279722 10485760 MESSAGE 2494 100000)
+  	5 OK Getquotaroot completed (0.066 + 0.000 + 0.065 secs).
+
+Host2: Quota current storage is 1310435328 bytes. Limit is 10737418240 bytes. So 12.20 % full
+Host1: Compression is off. Use --compress1 to allow compression on host1
+Host2: Compression is off. Use --compress2 to allow compression on host2
+Compression often generates annoying errors, especially with SSL connexions, Gmail, Office365. So, avoid it.
+Exiting because of --justlogin
+Exiting with return value 0 (EX_OK: successful termination) 0/50 nb_errors/max_errors PID 3998
+Removing pidfile /Users/a1234/tmp/imapsync.pid
+Log file is LOG_imapsync/2025_08_28_09_28_38_525_marcas_patriciastocker_com_tomas_patriciastocker_com.txt ( to change it, use --logfile filepath ; or use --nolog to turn off logging )

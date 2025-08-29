@@ -8,9 +8,8 @@ export async function GET(request: NextRequest) {
     const account = searchParams.get('account')
     const folder = searchParams.get('folder') || 'INBOX'
     
-    // CAMBIO: Usar /api/emails que funciona correctamente con emails_list
-    // en lugar de /api/emails/paginated que depende del caché SQLite vacío
-    let url = `http://localhost:8080/api/emails?page=${page}&limit=${limit}`
+    // Usar el nuevo endpoint que carga preview
+    let url = `http://localhost:8080/api/emails/with-preview?page=${page}&limit=${limit}&folder=${folder}`
     if (account) {
       url += `&account=${encodeURIComponent(account)}`
     }
@@ -30,7 +29,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data)
 
   } catch (error) {
-    console.error('❌ Error en proxy de emails paginados:', error)
+    console.error('❌ Error en proxy de emails con preview:', error)
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : 'Unknown error',

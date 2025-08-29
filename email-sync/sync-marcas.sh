@@ -6,9 +6,9 @@
 
 # Configuración
 SCRIPT_NAME="sync-marcas"
-LOG_DIR="/home/linuxuser/email-sync/logs"
+LOG_DIR="$(pwd)/email-sync/logs"
 LOG_FILE="$LOG_DIR/${SCRIPT_NAME}-$(date +%Y%m%d-%H%M%S).log"
-PID_FILE="/home/linuxuser/email-sync/${SCRIPT_NAME}.pid"
+PID_FILE="$(pwd)/email-sync/${SCRIPT_NAME}.pid"
 
 # Crear directorio de logs si no existe
 mkdir -p "$LOG_DIR"
@@ -83,7 +83,9 @@ imapsync \
     --useheader 'Date' \
     --skipsize \
     --allowsizemismatch \
-    --delete2 2>&1 | tee -a "$LOG_FILE"
+    --delete2 \
+    --compress1 \
+    --compress2 2>&1 | tee -a "$LOG_FILE"
 
 SYNC_RESULT=$?
 
